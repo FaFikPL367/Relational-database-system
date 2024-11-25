@@ -14,49 +14,50 @@
 
 ## Funkcje dla każdego użytkownika
 1. **Administrator**
-    - Możliwość usuwania nagrań z Webinarów
+    - Możliwość usuwania nagrań z webinarów
     - Możliwość edytowania danych uzytkowników systemu
-    - Możliwość edytowania ofert z webinar
+    - Możliwość edytowania ofert z webinarami
     - Możliwość tworzenia i odtwarzania kopii zapasowych
 2. **Dyrektor platformy**
     - Odraczanie płatności dla wybranych klientów
     - Dostęp do raportów generowanych przez system (raporty finansowe, raporty z "listą dłużników", raport związane z przyszłymi wydarzeniami i frekwencją na nich)
     - Możliwość zwalniania i zatrudniania pracowników
-    - Możliwość wyrzucania uczestników z kursów/webinarów
+    - Możliwość wyrzucania uczestników z kursów/webinarów/studiów
 3. **Koordynator webinarów**
     - Dodawanie i usuwanie webinarów oraz modyfikowanie ich właściwości
     - Przypisywanie prowadzących czy tłumaczy do webinarów
 4. **Koordynator kursów**
     - Dodawanie i usuwanie kursów do oferty
     - Możliwość modyfikowania właściwości kursów i wybieranie wykładowców czy tłumaczy
-    - Możliwość decydowania o zaliczeniu kursu (może zmienić decyzję systemu)
+    - Możliwość decydowania o zaliczeniu kursu (może zmienić decyzję systemu w szeczólnych przypadkach nawet jak uczestnik zaliczył 80% modułów)
+    - Możliwość określenia typu danego przedmiotu (stacjnonarnie, online, hybrydowo)
 5. **Koordynator studiów**
     - Dodawanie i usuwanie studium do oferty
     - Możliwość tworzenia sylabusa studiów poprzez dodawanie przedmiotów
       - Możliwość przypisywania wykładowców i tłumaczy do danych przedmiotów
       - Możliwość określenia typu danego przedmiotu (stacjnonarnie, online, hybrydowo)
-    - Możliwość dodawania i usuwanie uczestników danego studium
+    - Możliwość dodawania i usuwania uczestników danego studium
     - Możliwość modyfikowania harmonogramu danego studium
     - Możliwość wpisania oceny końcowej z egzaminu 
 6. **Pracownik sekretariatu**
     - Możliwość tworzenia harmonogramu zajęć na studiach/kursach i zarządzanie nim
     - Dostęp do raportów generowanych przez system (raporty finansowe, raporty z "listą dłużników", raport związane z przyszłymi wydarzeniami i frekwencją na nich)
     - Możliwość przyjmowania zgłoszeń od użytkowników systemu
-    - Dostęp do danych uczestników kursów/studiów/webinarów i ich modyfikacji
+    - Dostęp do danych uczestników kursów/studiów/webinarów i możliwość ich modyfikacji
 7. **Wykładowcy**
-    - Dostęp swojego harmonogramu zajęć i ich szczegółów
+    - Dostęp do swojego harmonogramu zajęć i ich szczegółów
     - Możliwość modyfikacji frekwencji uczestników na swoich zajęciach
-    - Dostęp do raportu nieobecności uczestników na swoich zajęciach
+    - Dostęp do raportu dotyczącego nieobecności uczestników na swoich zajęciach
 8. **Tłumacze**
-    - Dostęp swojego harmonogramu zajęć i ich szczegółów
+    - Dostęp do swojego harmonogramu zajęć i ich szczegółów
 9. **Uczestnik (osoba z założonym kontem)**
     - Możliwość zmiany swoich danych osobowych
     - Możliwość dodawania produktów z oferty do koszyka
-    - Możliwość wybrania sposobu płatności w wypadku kursu (zaliczka czy od razu całość)
+    - Możliwość wybrania sposobu płatności w przypadku kursu/studiów (zaliczka czy od razu całość)
     - Możliwość przeglądania aktualnych ofert wraz z ich szczegółami
-    - Dostęp do harmonogramu kursów/studiów/ofert, na które wykupił dostęp lub się zapisał
-    - Dostęp do nagrań z przypisanych ofert
-    - Możliwość zgłoszania prób np. o usunięcie z listy uczestników danego kursu/studium
+    - Dostęp do harmonogramu kursów/studiów/webinarów, na które wykupił dostęp lub się zapisał
+    - Dostęp do nagrań z wykupionych ofert
+    - Możliwość zgłoszenia próśb np. o usunięcie z listy uczestników danego kursu/studium
 10. **Gość**
     - Możliwość przeglądania aktualnych ofert wraz z ich szczegółami
     - Możliwość stworzenia konta
@@ -67,18 +68,18 @@
 - Sprawdzanie potwierdzenia płatności (czy udana / czy nieudana)
 - Możliwość blokowania dostępu do zasobów w przypadku opoźnienia w płatnościach (nagrania, kursy)
 - Rejestrowanie opłat w systemie
-- Zapis użytkownika na webinar w przypadku potwierdzenia płatności
+- Udzielenie użytkownikowi dostępu do danej usługi w przypadku potwierdzenia płatności
 - Możliwość sprawdzenia i zmienienia obecności w wyniku obejrzenia nagrania
 - Generowanie raportów:
     - generowanie sprawozdań finansowych, czyli zestawienie przychodów dla 
-        każdego kursy/webinaru/studium
+        każdego kursu/webinaru/studium
     - generowanie listy osób, które zwlekają z opłatą, lista dłużników
-    - generowanie listy zapisanych użytkowników na dane wydarzenie i również informacje o tym wydarzeniu: typ spotkania
+    - generowanie listy zapisanych użytkowników na dane wydarzenie oraz informacji o tym wydarzeniu: typ spotkania
     - generowanie raportu o frekwencji dla każdego szkolenia 
     - generowanie raportu o kolizjach w harmonogramie zajęć dla uczestników
 - Wyznaczanie ilości wolnych miejsc na studiach/kursach i pilnowanie limitów
 - Wysyłanie powiadomień o zaległych płatnościach
-- Blokowanie dostępu do nagrać z webinarów po upływie 30 dni
+- Blokowanie dostępu do nagrań z webinarów po upływie 30 dni
 - Zapisywanie zawartości koszyka dla użytkownika i obliczanie jego wartości
 - Generowanie linku do płatności dla użytkownika
 

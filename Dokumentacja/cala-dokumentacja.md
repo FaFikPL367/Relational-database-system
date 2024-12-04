@@ -1,3 +1,7 @@
+## AUTORZY
+1. ***Paweł Sosnowski***
+2. ***Maciej Słowik***
+
 ## Użytkownicy systemu
 1. Administrator
 2. Dyrektor platformy
@@ -83,3 +87,8 @@
 - Zapisywanie zawartości koszyka dla użytkownika i obliczanie jego wartości
 - Generowanie linku do płatności dla użytkownika
 
+---
+
+## Diagram bazy danych
+
+![image](diagram-bazy-raport2.png)

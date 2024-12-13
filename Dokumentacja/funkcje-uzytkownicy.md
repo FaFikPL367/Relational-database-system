@@ -32,16 +32,15 @@
     - Przypisywanie prowadzących czy tłumaczy do webinarów
 4. **Koordynator kursów**
     - Dodawanie i usuwanie kursów do oferty
-    - Możliwość modyfikowania właściwości kursów i wybieranie wykładowców czy tłumaczy
+    - Możliwość modyfikowania właściwości kursów i wybieranie wykładowców czy tłumaczy oraz określanie typu modułów
     - Możliwość decydowania o zaliczeniu kursu (może zmienić decyzję systemu w szeczólnych przypadkach nawet jak uczestnik zaliczył 80% modułów)
-    - Możliwość określenia typu danego przedmiotu (stacjnonarnie, online, hybrydowo)
 5. **Koordynator studiów**
-    - Dodawanie i usuwanie studium do oferty
-    - Możliwość tworzenia sylabusa studiów poprzez dodawanie przedmiotów
+    - Dodawanie i usuwanie studiów do oferty
+    - Możliwość tworzenia sylabusa studiów poprzez dodawanie przedmiotów:
       - Możliwość przypisywania wykładowców i tłumaczy do danych przedmiotów
-      - Możliwość określenia typu danego przedmiotu (stacjnonarnie, online, hybrydowo)
-    - Możliwość dodawania i usuwania uczestników danego studium
-    - Możliwość modyfikowania harmonogramu danego studium
+      - Możliwość określenia typu danego spotkania przedmotu (stacjnonarnie, online, hybrydowo)
+    - Możliwość dodawania i usuwania uczestników danych studiów
+    - Możliwość modyfikowania harmonogramu danych studiów
     - Możliwość wpisania oceny końcowej z egzaminu 
 6. **Pracownik sekretariatu**
     - Możliwość tworzenia harmonogramu zajęć na studiach/kursach i zarządzanie nim
@@ -84,6 +83,5 @@
 - Wyznaczanie ilości wolnych miejsc na studiach/kursach i pilnowanie limitów
 - Wysyłanie powiadomień o zaległych płatnościach
 - Blokowanie dostępu do nagrań z webinarów po upływie 30 dni
-- Zapisywanie zawartości koszyka dla użytkownika i obliczanie jego wartości
 - Generowanie linku do płatności dla użytkownika
 

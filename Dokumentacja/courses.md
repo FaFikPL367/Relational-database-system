@@ -37,7 +37,6 @@ Zawiera informacje o modułach odbywających się stacjonarnie:
 ```
 CREATE TABLE In-person_Modules (
    ModuleID int  NOT NULL,
-   Faculty nvarchar(10)  NOT NULL,
    Classroom int  NOT NULL,
    TranslatorID int  NULL,
    Limit int  NOT NULL,

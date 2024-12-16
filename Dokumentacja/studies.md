@@ -142,7 +142,6 @@ Zawiera informacje o obecności studenta na spotkaniu:
  * **MeetingID** [int] - część klucza głównego, identyfikator spotkania
  * **SubjectID** [int] - część klucza głównego, identyfikator przedmiotu
  * **Present** [bit] - informacja o obecności studenta na spotkaniu
-   * wartość domyślna: 0
 ``` SQL
 CREATE TABLE Users_Meetings_Attendance (
    UserID int  NOT NULL,
@@ -154,13 +153,12 @@ CREATE TABLE Users_Meetings_Attendance (
 ```
 
 ## <hr>
-## Tabela **Student_Studies_Grade**
+## Tabela **Users_Studies_Grade**
 Zawiera informajce o ocenie studenta za studia:
  * **UserID** [int] - część klucza głównego, identyfikator studenta
  * **StudiesID** [int] - część klucza głównego, identyfikator studiów
  * **Grade** [int] - ocena studenta za studia
    * warunki: Grade >= 2 AND Grade <= 5
-   * domyślna wartość: 2
 ```SQL
 CREATE TABLE Student_Studies_Grade (
    UserID int  NOT NULL,
@@ -206,7 +204,6 @@ Zawiera informacje o zdaniu praktyk przez danego studenta:
  * **StudiesID** [int] - część klucza głównego, identyfikator studiów
  * **PracticeID** [int] - część klucza głównego, identyfikator praktyk
  * **Present** [bit] - informacja o zdaniu praktyk
-   * wartość domyślna: 0
 ```SQL
 CREATE TABLE Users_Practices_Attendance (
    UserID int  NOT NULL,

@@ -30,7 +30,6 @@ CREATE TABLE Courses (
 ---
 Zawiera informacje o modułach odbywających się stacjonarnie:
 - ModuleID [int] - klucz główny, identyfikator modułu
-- Faculty [nvarchar(10)] - nazwa wydziału, w którego budynku odbywają się zajęcia
 - Classroom [int] - numer sali, w której odbywają się zajęcia
 - TransalatorID [int] - identyfikator tłumacza
 - Limit [int] - limit osób mogących uczestniczyć w danych zajęciach

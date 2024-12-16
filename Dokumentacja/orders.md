@@ -3,9 +3,15 @@
 
 ## Categories
 ---
-Zawiera informacje dotyczące kategorii możliwych do zamówienia usług (produktów):
+Zawiera informacje dotyczące kategorii
+możliwych do zamówienia usług (produktów):
 - CategoryID [int] - klucz główny, identyfikator kategorii
-- Name [nvarchar(15)] - nazwa kategorii 
+- Name [nvarchar(15)] - nazwa kategorii:
+	- 'Course' - kurs
+	- 'Meeting' - spotkanie (zjazd)
+	- 'Studies' - studia
+	- 'Subject' - przedmiot (zajęcia prowadzone w ramach pewnych studiów)
+	- 'Webinar' - webinar
 
 
 ```
@@ -22,7 +28,7 @@ CREATE TABLE Categories (
 Zawiera informacje dotyczące zamówień złożonych przez użytkowników:
 - OrderID [int] - klucz główny, identyfikator zamówienia
 - UserID [int] - identyfikator użytkownika składającego zamówienie
-- OrderDate [date] - data złożenia zamówienia
+- OrderDate [date] - data złożenia zamówienia w formacie 'rok-miesiąc-dzień'
 - PaymentLink [nvarchar(100)] - link do płatności
 
 ```
@@ -42,10 +48,14 @@ Zawiera informacje szczegółowe dotyczące danego zamówienia
 oraz jego zamówień składowych:
 - SubOrderID [int] - klucz główny, identyfikator zamówienia składowego
 - OrderID [int] - identyfikator zamówienia
-- PaymentDeadline [date] - termin płatności
-- ExtendedPaymentDeadline [date] - odroczony termin płatności
+- PaymentDeadline [date] - termin, do którego trzeba dokonać
+płatności w formacie 'rok-miesiąc-dzień'
+- ExtendedPaymentDeadline [date] - odroczony termin, do którego
+trzeba dokonać płatności w formacie 'rok-miesiąc-dzień' (jeśli jest podany,
+to musi być późniejszy od poprzedniego terminu płatności)
 - PaymentDate [date] - data dokonania płatności za dane zamówienie składowe
-- Price [money] - wpłacona kwota
+w formacie 'rok-miesiąc-dzień'
+- Price [money] - wpłacona kwota (musi być dodatnia)
 - ProductID [int] - identyfikator zamawianego produktu
 
 ```

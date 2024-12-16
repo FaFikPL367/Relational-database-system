@@ -8,9 +8,10 @@ Zawiera informacje dotyczące kursów:
 - CoordinatorID [int] - identyfikator koordynatora kursu
 - Name [nvarchar(30)] - nazwa kursu
 - Description [ntext] - opis kursu
-- StartDate [date] - data rozpoczęcia kursu
-- EndDate [date] - data zakończenia kursu
-- Price [money] - cena kursu
+- StartDate [date] - data rozpoczęcia kursu w formacie 'rok-miesiąc-dzień'
+- EndDate [date] - data zakończenia kursu w formacie 'rok-miesiąc-dzień'
+(musi być późniejsza od daty rozpoczęcia kursu)
+- Price [money] - cena kursu (domyślna 100, musi być dodatnia)
 
 ```
 CREATE TABLE Courses (
@@ -53,6 +54,11 @@ Zawiera informacje dotyczące modułów:
 - Name [nvarchar(50)] - nazwa modułu
 - Description [ntext] - opis modułu
 - TeacherID [int] - identyfikator prowadzącego dany moduł
+- Date [date] - termin odbywania się modułu w formacie 'rok-miesiąc-dzień'
+- BeginningTime [time(8)] - godzina rozpoczęcia modułu w formacie
+'godzina:minuty:sekundy'
+- Duration [time(8)] - czas trwania modułu w formacie
+'godziny:minuty:sekundy' (domyślny 1g 30min, musi być większy od 0)
 - TypeID [int] - identyfikator typu modułu
 
 ```
@@ -62,6 +68,9 @@ CREATE TABLE Modules (
    Name nvarchar(50)  NOT NULL,
    Description ntext  NOT NULL,
    TeacherID int  NOT NULL,
+   Date date  NOT NULL,
+   BeginningTime time(8)  NOT NULL,
+   Duration time(8)  NOT NULL DEFAULT '01:30:00' CHECK (Duration > '00:00:00'),
    TypeID int  NOT NULL,
    CONSTRAINT Modules_pk PRIMARY KEY  (ModuleID)
 );
@@ -72,7 +81,12 @@ CREATE TABLE Modules (
 ---
 Zawiera informację o typie danego modułu:
 - TypeID [int] - identyfikator typu modułu
-- TypeName [varchar(20)] - nazwa typu modułu
+- TypeName [varchar(20)] - nazwa typu modułu, określająca
+sposób jego odbywania się (domyślna 'In-person'):
+	- 'In-person' - stacjonarnie
+	- 'Online Sync' - online synchronicznie
+	- 'Online Async' - online asynchronicznie
+	- 'Hybrid' - hybrydowo
 
 ```
 CREATE TABLE Modules_Types (
@@ -119,7 +133,7 @@ CREATE TABLE Online_Sync_Modules (
 
 ## Users_Courses
 ---
-Zawiera informację o tym, na jakie kursy jest zapisany dany użytkownik
+Zawiera informacje o tym, na jakie kursy jest zapisany dany użytkownik:
 - UserID [int] - identyfikator użytkownika
 - CourseID [int] - identyfikator kursu
 
@@ -135,18 +149,20 @@ CREATE TABLE Users_Courses (
 ## Users_Modules_Passes
 ---
 Zawiera informację o zaliczeniu poszczególnych modułów
-przez danego użytkownika
+przez danego użytkownika:
 - UserID [int] - identyfikator użytkownika
 - CourseID [int] - identyfikator kursu, do którego należy dany moduł
 - ModuleID [int] - identyfikator modułu
-- Passed [bit] - informacja, czy moduł został zaliczony przez danego użytkownika
+- Passed [bit] - informacja, czy moduł został zaliczony (1 - zaliczony,
+0 - niezaliczony)
+przez danego użytkownika
 
 ```
 CREATE TABLE Users_Modules_Passes (
    UserID int  NOT NULL,
    CourseID int  NOT NULL,
    ModuleID int  NOT NULL,
-   Passed bit  NOT NULL,
+   Passed bit  NULL,
    CONSTRAINT UserID PRIMARY KEY  (ModuleID,UserID,CourseID)
 );
 ```

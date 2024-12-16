@@ -22,12 +22,15 @@ Zawiera informacje o Webinarach:
 - WebinarID [int] - identyfikator webinaru
 - Name [nvarchar(30)] - nazwa webinaru
 - Description [ntext] - opis webinaru
-- Date [date] - termin webinaru
-- BeginningTime [time(8)] - czas rozpoczęcia webinaru
-- Duration [time(8)] - czas trwania webinaru
+- Date [date] - termin odbywania się  webinaru w formacie
+'rok-miesiąc-dzień'
+- BeginningTime [time(8)] - czas rozpoczęcia webinaru w formacie
+'godzina:minuty:sekundy'
+- Duration [time(8)] - czas trwania webinaru w formacie
+'godzina:minuty:sekundy' (domyślny 1g 30min, musi być większy od 0)
 - TeacherID [int] - identyfikator prowadzącego dany webinar
 - TranslatorID [int] - identyfikator tłumacza
-- Price [money] - cena webinaru
+- Price [money] - cena webinaru (domyślna 0, musi być nieujemna)
 - LanguageID [int] - identyfikator języka, w którym prowadzony jest webinar
 - RecordingLink [nvarchar(100)] - link do nagrania z webinaru
 - MeetingLink [nvarchar(100)] - link do webinaru

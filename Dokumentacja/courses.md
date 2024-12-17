@@ -153,9 +153,8 @@ przez danego użytkownika:
 - UserID [int] - identyfikator użytkownika
 - CourseID [int] - identyfikator kursu, do którego należy dany moduł
 - ModuleID [int] - identyfikator modułu
-- Passed [bit] - informacja, czy moduł został zaliczony (1 - zaliczony,
-0 - niezaliczony)
-przez danego użytkownika
+- Passed [bit] - informacja, czy moduł został zaliczony
+przez danego użytkownika (1 - zaliczony, 0 - niezaliczony)
 
 ```
 CREATE TABLE Users_Modules_Passes (

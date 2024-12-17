@@ -94,469 +94,663 @@
 ---
 ## Diagram bazy danych
 
-## <img src="diagram_bazy_danych_raport3.png" width="2000"/>
+## <img src="schemat_bazy_danych.png" width="2000"/>
 
 ## <div class="page"/>
 ---
-## Opis poszczególnych tabel
+# ***Opis poszczególnych tabel***
+---
 
-### **Categories**
-```sql
-CREATE TABLE Categories (
-    CategoryID int  NOT NULL,
-    Name nvarchar(15)  NOT NULL,
-    CONSTRAINT Categories_pk PRIMARY KEY  (CategoryID)
-);
-```
+# Kategoria Users
+---
 
-### **Courses**
-```sql
-CREATE TABLE Courses (
-    CourseID int  NOT NULL,
-    CoordinatorID int  NOT NULL,
-    Name nvarchar(30)  NOT NULL,
-    Description ntext  NOT NULL,
-    StartDate date  NOT NULL,
-    EndDate date  NOT NULL,
-    Price money  NOT NULL,
-    TypeID int  NOT NULL,
-    CONSTRAINT Courses_pk PRIMARY KEY  (CourseID)
-);
-```
-
-### **Courses Modules**
-```sql
-CREATE TABLE Courses Modules (
-    CourseID int  NOT NULL,
-    ModuleID int  NOT NULL,
-    CONSTRAINT Courses Modules_pk PRIMARY KEY  (CourseID,ModuleID)
-);
-```
-
-### **Courses Types**
-```sql
-CREATE TABLE Courses Types (
-    TypeID int  NOT NULL,
-    TypeName varchar(20)  NOT NULL,
-    CONSTRAINT TypeID PRIMARY KEY  (TypeID)
-);
-```
-
-### **Employees**
-```sql
-CREATE TABLE Employees (
-    EmployeeID int  NOT NULL,
-    FirstName nvarchar(50)  NOT NULL,
-    LastName nvarchar(50)  NOT NULL,
-    Phone varchar(15)  NOT NULL,
-    Email nvarchar(50)  NOT NULL,
-    Address nvarchar(50)  NOT NULL,
-    City nvarchar(30)  NOT NULL,
-    PostalCode varchar(10)  NOT NULL,
-    PositionID int  NOT NULL,
-    CONSTRAINT Employees_pk PRIMARY KEY  (EmployeeID)
-);
-```
-
-### **Employees Postions**
-```sql
-CREATE TABLE Employees Postions (
-    PositionID int  NOT NULL,
-    PositionName nvarchar(30)  NOT NULL,
-    CONSTRAINT Employees Postions_pk PRIMARY KEY  (PositionID)
-);
-```
-
-### **In-person Meetings**
-```sql
-CREATE TABLE In-person Meetings (
-    MeetingID int  NOT NULL,
-    Faculty nvarchar(10)  NOT NULL,
-    Classroom int  NOT NULL,
-    TranslatorID int  NOT NULL,
-    CONSTRAINT In-person Meetings_pk PRIMARY KEY  (MeetingID)
-);
-```
-
-### **In-person Modules**
-```sql
-CREATE TABLE In-person Modules (
-    ModuleID int  NOT NULL,
-    Faculty nvarchar(10)  NOT NULL,
-    Classroom int  NOT NULL,
-    TranslatorID int  NOT NULL,
-    CONSTRAINT In-person Modules_pk PRIMARY KEY  (ModuleID)
-);
-```
-
-### **Meetings**
-```sql
-CREATE TABLE Meetings (
-    MeetingID int  NOT NULL,
-    TeacherID int  NOT NULL,
-    SubjectID int  NOT NULL,
-    StartDate date  NOT NULL,
-    BeginningTime time(15)  NOT NULL,
-    Duration time(15)  NOT NULL,
-    Price money  NOT NULL,
-    TypeID int  NOT NULL,
-    CONSTRAINT MeetingID PRIMARY KEY  (MeetingID)
-);
-```
-
-### **Modules**
-```sql
-CREATE TABLE Modules (
-    ModuleID int  NOT NULL,
-    Name nvarchar(50)  NOT NULL,
-    Description ntext  NOT NULL,
-    TeacherID int  NOT NULL,
-    TypeID int  NOT NULL,
-    CONSTRAINT Modules_pk PRIMARY KEY  (ModuleID)
-);
-```
-
-### **Online Async Meetings**
-```sql
-CREATE TABLE Online Async Meetings (
-    MeetingID int  NOT NULL,
-    RecordingLink nvarchar(100)  NOT NULL,
-    CONSTRAINT Online Async Meetings_pk PRIMARY KEY  (MeetingID)
-);
-```
-
-### **Online Async Modules**
-```sql
-CREATE TABLE Online Async Modules (
-    ModuleID int  NOT NULL,
-    RecordingLink nvarchar(100)  NOT NULL,
-    CONSTRAINT Online Async Modules_pk PRIMARY KEY  (ModuleID)
-);
-```
-
-### **Online Sync Meetings**
-```sql
-CREATE TABLE Online Sync Meetings (
-    MeetingID int  NOT NULL,
-    MeetingLink nvarchar(100)  NOT NULL,
-    RecordingLink nvarchar(100)  NOT NULL,
-    TranslatorID int  NOT NULL,
-    CONSTRAINT Online Sync Meetings_pk PRIMARY KEY  (MeetingID)
-);
-```
-
-### **Online Sync Modules**
-```sql
-CREATE TABLE Online Sync Modules (
-    ModuleID int  NOT NULL,
-    MeetingLink nvarchar(100)  NOT NULL,
-    RecordingLink nvarchar(100)  NOT NULL,
-    TranslatorID int  NOT NULL,
-    CONSTRAINT Online Sync Modules_pk PRIMARY KEY  (ModuleID)
-);
-```
-
-### **Order Details**
-```sql
-CREATE TABLE "Order Details" (
-    SubOrderID int  NOT NULL,
-    OrderID int  NOT NULL,
-    PaymentDate date  NOT NULL,
-    Price int  NOT NULL,
-    ProductID int  NOT NULL,
-    PaymentLink nvarchar(100)  NOT NULL,
-    CONSTRAINT "Order Details_pk" PRIMARY KEY  (SubOrderID)
-);
-```
-
-### **Orders**
-```sql
-CREATE TABLE Orders (
-    OrderID int  NOT NULL,
-    UserID int  NOT NULL,
-    TotalPrice money  NOT NULL,
-    OrderDate int  NOT NULL,
-    CONSTRAINT Orders_pk PRIMARY KEY  (OrderID)
-);
-```
-
-### **Practices**
-```sql
-CREATE TABLE Practices (
-    PracticeID int  NOT NULL,
-    Description ntext  NOT NULL,
-    CompanyName nvarchar(30)  NOT NULL,
-    Country nvarchar(30)  NOT NULL,
-    City nvarchar(30)  NOT NULL,
-    Address nvarchar(30)  NOT NULL,
-    Phone varchar(15)  NOT NULL,
-    Email nvarchar(50)  NOT NULL,
-    CONSTRAINT Practices_pk PRIMARY KEY  (PracticeID)
-);
-```
-
-### **Products**
-```sql
-CREATE TABLE Products (
-    ProductID int  NOT NULL,
-    CategoryID int  NOT NULL,
-    CONSTRAINT Products_pk PRIMARY KEY  (ProductID)
-);
-```
-
-### **Studies**
-```sql
-CREATE TABLE Studies (
-    StudiesID int  NOT NULL,
-    CoordinatorID int  NOT NULL,
-    Name nvarchar(30)  NOT NULL,
-    Description ntext  NOT NULL,
-    StartDate date  NOT NULL,
-    EndDate date  NOT NULL,
-    Price money  NOT NULL,
-    TypeID int  NOT NULL,
-    CONSTRAINT Studies_pk PRIMARY KEY  (StudiesID)
-);
-```
-
-### **Studies Practices**
-```sql
-CREATE TABLE Studies Practices (
-    StudiesID int  NOT NULL,
-    PracticeID int  NOT NULL,
-    StartDate date  NOT NULL,
-    CONSTRAINT Studies Practices_pk PRIMARY KEY  (StudiesID,PracticeID)
-);
-```
-
-### **Studies Subjects**
-```sql
-CREATE TABLE Studies Subjects (
-    StudiesID int  NOT NULL,
-    SubjectID int  NOT NULL,
-    CONSTRAINT Studies Subjects_pk PRIMARY KEY  (StudiesID,SubjectID)
-);
-```
-
-### **Studies/Meetings Types**
-```sql
-CREATE TABLE Studies/Meetings Types (
-    TypeID int  NOT NULL,
-    TypeName varchar(20)  NOT NULL,
-    CONSTRAINT TypeID PRIMARY KEY  (TypeID)
-);
-```
-
-### **Subjects**
-```sql
-CREATE TABLE Subjects (
-    SubjectID int  NOT NULL,
-    Name nvarchar(50)  NOT NULL,
-    TeacherID int  NOT NULL,
-    Description ntext  NOT NULL,
-    CONSTRAINT Subjects_pk PRIMARY KEY  (SubjectID)
-);
-```
-
-### **Teachers Subjects**
-```sql
-CREATE TABLE Teachers Subjects (
-    TeacherID int  NOT NULL,
-    SubjectID int  NOT NULL,
-    CONSTRAINT Teachers Subjects_pk PRIMARY KEY  (TeacherID,SubjectID)
-);
-```
-
-### **Translators**
-```sql
-CREATE TABLE Translators (
-    TranslatorID int  NOT NULL,
-    FirstName nvarchar(50)  NOT NULL,
-    LastName nvarchar(50)  NOT NULL,
-    Phone varchar(15)  NOT NULL,
-    Email nvarchar(50)  NOT NULL,
-    Address nvarchar(50)  NOT NULL,
-    City nvarchar(30)  NOT NULL,
-    PostalCode varchar(10)  NOT NULL,
-    CONSTRAINT UserID PRIMARY KEY  (TranslatorID)
-);
-```
-
-### **Translators Languages**
-```sql
-CREATE TABLE Translators Languages (
-    TranslatorID int  NOT NULL,
-    Languages nvarchar(30)  NOT NULL,
-    CONSTRAINT Translators Languages_pk PRIMARY KEY  (TranslatorID)
-);
-```
-
-### **User Studies Grade**
-```sql
-CREATE TABLE "User Studies Grade" (
-    UserID int  NOT NULL,
-    StudiesID int  NOT NULL,
-    Grade int  NOT NULL,
-    CONSTRAINT "User Studies Grade_pk" PRIMARY KEY  (UserID,StudiesID)
-);
-```
-
-### **Users**
-```sql
+## Tabela **Users**
+Zawiera ona informacje o użytkownikach:
+ * **UserID** [int] - klucz główny, identyfikator użytkownika
+ * **FirstName** [nvarchar(50)] - imię użytkownika
+ * **LastName** [nvarchar(50)] - nazwisko użytkownika
+ * **Phone** [varchar(15), unique] - numer telefonu użytkownika 
+    * warunki: LEN(Phone) = 15 AND ISNUMERIC(Phone) = 1
+ * **Email** [nvarchar(50), unique] - email użytkownika
+    * warunki: Email LIKE '%_@%.%'
+ * **Address** [nvarchar(50)] - adres użytkownika
+ * **City** [nvarchar(30)] - miasto użytkownika
+ * **PostalCode** [varcahr(10)] - kod pocztowy użytkownika
+``` SQL
 CREATE TABLE Users (
-    UserID int  NOT NULL,
-    FirstName nvarchar(50)  NOT NULL,
-    LastName nvarchar(50)  NOT NULL,
-    Phone varchar(15)  NOT NULL,
-    Email nvarchar(50)  NOT NULL,
-    Address nvarchar(50)  NOT NULL,
-    City nvarchar(30)  NOT NULL,
-    PostalCode varchar(10)  NOT NULL,
-    CONSTRAINT UserID PRIMARY KEY  (UserID)
+   UserID int  NOT NULL,
+   FirstName nvarchar(50)  NOT NULL,
+   LastName nvarchar(50)  NOT NULL,
+   Phone varchar(15)  NOT NULL CHECK (LEN(Phone) = 15 and ISNUMERIC(Phone) = 1),
+   Email nvarchar(50)  NOT NULL CHECK (Email LIKE '%_@%.%'),
+   Address nvarchar(50)  NOT NULL,
+   City nvarchar(30)  NOT NULL,
+   PostalCode varchar(10)  NOT NULL,
+   CONSTRAINT UserPhone UNIQUE (Phone),
+   CONSTRAINT UserEmail UNIQUE (Email),
+   CONSTRAINT UserID PRIMARY KEY  (UserID)
 );
 ```
 
-### **Users Courses**
-```sql
-CREATE TABLE Users Courses (
-    UserID int  NOT NULL,
-    CourseID int  NOT NULL,
-    CONSTRAINT Users Courses_pk PRIMARY KEY  (UserID,CourseID)
+## <hr>
+## Tabela **Employees**
+Zawiera informacje o pracownikach:
+ * **EmployeeID** [int] - klucz główny, identyfikator pracownika
+ * **FirstName** [nvarchar(50)] - imię pracownika
+ * **LastName** [nvarchar(50)] - nazwisko pracownika
+ * **Phone** [varcahr(15), unique] - numer telefonu pracownika
+    * warunki: LEN(Phone) = 15 AND ISNUMERIC(Phone) = 1
+ * **Email** [nvarchar(50), unique] - email pracownika
+    * warunki: Email LIKE '%_@%.%'
+ * **Address** [nvarchar(50)] - adres pracownika
+ * **City** [nvarchar(30)] - miasto pracownika
+ * **PostalCode** [varchar(10)] - kod pocztowy pracownika
+ * **PositionID** [int] - identyfikator pozycji pracownika
+```SQL
+CREATE TABLE Employees (
+   EmployeeID int  NOT NULL,
+   FirstName nvarchar(50)  NOT NULL,
+   LastName nvarchar(50)  NOT NULL,
+   Phone varchar(15)  NOT NULL CHECK (LEN(Phone) = 15 and ISNUMERIC(Phone) = 1),
+   Email nvarchar(50)  NOT NULL CHECK (Email LIKE '%_@%.%'),
+   Address nvarchar(50)  NOT NULL,
+   City nvarchar(30)  NOT NULL,
+   PostalCode varchar(10)  NOT NULL,
+   PositionID int  NOT NULL,
+   CONSTRAINT EmployeePhone UNIQUE (Phone),
+   CONSTRAINT EmployeeEmail UNIQUE (Email),
+   CONSTRAINT Employees_pk PRIMARY KEY  (EmployeeID)
 );
 ```
 
-### **Users Meetings Attendance**
-```sql
-CREATE TABLE Users Meetings Attendance (
-    UserID int  NOT NULL,
-    MeetingID int  NOT NULL,
-    SubjectID int  NOT NULL,
-    Present bit  NOT NULL,
-    CONSTRAINT Users Meetings Attendance_pk PRIMARY KEY  (MeetingID,UserID,SubjectID)
+## <hr>
+## Tabela **Employees_Positions**
+Zawiera informacje o możliwych pozycjach pracowników:
+ * **PositionID** [int] - klucz główny, identyfikator pozycji
+ * **PositionName** [nvarchar(30)] - nazwa pozycji
+```SQL
+CREATE TABLE Employees_Postions (
+   PositionID int  NOT NULL,
+   PositionName nvarchar(30)  NOT NULL,
+   CONSTRAINT Employees_Postions_pk PRIMARY KEY  (PositionID)
 );
 ```
 
-### **Users Modules Passes**
-```sql
-CREATE TABLE Users Modules Passes (
-    UserID int  NOT NULL,
-    CourseID int  NOT NULL,
-    ModuleID int  NOT NULL,
-    Passed bit  NOT NULL,
-    CONSTRAINT UserID PRIMARY KEY  (ModuleID,UserID,CourseID)
+## Tabela **Translators**
+Zwiera informacje o tłumaczach:
+ * **TranslatorID** [int] - klucz główny, identyfikator tłumacza
+ * **FirstName** [nvarchar(50)] - imię tłumacza
+ * **LastName** [nvarchar(50)] - nazwisko tłumacza
+ * **Phone** [varchar(15), unique] - numer telefonu tłumacza
+    * warunki: LEN(Phone) = 15 AND ISNUMERIC(Phone) = 1
+ * **Email** [nvarchar(50), unique] - email tłumacza
+    * warunki: Email LIKE '%_@%.%'
+ * **Address** [nvarchar(50)] - adres tłumacza
+ * **City** [nvarchar(30)] - miasto tłumacza
+ * **PostalCode** [varchar(10)] - kod pocztowy tłumacza
+```SQL
+CREATE TABLE Translators (
+   TranslatorID int  NOT NULL,
+   FirstName nvarchar(50)  NOT NULL,
+   LastName nvarchar(50)  NOT NULL,
+   Phone varchar(15)  NOT NULL CHECK (LEN(Phone) = 15 and ISNUMERIC(Phone) = 1),
+   Email nvarchar(50)  NOT NULL CHECK (Email LIKE '%_@%.%'),
+   Address nvarchar(50)  NOT NULL,
+   City nvarchar(30)  NOT NULL,
+   PostalCode varchar(10)  NOT NULL,
+   CONSTRAINT TranslatorPhone UNIQUE (Phone),
+   CONSTRAINT TranslatorEmail UNIQUE (Email),
+   CONSTRAINT UserID PRIMARY KEY  (TranslatorID)
 );
 ```
 
-### **Users Practices Attendance**
-```sql
-CREATE TABLE Users Practices Attendance (
-    UserID int  NOT NULL,
-    StudiesID int  NOT NULL,
-    PracticeID int  NOT NULL,
-    Present bit  NOT NULL,
-    CONSTRAINT Users Practices Attendance_pk PRIMARY KEY  (UserID,StudiesID,PracticeID)
+## <hr>
+## Tabela **Translator_Languages**
+Zawiera informajce o językach jakimi posługują się tłumacze:
+ * **TranslatorID** [int] - część klucza głównego, identyfikator tłumacza
+ * **LanguageID** [int] - klucz obcy, identyfikator języka
+```SQL
+CREATE TABLE Translators_Languages (
+   TranslatorID int  NOT NULL,
+   LanguageID int  NOT NULL,
+   CONSTRAINT Translators_Languages_pk PRIMARY KEY  (TranslatorID)
 );
 ```
 
-### **Users Studies**
-```sql
-CREATE TABLE Users Studies (
-    UserID int  NOT NULL,
-    StudiesID int  NOT NULL,
-    CONSTRAINT Users Studies_pk PRIMARY KEY  (UserID,StudiesID)
+## <hr>
+## Tabela **Languages**
+Zawiera możliwe języki tłumaczenia:
+ * **LanguageID** [int] - klucz główny, identyfikator języka
+ * **LanguaneName** [nvarchar(30)] - nazwa języka
+```SQL
+CREATE TABLE Languages (
+   LanguageID int  NOT NULL,
+   LanguageName nvarchar(30)  NOT NULL,
+   CONSTRAINT Languages_pk PRIMARY KEY  (LanguageID)
+);
+```
+---
+# Kategoria Courses
+---
+
+## Tabela **Courses**
+Zawiera informacje dotyczące kursów:
+- **CourseID** [int] - klucz główny, identyfikator kursu
+- **CoordinatorID** [int] - identyfikator koordynatora kursu
+- **Name** [nvarchar(30)] - nazwa kursu
+- **Description** [ntext] - opis kursu
+- **StartDate** [date] - data rozpoczęcia kursu w formacie 'rok-miesiąc-dzień'
+- **EndDate** [date] - data zakończenia kursu w formacie 'rok-miesiąc-dzień'
+(musi być późniejsza od daty rozpoczęcia kursu)
+- **Price** [money] - cena kursu (domyślna 100, musi być dodatnia)
+
+```SQL
+CREATE TABLE Courses (
+   CourseID int  NOT NULL,
+   CoordinatorID int  NOT NULL,
+   Name nvarchar(30)  NOT NULL,
+   Description ntext  NOT NULL,
+   StartDate date  NOT NULL,
+   EndDate date  NOT NULL CHECK (EndDate > StartDate),
+   Price money  NOT NULL DEFAULT 100 CHECK (Price > 0),
+   CONSTRAINT Courses_pk PRIMARY KEY  (CourseID)
 );
 ```
 
-### **Users Webinars**
-```sql
-CREATE TABLE Users Webinars (
-    UserID int  NOT NULL,
-    WebinarID int  NOT NULL,
-    CONSTRAINT Users Webinars_pk PRIMARY KEY  (UserID,WebinarID)
+## <hr>
+## Tabela In-**person_Modules**
+Zawiera informacje o modułach odbywających się stacjonarnie:
+- **ModuleID** [int] - klucz główny, identyfikator modułu
+- **Classroom** [int] - numer sali, w której odbywają się zajęcia
+- **TransalatorID** [int] - identyfikator tłumacza
+- **Limit** [int] - limit osób mogących uczestniczyć w danych zajęciach
+
+```SQL
+CREATE TABLE In-person_Modules (
+   ModuleID int  NOT NULL,
+   Classroom int  NOT NULL,
+   TranslatorID int  NULL,
+   Limit int  NOT NULL,
+   CONSTRAINT In-person_Modules_pk PRIMARY KEY  (ModuleID)
 );
 ```
 
-### **Webinars**
-```sql
+## <hr>
+## Tabela **Modules**
+Zawiera informacje dotyczące modułów:
+- **ModuleID** [int] - klucz główny, identyfikator modułu
+- **CourseID** [int] - identyfikator kursu, do którego należy dany moduł
+- **Name** [nvarchar(50)] - nazwa modułu
+- **Description** [ntext] - opis modułu
+- **TeacherID** [int] - identyfikator prowadzącego dany moduł
+- **Date** [date] - termin odbywania się modułu w formacie 'rok-miesiąc-dzień'
+- **BeginningTime** [time(8)] - godzina rozpoczęcia modułu w formacie
+'godzina:minuty:sekundy'
+- **Duration** [time(8)] - czas trwania modułu w formacie
+'godziny:minuty:sekundy' (domyślny 1g 30min, musi być większy od 0)
+- **TypeID** [int] - identyfikator typu modułu
+```SQL
+CREATE TABLE Modules (
+   ModuleID int  NOT NULL,
+   CourseID int  NOT NULL,
+   Name nvarchar(50)  NOT NULL,
+   Description ntext  NOT NULL,
+   TeacherID int  NOT NULL,
+   Date date  NOT NULL,
+   BeginningTime time(8)  NOT NULL,
+   Duration time(8)  NOT NULL DEFAULT '01:30:00' CHECK (Duration > '00:00:00'),
+   TypeID int  NOT NULL,
+   CONSTRAINT Modules_pk PRIMARY KEY  (ModuleID)
+);
+```
+
+## <hr>
+## Tabela **Modules_Types**
+Zawiera informację o typie danego modułu:
+- **TypeID** [int] - identyfikator typu modułu
+- **TypeName** [varchar(20)] - nazwa typu modułu, określająca
+sposób jego odbywania się (domyślna 'In-person'):
+	- 'In-person' - stacjonarnie
+	- 'Online Sync' - online synchronicznie
+	- 'Online Async' - online asynchronicznie
+	- 'Hybrid' - hybrydowo
+
+```SQL
+CREATE TABLE Modules_Types (
+   TypeID int  NOT NULL,
+   TypeName varchar(20)  NOT NULL DEFAULT 'In-person' CHECK (TypeName IN ('In-person', 'Online Sync', 'Online Async', 'Hybrid')),
+   CONSTRAINT TypeID PRIMARY KEY  (TypeID)
+);
+```
+
+## <hr>
+## Tabela **Online_Async_Modules**
+Zawiera informacje o modułach odbywających się online asynchronicznie:
+- **ModuleID** [int] - identyfikator modułu
+- **RecordingLink** [nvarchar(100)] - link do nagrania
+
+```SQL
+CREATE TABLE Online_Async_Modules (
+   ModuleID int  NOT NULL,
+   RecordingLink nvarchar(100)  NOT NULL,
+   CONSTRAINT Online_Async_Modules_pk PRIMARY KEY  (ModuleID)
+);
+```
+
+## <hr>
+## Tabela **Online_Sync_Modules**
+Zawiera informacje o modułach odbywających się online synchronicznie:
+- **ModuleID** [int] - identyfikator modułu
+- **MeetingLink** [nvarchar(100)] - link do spotkania
+- **RecordingLink** [nvarchar(100)] - link do nagrania ze spotkania
+- **TranslatorID** [int] - identyfikator tłumacza
+
+```SQL
+CREATE TABLE Online_Sync_Modules (
+   ModuleID int  NOT NULL,
+   MeetingLink nvarchar(100)  NOT NULL,
+   RecordingLink nvarchar(100)  NOT NULL,
+   TranslatorID int  NULL,
+   CONSTRAINT Online_Sync_Modules_pk PRIMARY KEY  (ModuleID)
+);
+```
+
+## <hr>
+## Tabela **Users_Courses**
+Zawiera informacje o tym, na jakie kursy jest zapisany dany użytkownik:
+- **UserID** [int] - identyfikator użytkownika
+- **CourseID** [int] - identyfikator kursu
+
+```SQL
+CREATE TABLE Users_Courses (
+   UserID int  NOT NULL,
+   CourseID int  NOT NULL,
+   CONSTRAINT Users_Courses_pk PRIMARY KEY  (UserID,CourseID)
+);
+```
+
+## <hr>
+## Tabela **Users_Modules_Passes**
+Zawiera informację o zaliczeniu poszczególnych modułów
+przez danego użytkownika:
+- **UserID** [int] - identyfikator użytkownika
+- **CourseID** [int] - identyfikator kursu, do którego należy dany moduł
+- **ModuleID** [int] - identyfikator modułu
+- **Passed** [bit] - informacja, czy moduł został zaliczony
+przez danego użytkownika (1 - zaliczony, 0 - niezaliczony)
+
+```SQL
+CREATE TABLE Users_Modules_Passes (
+   UserID int  NOT NULL,
+   CourseID int  NOT NULL,
+   ModuleID int  NOT NULL,
+   Passed bit  NULL,
+   CONSTRAINT UserID PRIMARY KEY  (ModuleID,UserID,CourseID)
+);
+```
+---
+# Kategoria Studies
+---
+
+## Tabela **Studies**
+Zawiera informajce o dostępnych studiach:
+ * **StudiesID** [int] - klucz główny, identyfikator studiów
+ * **CoordinatorID** [int] - identyfikator kordynatora studiów
+ * **Name** [nvarchar(30)] - nazwa studiów
+ * **Description** [ntext] - obpis studiów
+ * **StartDate** [date] - data rozpoczęcia studiów
+ * **EndDate** [date] - data zakończenia studiów
+ * **Price** [money] - cena wpisowego na studiach
+   * warunki: Price > 0
+   * wartość domyślna: 1200
+```SQL
+CREATE TABLE Studies (
+   StudiesID int  NOT NULL,
+   CoordinatorID int  NOT NULL,
+   Name nvarchar(30)  NOT NULL,
+   Description ntext  NOT NULL,
+   StartDate date  NOT NULL,
+   EndDate date  NOT NULL,
+   Price money  NOT NULL DEFAULT 1200 CHECK (Price > 0),
+   CONSTRAINT Studies_pk PRIMARY KEY  (StudiesID)
+);
+```
+
+## <hr>
+## Tabela **Subjects**
+Zawiera informajce o przedmiotach:
+ * **SubjectID** [int] - klucz główny, identyfikator przedmiotu
+ * **StudiesID** [int] - klucz obcy, identyfikator studiów
+ * **Name** [nvarchar(50)] - nazwa przedmiotu
+ * **TeacherID** [int] - identyfikator koordynatora przedmiotu
+ * **Description** [ntext] - opis przedmiotu
+```SQL
+CREATE TABLE Subjects (
+   SubjectID int  NOT NULL,
+   StudiesID int  NOT NULL,
+   Name nvarchar(50)  NOT NULL,
+   TeacherID int  NOT NULL,
+   Description ntext  NOT NULL,
+   CONSTRAINT Subjects_pk PRIMARY KEY  (SubjectID)
+);
+```
+
+## <hr>
+## Tabela **Meetings**
+Zawiera informacje o pojedynczym spotkaniu na studiach z danego przedmiotu:
+ * **MeetingID** [int] - klucz główny, identyfikator spotkania
+ * **TeacheID** [int] - klucz obcy, identyfikator nauczyciela
+ * **SubjectID** [int] - klucz obcy - identyfikator przedmiotu, z którego jest dane spotkanie
+ * **Date** [date] - data spotkania
+ * **BeginningTime** [time(0)] - godzina rozpoczęcia spotkania
+ * **Duration** [time(0)] - czas trwania spotkania
+   * warunki: Duration > '00:00:00'
+   * wartość domyślna: '01:30:00'
+ * **Price** [money] - cena pojedynczego spotkania
+   * warunki: Price > 0
+   * wartość domyślna: 120
+ * **TypeID** [int] - klucz obcy, identyfikator typu spotkania np. stacjonarne itd.
+```SQL
+CREATE TABLE Meetings (
+   MeetingID int  NOT NULL,
+   TeacherID int  NOT NULL,
+   SubjectID int  NOT NULL,
+   Date date  NOT NULL,
+   BeginningTime time(0)  NOT NULL,
+   Duration time(0)  NOT NULL DEFAULT 01:30:00 CHECK (Duration > '00:00:00'),
+   Price money  NOT NULL DEFAULT 120 CHECK (Price > 0),
+   TypeID int  NOT NULL,
+   CONSTRAINT MeetingID PRIMARY KEY  (MeetingID)
+);
+```
+
+## <hr>
+## Tabela **Meeting_Types**
+Zawiera informacje o rodzajach typów spotkań:
+ * **TypeID** [int] - klucz główny, identyfikator typu
+ * **TypeName** [varchar(20)] - nazwa typu
+```SQL
+CREATE TABLE Meetings_Types (
+   TypeID int  NOT NULL,
+   TypeName varchar(20)  NOT NULL,
+   CONSTRAINT TypeID PRIMARY KEY  (TypeID)
+);
+```
+
+## <hr>
+## Tabela **In-person_Meetings**
+Zawiera dodatkowe informacje dla spotkach stacjonarnych:
+ * **MeetingID** [int] - klucz główny, identyfikator spotkania
+ * **Classroom** [int] - numer sali spotkania
+ * **TranslatorID** [int, nullable] - identyfikator tłumacza
+ * **LanguageID** [int] - klucz obcy, identyfikator języka w jakim odbywa się spotkanie
+ * **Limit** [int] - limit miejsc na spotkaniu
+   * warunki: Limit > 0
+   * wartość domyślna: 25
+```SQL
+CREATE TABLE In_person_Meetings (
+   MeetingID int  NOT NULL,
+   Classroom int  NOT NULL,
+   TranslatorID int  NULL,
+   LanguageID int  NOT NULL,
+   Limit int  NOT NULL DEFAULT 25 CHECK (Limit > 0),
+   CONSTRAINT In_person_Meetings_pk PRIMARY KEY  (MeetingID)
+);
+```
+
+## <hr>
+## Tabela **Online_Sync_Meetings**
+Zaweira dodatkowe informacje dla spotkań online synchronicznie:
+ * **MeetingID** [int] - klucz główny, identyfikator spotkania
+ * **MeetingLink** [nvarchar(100)] - link do spotkania
+ * **RecodringLink** [nvarchar(100)] - link do nagrania spotkania
+ * **TranslatorID** [int, nullable] - identyfikator tłumacza
+ * **LanguageID** [int] - identyfiaktor języka w jakim odbywa się spotkanie
+```SQL
+CREATE TABLE Online_Sync_Meetings (
+   MeetingID int  NOT NULL,
+   MeetingLink nvarchar(100)  NOT NULL,
+   RecordingLink nvarchar(100)  NOT NULL,
+   TranslatorID int  NULL,
+   LanguageID int  NOT NULL,
+   CONSTRAINT Online_Sync_Meetings_pk PRIMARY KEY  (MeetingID)
+);
+```
+
+## <hr>
+## Tabela **Online_Async_Meetings**
+Zawiera dodatkowe informacje dla spotkań online asynchronicznie:
+ * **MeetingID** [int] - klucz główny, identyfikator spotkania
+ * **RecordingLink** [nvarchar(100)] - link do nagrania
+```SQL
+CREATE TABLE Online_Async_Meetings (
+   MeetingID int  NOT NULL,
+   RecordingLink nvarchar(100)  NOT NULL,
+   CONSTRAINT Online_Async_Meetings_pk PRIMARY KEY  (MeetingID)
+);
+```
+
+## <hr>
+## Tabela **User_Meetings_Attendance**
+Zawiera informacje o obecności studenta na spotkaniu:
+ * **UserID** [int] - część klucz głównego, identyfikator studenta
+ * **MeetingID** [int] - część klucza głównego, identyfikator spotkania
+ * **SubjectID** [int] - część klucza głównego, identyfikator przedmiotu
+ * **Present** [bit, nullable] - informacja o obecności studenta na spotkaniu
+``` SQL
+CREATE TABLE Users_Meetings_Attendance (
+   UserID int  NOT NULL,
+   MeetingID int  NOT NULL,
+   SubjectID int  NOT NULL,
+   Present bit  NULL,
+   CONSTRAINT Users_Meetings_Attendance_pk PRIMARY KEY  (MeetingID,UserID,SubjectID)
+);
+```
+
+## <hr>
+## Tabela **Practices**
+Zawiera informacje o firmach gdzie mogą być odbywane praktyki:
+ * **PracticeID** [int] - klucz główny, identyfikator praktyki
+ * **Description** [ntext] - opis firmy gdzie odbywają się praktyki
+ * **CompanyName** [nvarchar(30)] - nazwa firmy
+ * **Country** [nvarchar(30)] - kraj gdzie jest zarejestrowana firma
+ * **City** [nvarchar(30)] - miasto siedziby firmy
+ * **Address** [nvarchar(30)] - adres firmy
+ * **Phone** [varchar(15)] - numer telefonu do firmy
+   * warunki: LEN(Phone) = 15 AND ISNUMERIC(Phone) = 1
+ * **Email** [nvarchar(50)] - email firmy
+   * warunki: Email LIKE '%_@%.%'
+```SQL
+CREATE TABLE Practices (
+   PracticeID int  NOT NULL,
+   Description ntext  NOT NULL,
+   CompanyName nvarchar(30)  NOT NULL,
+   Country nvarchar(30)  NOT NULL,
+   City nvarchar(30)  NOT NULL,
+   Address nvarchar(30)  NOT NULL,
+   Phone varchar(15)  NOT NULL CHECK (LEN(Phone) = 15 AND ISNUMERIC(Phone) = 1),
+   Email nvarchar(50)  NOT NULL CHECK (Email LIKE '%_@%.%'),
+   CONSTRAINT Phone UNIQUE (Phone),
+   CONSTRAINT Email UNIQUE (Email),
+   CONSTRAINT Practices_pk PRIMARY KEY  (PracticeID)
+);
+```
+
+## <hr>
+## Tabela **Users_Practices_Attendance**
+Zawiera informacje o zdaniu praktyk przez danego studenta:
+ * **UserID** [int] - część klucz głównego, identyfikator studenta
+ * **StudiesID** [int] - część klucza głównego, identyfikator studiów
+ * **PracticeID** [int] - część klucza głównego, identyfikator praktyk
+ * **Present** [bit, nullable] - informacja o zdaniu praktyk
+```SQL
+CREATE TABLE Users_Practices_Attendance (
+   UserID int  NOT NULL,
+   StudiesID int  NOT NULL,
+   PracticeID int  NOT NULL,
+   Present bit  NULL,
+   CONSTRAINT Users_Practices_Attendance_pk PRIMARY KEY  (UserID,StudiesID,PracticeID)
+);
+```
+
+## <hr>
+## Tabela **Users_Studies**
+Zawiera informacje studentach przypisanych do danych studiów:
+ * **UserID** [int] - część klucza głównego, identyfikator studenta
+ * **StudiesID** [int] - część klucza głównego, identyfikator studiów
+ * **Grade** [int] - wartość oceny studenta na koniec studiów
+   * warunki: Grade >=2 AND Grade <= 5
+```SQL
+CREATE TABLE Users_Studies (
+   UserID int  NOT NULL,
+   StudiesID int  NOT NULL,
+   Grade int  NULL CHECK (Grade >=2 AND Grade <= 5),
+   CONSTRAINT Users_Studies_pk PRIMARY KEY  (UserID,StudiesID)
+);
+```
+---
+# Kategoria Webinars
+---
+
+## Tabela **Users_Webinars**
+Zawiera informacje o tym, na jakie Webinary jest zapisany dany użytkownik:
+- UserID [int] - identyfikator użytkownika
+- WebinarID [int] - identyfikator webinaru
+
+```SQL
+CREATE TABLE Users_Webinars (
+   UserID int  NOT NULL,
+   WebinarID int  NOT NULL,
+   CONSTRAINT Users_Webinars_pk PRIMARY KEY  (UserID,WebinarID)
+);
+```
+
+## <hr>
+## Tabela **Webinars**
+---
+Zawiera informacje o Webinarach:
+- WebinarID [int] - identyfikator webinaru
+- Name [nvarchar(30)] - nazwa webinaru
+- Description [ntext] - opis webinaru
+- Date [date] - termin odbywania się  webinaru w formacie
+'rok-miesiąc-dzień'
+- BeginningTime [time(8)] - czas rozpoczęcia webinaru w formacie
+'godzina:minuty:sekundy'
+- Duration [time(8)] - czas trwania webinaru w formacie
+'godziny:minuty:sekundy' (domyślny 1g 30min, musi być większy od 0)
+- TeacherID [int] - identyfikator prowadzącego dany webinar
+- TranslatorID [int] - identyfikator tłumacza
+- Price [money] - cena webinaru (domyślna 0, musi być nieujemna)
+- LanguageID [int] - identyfikator języka, w którym prowadzony jest webinar
+- RecordingLink [nvarchar(100)] - link do nagrania z webinaru
+- MeetingLink [nvarchar(100)] - link do webinaru
+
+```SQL
 CREATE TABLE Webinars (
-    WebinarID int  NOT NULL,
-    Name nvarchar(30)  NOT NULL,
-    Description ntext  NOT NULL,
-    Date date  NOT NULL,
-    BeginningTime time(8)  NOT NULL,
-    Duration time(8)  NOT NULL,
-    TeacherID int  NOT NULL,
-    TranslatorID int  NOT NULL,
-    Price money  NOT NULL,
-    Language nvarchar(30)  NOT NULL,
-    RecordingLink nvarchar(100)  NOT NULL,
-    MeetingLink nvarchar(100)  NOT NULL,
-    CONSTRAINT Webinars_pk PRIMARY KEY  (WebinarID)
+   WebinarID int  NOT NULL,
+   Name nvarchar(30)  NOT NULL,
+   Description ntext  NOT NULL,
+   Date date  NOT NULL,
+   BeginningTime time(8)  NOT NULL,
+   Duration time(8)  NOT NULL DEFAULT '01:30:00' CHECK (Duration > '00:00:00'),
+   TeacherID int  NOT NULL,
+   TranslatorID int  NULL,
+   Price money  NOT NULL DEFAULT 0 CHECK (Price >= 0),
+   LanguageID int  NOT NULL,
+   RecordingLink nvarchar(100)  NOT NULL,
+   MeetingLink nvarchar(100)  NOT NULL,
+   CONSTRAINT Webinars_pk PRIMARY KEY  (WebinarID)
+);
+```
+---
+# Kategoria Orders
+---
+
+## Tabela **Categories**
+Zawiera informacje dotyczące kategorii
+możliwych do zamówienia usług (produktów):
+- **CategoryID** [int] - klucz główny, identyfikator kategorii
+- **Name** [nvarchar(15)] - nazwa kategorii:
+	- 'Course' - kurs
+	- 'Meeting' - spotkanie (zjazd)
+	- 'Studies' - studia
+	- 'Subject' - przedmiot (zajęcia prowadzone w ramach pewnych studiów)
+	- 'Webinar' - webinar
+```SQL
+CREATE TABLE Categories (
+   CategoryID int  NOT NULL,
+   Name nvarchar(15)  NOT NULL CHECK (Name IN ('Course', 'Meeting', 'Studies', 'Subject', 'Webinar')),
+   CONSTRAINT Categories_pk PRIMARY KEY  (CategoryID)
+);
+```
+
+## <hr>
+## Tabela **Orders**
+Zawiera informacje dotyczące zamówień złożonych przez użytkowników:
+- **OrderID** [int] - klucz główny, identyfikator zamówienia
+- **UserID** [int] - identyfikator użytkownika składającego zamówienie
+- **OrderDate** [date] - data złożenia zamówienia w formacie 'rok-miesiąc-dzień'
+- **PaymentLink** [nvarchar(100)] - link do płatności
+```SQL
+CREATE TABLE Orders (
+   OrderID int  NOT NULL,
+   UserID int  NOT NULL,
+   OrderDate date  NOT NULL,
+   PaymentLink nvarchar(100)  NOT NULL,
+   CONSTRAINT Orders_pk PRIMARY KEY  (OrderID)
+);
+```
+
+## <hr>
+## Tabela **Orders_Details**
+Zawiera informacje szczegółowe dotyczące danego zamówienia
+oraz jego zamówień składowych:
+- **SubOrderID** [int] - klucz główny, identyfikator zamówienia składowego
+- **OrderID** [int] - identyfikator zamówienia
+- PaymentDeadline [date] - termin, do którego trzeba dokonać
+**płatności** w formacie 'rok-miesiąc-dzień'
+- **ExtendedPaymentDeadline** [date] - odroczony termin, do którego
+trzeba dokonać płatności w formacie 'rok-miesiąc-dzień' (jeśli jest podany,
+to musi być późniejszy od poprzedniego terminu płatności)
+- **PaymentDate** [date] - data dokonania płatności za dane zamówienie składowe
+w formacie 'rok-miesiąc-dzień'
+- **Price** [money] - wpłacona kwota (musi być dodatnia)
+- **ProductID** [int] - identyfikator zamawianego produktu
+```SQL
+CREATE TABLE Orders_Details (
+   SubOrderID int  NOT NULL,
+   OrderID int  NOT NULL,
+   PaymentDeadline date  NOT NULL,
+   ExtendedPaymentDeadline date  NULL CHECK (ExtendedPaymentDeadline > PaymentDeadline),
+   PaymentDate date  NULL,
+   Price money  NOT NULL CHECK (Price > 0),
+   ProductID int  NOT NULL,
+   CONSTRAINT Orders_Details_pk PRIMARY KEY  (SubOrderID)
+);
+```
+
+## <hr>
+## Tabela **Products**
+Zawiera informacje o dostępnych produktach (usługach):
+- **ProductID** [int] - klucz główny, identyfikator produktu
+- **CategoryID** [int] - identyfikator kategorii produktu
+```SQL
+CREATE TABLE Products (
+   ProductID int  NOT NULL,
+   CategoryID int  NOT NULL,
+   CONSTRAINT Products_pk PRIMARY KEY  (ProductID)
 );
 ```
 
 ---
-## Kod generujący zależności pomiędzy tabelami
-```sql
--- Reference: Copy_of_Course Modules_Users Course Attendance (table: Users Meetings Attendance)
-ALTER TABLE Users Meetings Attendance ADD CONSTRAINT Copy_of_Course Modules_Users Course Attendance
-    FOREIGN KEY (SubjectID)
-    REFERENCES Subjects (SubjectID);
-
--- Reference: Copy_of_Courses with Modules_Course Modules (table: Studies Subjects)
-ALTER TABLE Studies Subjects ADD CONSTRAINT "Copy_of_Courses with Modules_Course Modules"
-    FOREIGN KEY (SubjectID)
-    REFERENCES Subjects (SubjectID);
-
--- Reference: Copy_of_Courses with Modules_Courses (table: Studies Subjects)
-ALTER TABLE Studies Subjects ADD CONSTRAINT "Copy_of_Courses with Modules_Courses"
-    FOREIGN KEY (StudiesID)
-    REFERENCES Studies (StudiesID);
-
--- Reference: Copy_of_Courses_Types (table: Studies)
-ALTER TABLE Studies ADD CONSTRAINT Copy_of_Courses_Types
-    FOREIGN KEY (TypeID)
-    REFERENCES Studies/Meetings Types (TypeID);
-
--- Reference: Copy_of_Courses_Users Courses (table: Users Studies)
-ALTER TABLE Users Studies ADD CONSTRAINT Copy_of_Courses_Users Courses
-    FOREIGN KEY (StudiesID)
-    REFERENCES Studies (StudiesID);
-
--- Reference: Course Modules_Users Course Attendance (table: Users Modules Passes)
-ALTER TABLE Users Modules Passes ADD CONSTRAINT Course Modules_Users Course Attendance
-    FOREIGN KEY (ModuleID)
-    REFERENCES Modules (ModuleID);
-
--- Reference: Courses with Modules_Course Modules (table: Courses Modules)
-ALTER TABLE Courses Modules ADD CONSTRAINT "Courses with Modules_Course Modules"
-    FOREIGN KEY (ModuleID)
-    REFERENCES Modules (ModuleID);
-
--- Reference: Courses with Modules_Courses (table: Courses Modules)
-ALTER TABLE Courses Modules ADD CONSTRAINT "Courses with Modules_Courses"
+# Zależności między tabelami
+---
+```SQL
+-- foreign keys
+-- Reference: Courses_Users_Courses (table: Users_Courses)
+ALTER TABLE Users_Courses ADD CONSTRAINT Courses_Users_Courses
     FOREIGN KEY (CourseID)
     REFERENCES Courses (CourseID);
-
--- Reference: Courses_Types (table: Courses)
-ALTER TABLE Courses ADD CONSTRAINT Courses_Types
-    FOREIGN KEY (TypeID)
-    REFERENCES Courses Types (TypeID);
-
--- Reference: Courses_Users Course Credits (table: Users Modules Passes)
-ALTER TABLE Users Modules Passes ADD CONSTRAINT Courses_Users Course Credits
-    FOREIGN KEY (CourseID)
-    REFERENCES Courses (CourseID);
-
--- Reference: Courses_Users Courses (table: Users Courses)
-ALTER TABLE Users Courses ADD CONSTRAINT Courses_Users Courses
-    FOREIGN KEY (CourseID)
-    REFERENCES Courses (CourseID);
-
--- Reference: Employees Postions_Employees (table: Employees)
-ALTER TABLE Employees ADD CONSTRAINT Employees Postions_Employees
-    FOREIGN KEY (PositionID)
-    REFERENCES Employees Postions (PositionID);
 
 -- Reference: Employees_Courses (table: Courses)
 ALTER TABLE Courses ADD CONSTRAINT Employees_Courses
@@ -568,68 +762,113 @@ ALTER TABLE Modules ADD CONSTRAINT Employees_Modules
     FOREIGN KEY (TeacherID)
     REFERENCES Employees (EmployeeID);
 
--- Reference: In-person Modules_Course Modules (table: In-person Modules)
-ALTER TABLE In-person Modules ADD CONSTRAINT In-person Modules_Course Modules
-    FOREIGN KEY (ModuleID)
-    REFERENCES Modules (ModuleID);
+-- Reference: Employees_Postions_Employees (table: Employees)
+ALTER TABLE Employees ADD CONSTRAINT Employees_Postions_Employees
+    FOREIGN KEY (PositionID)
+    REFERENCES Employees_Postions (PositionID);
+
+-- Reference: In_person_Meetings_Languages (table: In_person_Meetings)
+ALTER TABLE In_person_Meetings ADD CONSTRAINT In_person_Meetings_Languages
+    FOREIGN KEY (LanguageID)
+    REFERENCES Languages (LanguageID);
+
+-- Reference: In_person_Meetings_Translators (table: In_person_Meetings)
+ALTER TABLE In_person_Meetings ADD CONSTRAINT In_person_Meetings_Translators
+    FOREIGN KEY (TranslatorID)
+    REFERENCES Translators (TranslatorID);
+
+-- Reference: In_person_Modules_Languages (table: In_person_Modules)
+ALTER TABLE In_person_Modules ADD CONSTRAINT In_person_Modules_Languages
+    FOREIGN KEY (LanguageID)
+    REFERENCES Languages (LanguageID);
 
 -- Reference: Meetings_Employees (table: Meetings)
 ALTER TABLE Meetings ADD CONSTRAINT Meetings_Employees
     FOREIGN KEY (TeacherID)
     REFERENCES Employees (EmployeeID);
 
--- Reference: Meetings_In-person Meetings (table: In-person Meetings)
-ALTER TABLE In-person Meetings ADD CONSTRAINT Meetings_In-person Meetings
+-- Reference: Meetings_In_person_Meetings (table: In_person_Meetings)
+ALTER TABLE In_person_Meetings ADD CONSTRAINT Meetings_In_person_Meetings
     FOREIGN KEY (MeetingID)
     REFERENCES Meetings (MeetingID);
 
--- Reference: Meetings_Online Async Meetings (table: Online Async Meetings)
-ALTER TABLE Online Async Meetings ADD CONSTRAINT Meetings_Online Async Meetings
+-- Reference: Meetings_Online_Async_Meetings (table: Online_Async_Meetings)
+ALTER TABLE Online_Async_Meetings ADD CONSTRAINT Meetings_Online_Async_Meetings
     FOREIGN KEY (MeetingID)
     REFERENCES Meetings (MeetingID);
 
--- Reference: Meetings_Online Sync Meetings (table: Online Sync Meetings)
-ALTER TABLE Online Sync Meetings ADD CONSTRAINT Meetings_Online Sync Meetings
+-- Reference: Meetings_Online_Sync_Meetings (table: Online_Sync_Meetings)
+ALTER TABLE Online_Sync_Meetings ADD CONSTRAINT Meetings_Online_Sync_Meetings
     FOREIGN KEY (MeetingID)
     REFERENCES Meetings (MeetingID);
-
--- Reference: Meetings_Studies Types (table: Meetings)
-ALTER TABLE Meetings ADD CONSTRAINT Meetings_Studies Types
-    FOREIGN KEY (TypeID)
-    REFERENCES Studies/Meetings Types (TypeID);
 
 -- Reference: Meetings_Subjects (table: Meetings)
 ALTER TABLE Meetings ADD CONSTRAINT Meetings_Subjects
     FOREIGN KEY (SubjectID)
     REFERENCES Subjects (SubjectID);
 
--- Reference: Meetings_Users Meetings Attendance (table: Users Meetings Attendance)
-ALTER TABLE Users Meetings Attendance ADD CONSTRAINT Meetings_Users Meetings Attendance
+-- Reference: Meetings_Types_Meetings (table: Meetings)
+ALTER TABLE Meetings ADD CONSTRAINT Meetings_Types_Meetings
+    FOREIGN KEY (TypeID)
+    REFERENCES Meetings_Types (TypeID);
+
+-- Reference: Meetings_Users_Meetings_Attendance (table: Users_Meetings_Attendance)
+ALTER TABLE Users_Meetings_Attendance ADD CONSTRAINT Meetings_Users_Meetings_Attendance
     FOREIGN KEY (MeetingID)
     REFERENCES Meetings (MeetingID);
 
--- Reference: Modules_Types (table: Modules)
-ALTER TABLE Modules ADD CONSTRAINT Modules_Types
+-- Reference: Modules_Courses (table: Modules)
+ALTER TABLE Modules ADD CONSTRAINT Modules_Courses
+    FOREIGN KEY (CourseID)
+    REFERENCES Courses (CourseID);
+
+-- Reference: Modules_In_person_Modules (table: In_person_Modules)
+ALTER TABLE In_person_Modules ADD CONSTRAINT Modules_In_person_Modules
+    FOREIGN KEY (ModuleID)
+    REFERENCES Modules (ModuleID);
+
+-- Reference: Modules_Online_Async_Modules (table: Online_Async_Modules)
+ALTER TABLE Online_Async_Modules ADD CONSTRAINT Modules_Online_Async_Modules
+    FOREIGN KEY (ModuleID)
+    REFERENCES Modules (ModuleID);
+
+-- Reference: Modules_Online_Sync_Modules (table: Online_Sync_Modules)
+ALTER TABLE Online_Sync_Modules ADD CONSTRAINT Modules_Online_Sync_Modules
+    FOREIGN KEY (ModuleID)
+    REFERENCES Modules (ModuleID);
+
+-- Reference: Modules_Types_Modules (table: Modules)
+ALTER TABLE Modules ADD CONSTRAINT Modules_Types_Modules
     FOREIGN KEY (TypeID)
-    REFERENCES Courses Types (TypeID);
+    REFERENCES Modules_Types (TypeID);
 
--- Reference: Online Async Modules_Course Modules (table: Online Async Modules)
-ALTER TABLE Online Async Modules ADD CONSTRAINT Online Async Modules_Course Modules
+-- Reference: Modules_Users_Modules_Passes (table: Users_Modules_Passes)
+ALTER TABLE Users_Modules_Passes ADD CONSTRAINT Modules_Users_Modules_Passes
     FOREIGN KEY (ModuleID)
     REFERENCES Modules (ModuleID);
 
--- Reference: Online Sync Modules_Course Modules (table: Online Sync Modules)
-ALTER TABLE Online Sync Modules ADD CONSTRAINT Online Sync Modules_Course Modules
-    FOREIGN KEY (ModuleID)
-    REFERENCES Modules (ModuleID);
+-- Reference: Online_Sync_Meetings_Languages (table: Online_Sync_Meetings)
+ALTER TABLE Online_Sync_Meetings ADD CONSTRAINT Online_Sync_Meetings_Languages
+    FOREIGN KEY (LanguageID)
+    REFERENCES Languages (LanguageID);
 
--- Reference: Order Details_Orders (table: Order Details)
-ALTER TABLE "Order Details" ADD CONSTRAINT "Order Details_Orders"
+-- Reference: Online_Sync_Meetings_Translators (table: Online_Sync_Meetings)
+ALTER TABLE Online_Sync_Meetings ADD CONSTRAINT Online_Sync_Meetings_Translators
+    FOREIGN KEY (TranslatorID)
+    REFERENCES Translators (TranslatorID);
+
+-- Reference: Online_Sync_Modules_Languages (table: Online_Sync_Modules)
+ALTER TABLE Online_Sync_Modules ADD CONSTRAINT Online_Sync_Modules_Languages
+    FOREIGN KEY (LanguageID)
+    REFERENCES Languages (LanguageID);
+
+-- Reference: Order_Details_Orders (table: Orders_Details)
+ALTER TABLE Orders_Details ADD CONSTRAINT Order_Details_Orders
     FOREIGN KEY (OrderID)
     REFERENCES Orders (OrderID);
 
--- Reference: Order Details_Products (table: Order Details)
-ALTER TABLE "Order Details" ADD CONSTRAINT "Order Details_Products"
+-- Reference: Order_Details_Products (table: Orders_Details)
+ALTER TABLE Orders_Details ADD CONSTRAINT Order_Details_Products
     FOREIGN KEY (ProductID)
     REFERENCES Products (ProductID);
 
@@ -653,6 +892,11 @@ ALTER TABLE Products ADD CONSTRAINT Products_Meetings
     FOREIGN KEY (ProductID)
     REFERENCES Meetings (MeetingID);
 
+-- Reference: Products_Studies (table: Products)
+ALTER TABLE Products ADD CONSTRAINT Products_Studies
+    FOREIGN KEY (ProductID)
+    REFERENCES Studies (StudiesID);
+
 -- Reference: Products_Subjects (table: Products)
 ALTER TABLE Products ADD CONSTRAINT Products_Subjects
     FOREIGN KEY (ProductID)
@@ -663,88 +907,78 @@ ALTER TABLE Products ADD CONSTRAINT Products_Webinars
     FOREIGN KEY (ProductID)
     REFERENCES Webinars (WebinarID);
 
--- Reference: Studies Practices_Practices (table: Studies Practices)
-ALTER TABLE Studies Practices ADD CONSTRAINT Studies Practices_Practices
-    FOREIGN KEY (PracticeID)
-    REFERENCES Practices (PracticeID);
+-- Reference: Studies_Employees (table: Studies)
+ALTER TABLE Studies ADD CONSTRAINT Studies_Employees
+    FOREIGN KEY (CoordinatorID)
+    REFERENCES Employees (EmployeeID);
 
--- Reference: Studies Practices_Studies (table: Studies Practices)
-ALTER TABLE Studies Practices ADD CONSTRAINT Studies Practices_Studies
+-- Reference: Studies_Users_Studies (table: Users_Studies)
+ALTER TABLE Users_Studies ADD CONSTRAINT Studies_Users_Studies
     FOREIGN KEY (StudiesID)
     REFERENCES Studies (StudiesID);
 
--- Reference: Studies Practices_Users Practices Attendance (table: Users Practices Attendance)
-ALTER TABLE Users Practices Attendance ADD CONSTRAINT Studies Practices_Users Practices Attendance
-    FOREIGN KEY (StudiesID,PracticeID)
-    REFERENCES Studies Practices (StudiesID,PracticeID);
-
--- Reference: Studies_User Studies Grade (table: User Studies Grade)
-ALTER TABLE "User Studies Grade" ADD CONSTRAINT Studies_User Studies Grade
+-- Reference: Subjects_Studies (table: Subjects)
+ALTER TABLE Subjects ADD CONSTRAINT Subjects_Studies
     FOREIGN KEY (StudiesID)
     REFERENCES Studies (StudiesID);
 
--- Reference: Subjects_Teachers Subjects (table: Teachers Subjects)
-ALTER TABLE Teachers Subjects ADD CONSTRAINT Subjects_Teachers Subjects
+-- Reference: Subjects_Users_Meetings_Attendance (table: Users_Meetings_Attendance)
+ALTER TABLE Users_Meetings_Attendance ADD CONSTRAINT Subjects_Users_Meetings_Attendance
     FOREIGN KEY (SubjectID)
     REFERENCES Subjects (SubjectID);
 
--- Reference: Teachers Subjects_Employees (table: Teachers Subjects)
-ALTER TABLE Teachers Subjects ADD CONSTRAINT Teachers Subjects_Employees
-    FOREIGN KEY (TeacherID)
-    REFERENCES Employees (EmployeeID);
-
--- Reference: Translators_In-person Modules (table: In-person Modules)
-ALTER TABLE In-person Modules ADD CONSTRAINT Translators_In-person Modules
+-- Reference: Translators_In_person_Modules (table: In_person_Modules)
+ALTER TABLE In_person_Modules ADD CONSTRAINT Translators_In_person_Modules
     FOREIGN KEY (TranslatorID)
     REFERENCES Translators (TranslatorID);
 
--- Reference: Translators_Online Sync Modules (table: Online Sync Modules)
-ALTER TABLE Online Sync Modules ADD CONSTRAINT Translators_Online Sync Modules
+-- Reference: Translators_Languages_Languages (table: Translators_Languages)
+ALTER TABLE Translators_Languages ADD CONSTRAINT Translators_Languages_Languages
+    FOREIGN KEY (LanguageID)
+    REFERENCES Languages (LanguageID);
+
+-- Reference: Translators_Online_Sync_Modules (table: Online_Sync_Modules)
+ALTER TABLE Online_Sync_Modules ADD CONSTRAINT Translators_Online_Sync_Modules
     FOREIGN KEY (TranslatorID)
     REFERENCES Translators (TranslatorID);
 
--- Reference: Translators_Translators_Language (table: Translators Languages)
-ALTER TABLE Translators Languages ADD CONSTRAINT Translators_Translators_Language
+-- Reference: Translators_Translators_Language (table: Translators_Languages)
+ALTER TABLE Translators_Languages ADD CONSTRAINT Translators_Translators_Language
     FOREIGN KEY (TranslatorID)
     REFERENCES Translators (TranslatorID);
 
--- Reference: User Webinars_Users (table: Users Webinars)
-ALTER TABLE Users Webinars ADD CONSTRAINT "User Webinars_Users"
+-- Reference: Users_Courses_Users (table: Users_Courses)
+ALTER TABLE Users_Courses ADD CONSTRAINT Users_Courses_Users
     FOREIGN KEY (UserID)
     REFERENCES Users (UserID);
 
--- Reference: User Webinars_Webinars (table: Users Webinars)
-ALTER TABLE Users Webinars ADD CONSTRAINT "User Webinars_Webinars"
-    FOREIGN KEY (WebinarID)
-    REFERENCES Webinars (WebinarID);
-
--- Reference: Users Course Credits_Users (table: Users Modules Passes)
-ALTER TABLE Users Modules Passes ADD CONSTRAINT Users Course Credits_Users
+-- Reference: Users_Meetings_Attendance_Users (table: Users_Meetings_Attendance)
+ALTER TABLE Users_Meetings_Attendance ADD CONSTRAINT Users_Meetings_Attendance_Users
     FOREIGN KEY (UserID)
     REFERENCES Users (UserID);
 
--- Reference: Users Courses_Users (table: Users Courses)
-ALTER TABLE Users Courses ADD CONSTRAINT Users Courses_Users
+-- Reference: Users_Modules_Passes_Users_Courses (table: Users_Modules_Passes)
+ALTER TABLE Users_Modules_Passes ADD CONSTRAINT Users_Modules_Passes_Users_Courses
+    FOREIGN KEY (UserID,CourseID)
+    REFERENCES Users_Courses (UserID,CourseID);
+
+-- Reference: Users_Practices_Attendance_Practices (table: Users_Practices_Attendance)
+ALTER TABLE Users_Practices_Attendance ADD CONSTRAINT Users_Practices_Attendance_Practices
+    FOREIGN KEY (PracticeID)
+    REFERENCES Practices (PracticeID);
+
+-- Reference: Users_Practices_Attendance_Users_Studies (table: Users_Practices_Attendance)
+ALTER TABLE Users_Practices_Attendance ADD CONSTRAINT Users_Practices_Attendance_Users_Studies
+    FOREIGN KEY (UserID,StudiesID)
+    REFERENCES Users_Studies (UserID,StudiesID);
+
+-- Reference: Users_Studies_Users (table: Users_Studies)
+ALTER TABLE Users_Studies ADD CONSTRAINT Users_Studies_Users
     FOREIGN KEY (UserID)
     REFERENCES Users (UserID);
 
--- Reference: Users Meetings Attendance_Users (table: Users Meetings Attendance)
-ALTER TABLE Users Meetings Attendance ADD CONSTRAINT Users Meetings Attendance_Users
-    FOREIGN KEY (UserID)
-    REFERENCES Users (UserID);
-
--- Reference: Users Practices Attendance_Users (table: Users Practices Attendance)
-ALTER TABLE Users Practices Attendance ADD CONSTRAINT Users Practices Attendance_Users
-    FOREIGN KEY (UserID)
-    REFERENCES Users (UserID);
-
--- Reference: Users Studies_Users (table: Users Studies)
-ALTER TABLE Users Studies ADD CONSTRAINT Users Studies_Users
-    FOREIGN KEY (UserID)
-    REFERENCES Users (UserID);
-
--- Reference: Users_User Studies Grade (table: User Studies Grade)
-ALTER TABLE "User Studies Grade" ADD CONSTRAINT Users_User Studies Grade
+-- Reference: Users_Webinars_Users (table: Users_Webinars)
+ALTER TABLE Users_Webinars ADD CONSTRAINT Users_Webinars_Users
     FOREIGN KEY (UserID)
     REFERENCES Users (UserID);
 
@@ -753,10 +987,20 @@ ALTER TABLE Webinars ADD CONSTRAINT Webinars_Employees
     FOREIGN KEY (TeacherID)
     REFERENCES Employees (EmployeeID);
 
+-- Reference: Webinars_Languages (table: Webinars)
+ALTER TABLE Webinars ADD CONSTRAINT Webinars_Languages
+    FOREIGN KEY (LanguageID)
+    REFERENCES Languages (LanguageID);
+
 -- Reference: Webinars_Translators (table: Webinars)
 ALTER TABLE Webinars ADD CONSTRAINT Webinars_Translators
     FOREIGN KEY (TranslatorID)
     REFERENCES Translators (TranslatorID);
+
+-- Reference: Webinars_Users_Webinars (table: Users_Webinars)
+ALTER TABLE Users_Webinars ADD CONSTRAINT Webinars_Users_Webinars
+    FOREIGN KEY (WebinarID)
+    REFERENCES Webinars (WebinarID);
 ```
 
 

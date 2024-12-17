@@ -6,8 +6,8 @@ Zawiera informajce o dostępnych studiach:
  * **StudiesID** [int] - klucz główny, identyfikator studiów
  * **CoordinatorID** [int] - identyfikator kordynatora studiów
  * **Name** [nvarchar(30)] - nazwa studiów
- * ****Description**** [ntext] - obpis studiów
- * StartDate [date] - data rozpoczęcia studiów
+ * **Description** [ntext] - obpis studiów
+ * **StartDate** [date] - data rozpoczęcia studiów
  * **EndDate** [date] - data zakończenia studiów
  * **Price** [money] - cena wpisowego na studiach
    * warunki: Price > 0
@@ -91,17 +91,19 @@ CREATE TABLE Meetings_Types (
 Zawiera dodatkowe informacje dla spotkach stacjonarnych:
  * **MeetingID** [int] - klucz główny, identyfikator spotkania
  * **Classroom** [int] - numer sali spotkania
- * **TranslatorID** [int] - identyfikator tłumacza
+ * **TranslatorID** [int, nullable] - identyfikator tłumacza
+ * **LanguageID** [int] - klucz obcy, identyfikator języka w jakim odbywa się spotkanie
  * **Limit** [int] - limit miejsc na spotkaniu
    * warunki: Limit > 0
    * wartość domyślna: 25
 ```SQL
-CREATE TABLE In-person_Meetings (
+CREATE TABLE In_person_Meetings (
    MeetingID int  NOT NULL,
    Classroom int  NOT NULL,
-   TranslatorID int  NOT NULL,
+   TranslatorID int  NULL,
+   LanguageID int  NOT NULL,
    Limit int  NOT NULL DEFAULT 25 CHECK (Limit > 0),
-   CONSTRAINT In-person_Meetings_pk PRIMARY KEY  (MeetingID)
+   CONSTRAINT In_person_Meetings_pk PRIMARY KEY  (MeetingID)
 );
 ```
 
@@ -111,13 +113,15 @@ Zaweira dodatkowe informacje dla spotkań online synchronicznie:
  * **MeetingID** [int] - klucz główny, identyfikator spotkania
  * **MeetingLink** [nvarchar(100)] - link do spotkania
  * **RecodringLink** [nvarchar(100)] - link do nagrania spotkania
- * **TranslatorID** [int] - identyfikator tłumacza
+ * **TranslatorID** [int, nullable] - identyfikator tłumacza
+ * **LanguageID** [int] - identyfiaktor języka w jakim odbywa się spotkanie
 ```SQL
 CREATE TABLE Online_Sync_Meetings (
    MeetingID int  NOT NULL,
    MeetingLink nvarchar(100)  NOT NULL,
    RecordingLink nvarchar(100)  NOT NULL,
-   TranslatorID int  NOT NULL,
+   TranslatorID int  NULL,
+   LanguageID int  NOT NULL,
    CONSTRAINT Online_Sync_Meetings_pk PRIMARY KEY  (MeetingID)
 );
 ```
@@ -141,30 +145,14 @@ Zawiera informacje o obecności studenta na spotkaniu:
  * **UserID** [int] - część klucz głównego, identyfikator studenta
  * **MeetingID** [int] - część klucza głównego, identyfikator spotkania
  * **SubjectID** [int] - część klucza głównego, identyfikator przedmiotu
- * **Present** [bit] - informacja o obecności studenta na spotkaniu
+ * **Present** [bit, nullable] - informacja o obecności studenta na spotkaniu
 ``` SQL
 CREATE TABLE Users_Meetings_Attendance (
    UserID int  NOT NULL,
    MeetingID int  NOT NULL,
    SubjectID int  NOT NULL,
-   Present bit  NOT NULL DEFAULT 0,
+   Present bit  NULL,
    CONSTRAINT Users_Meetings_Attendance_pk PRIMARY KEY  (MeetingID,UserID,SubjectID)
-);
-```
-
-## <hr>
-## Tabela **Users_Studies_Grade**
-Zawiera informajce o ocenie studenta za studia:
- * **UserID** [int] - część klucza głównego, identyfikator studenta
- * **StudiesID** [int] - część klucza głównego, identyfikator studiów
- * **Grade** [int] - ocena studenta za studia
-   * warunki: Grade >= 2 AND Grade <= 5
-```SQL
-CREATE TABLE Student_Studies_Grade (
-   UserID int  NOT NULL,
-   StudiesID int  NOT NULL,
-   Grade int  NOT NULL DEFAULT 2 CHECK (Grade >= 2 AND Grade <= 5),
-   CONSTRAINT Student_Studies_Grade_pk PRIMARY KEY  (UserID,StudiesID)
 );
 ```
 
@@ -203,13 +191,13 @@ Zawiera informacje o zdaniu praktyk przez danego studenta:
  * **UserID** [int] - część klucz głównego, identyfikator studenta
  * **StudiesID** [int] - część klucza głównego, identyfikator studiów
  * **PracticeID** [int] - część klucza głównego, identyfikator praktyk
- * **Present** [bit] - informacja o zdaniu praktyk
+ * **Present** [bit, nullable] - informacja o zdaniu praktyk
 ```SQL
 CREATE TABLE Users_Practices_Attendance (
    UserID int  NOT NULL,
    StudiesID int  NOT NULL,
    PracticeID int  NOT NULL,
-   Present bit  NOT NULL DEFAULT 0,
+   Present bit  NULL,
    CONSTRAINT Users_Practices_Attendance_pk PRIMARY KEY  (UserID,StudiesID,PracticeID)
 );
 ```
@@ -219,10 +207,13 @@ CREATE TABLE Users_Practices_Attendance (
 Zawiera informacje studentach przypisanych do danych studiów:
  * **UserID** [int] - część klucza głównego, identyfikator studenta
  * **StudiesID** [int] - część klucza głównego, identyfikator studiów
+ * **Grade** [int] - wartość oceny studenta na koniec studiów
+   * warunki: Grade >=2 AND Grade <= 5
 ```SQL
 CREATE TABLE Users_Studies (
    UserID int  NOT NULL,
    StudiesID int  NOT NULL,
+   Grade int  NULL CHECK (Grade >=2 AND Grade <= 5),
    CONSTRAINT Users_Studies_pk PRIMARY KEY  (UserID,StudiesID)
 );
 ```

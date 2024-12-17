@@ -27,7 +27,7 @@ Zawiera informacje o Webinarach:
 - BeginningTime [time(8)] - czas rozpoczęcia webinaru w formacie
 'godzina:minuty:sekundy'
 - Duration [time(8)] - czas trwania webinaru w formacie
-'godzina:minuty:sekundy' (domyślny 1g 30min, musi być większy od 0)
+'godziny:minuty:sekundy' (domyślny 1g 30min, musi być większy od 0)
 - TeacherID [int] - identyfikator prowadzącego dany webinar
 - TranslatorID [int] - identyfikator tłumacza
 - Price [money] - cena webinaru (domyślna 0, musi być nieujemna)

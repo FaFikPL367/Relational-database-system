@@ -36,9 +36,9 @@ for i in range(1, 31):
             "TranslatorID": i,
             "LanguageID": random.randint(1, 24)
         })
+        
 
 # Wstawienie danych do bazy
-
 for translator_language in translators_languages_pars:
     cursor.execute(
         "INSERT INTO Translators_Languages (TranslatorID, LanguageID) "

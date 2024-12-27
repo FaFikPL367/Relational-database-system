@@ -27,7 +27,7 @@ languages = [
     "włoski",
     "anielski",
     "duński",
-    "grecki"
+    "grecki",
     "portugalski",
     "hiszpański",
     "fiński",

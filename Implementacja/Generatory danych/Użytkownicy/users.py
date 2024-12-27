@@ -4,7 +4,7 @@ import re
 
 
 # Inicjalizajca Faker'a
-fake = Faker()
+fake = Faker('pl_PL')
 
 
 # Połączenie z bazą danych

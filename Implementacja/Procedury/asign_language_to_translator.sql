@@ -16,8 +16,7 @@ as begin
         end
 
         -- Sprawdzenie czy taki wpis już istnieje
-        if exists(select 1 from Translators_Languages where TranslatorID = @TranslatorID
-                                                      and LanguageID = @LanguageID)
+        if dbo.check_translator_language(@TranslatorID, @LanguageID) = cast(1 as bit)
         begin
             throw 50003, 'Taka para już istnieje', 1;
         end
@@ -33,3 +32,5 @@ as begin
         print 'Pojawienie sie błedu: ' + error_message();
     end catch
 end
+go
+

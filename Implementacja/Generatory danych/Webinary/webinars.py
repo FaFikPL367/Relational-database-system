@@ -37,7 +37,7 @@ cursor.execute(query)
 teachers = cursor.fetchall()
 
 
-# Pobranie informacji o ID koordynatorów
+# Pobranie informacji o ID koordynatorów webinarów
 query = 'Select EmployeeID from Employees where PositionID = 2'
 cursor.execute(query)
 coordinators = cursor.fetchall()

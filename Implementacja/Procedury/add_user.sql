@@ -26,3 +26,5 @@ begin
         set @NewUserID = null; -- W razie błędu zwróć NULL
     end catch
 end;
+go
+

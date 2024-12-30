@@ -21,3 +21,5 @@ as begin
         print 'Pojawienie sie błedu: ' + error_message();
     end catch
 end
+go
+

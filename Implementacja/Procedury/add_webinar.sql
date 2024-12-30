@@ -1,4 +1,4 @@
-create procedure add_webinar
+CREATE procedure add_webinar
     @Name nvarchar(30),
     @Description nvarchar(max),
     @DateAndBeginningTIme datetime,
@@ -9,13 +9,15 @@ create procedure add_webinar
     @Price int,
     @LanguageID int,
     @RecordingLink nvarchar(100),
-    @MeetingLink nvarchar(100)
+    @MeetingLink nvarchar(100),
+    @Status bit
 as begin
     begin try
         -- Sprawdzenie poprawności wpisywanych danych
-        if not exists(select 1 from Employees where EmployeeID = @CoordinatorID)
+        if not exists(select 1 from Employees where EmployeeID = @CoordinatorID and
+                                                    PositionID = 2)
         begin
-            throw 50001, 'Koordynator o danym ID nie istnieje', 1;
+            throw 50001, 'Koordynator o danym ID nie istnieje lub nie jest kordynatorem webinarów', 1;
         end
 
         if not exists(select 1 from Employees where EmployeeID = @TeacherID)
@@ -33,7 +35,7 @@ as begin
             throw 50004, 'Język o danym ID nie iestnieje', 1;
         end
 
-        if not exists(select 1 from Translators where @TranslatorID = TranslatorID)
+        if not exists(select 1 from Translators where @TranslatorID = TranslatorID) and @TranslatorID IS NOT NULL
         begin
             throw 50005, 'Tłumacz o danym ID nie istnieje', 1;
         end
@@ -47,18 +49,22 @@ as begin
         -- Rezerwacja ID w produktach
         declare @NewProductID int;
 
-        insert into Products (CategoryID)
-        values (1)
+        insert Products (CategoryID, Status)
+        values (1, @Status)
 
         -- Pobranie ID po dodaniu do produktów
         set @NewProductID = SCOPE_IDENTITY();
 
         -- Dodanie do tabeli ze Wbinarami
-        insert into Webinars (WebinarID, Name, Description, DateAndBeginningTime, Duration, TeacherID, TranslatorID, Price, LanguageID, RecordingLink, MeetingLink, CoordinatorID)
+        insert Webinars (WebinarID, Name, Description, DateAndBeginningTime, Duration, TeacherID, TranslatorID, Price, LanguageID, RecordingLink, MeetingLink, CoordinatorID)
         values (@NewProductID, @Name, @Description, @DateAndBeginningTIme, @Duration, @TeacherID, @TranslatorID, @Price, @LanguageID, @RecordingLink, @MeetingLink, @CoordinatorID)
+
+        print 'Pomyślne dodanie webinaru';
     end try
     begin catch
         -- Obsługa błedu
         print 'Pojawienie sie błedu: ' + error_message();
     end catch
 end
+go
+

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/Implementacja/Indeksy/idx_course_date.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Indeksy/idx_studies_date.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Indeksy/idx_webinar_date.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Widoki/course_information.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Widoki/future_course_sign.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Widoki/future_courses.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Widoki/future_studie_sign.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Widoki/future_studies.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Widoki/future_webinar_sign.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Widoki/future_webinars.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Widoki/in_person_module_information.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Widoki/module_information.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Widoki/onlince_sync_module_information.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Widoki/online_async_module_information.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Widoki/studie_information.sql" dialect="TSQL" />
+  </component>
+</project>

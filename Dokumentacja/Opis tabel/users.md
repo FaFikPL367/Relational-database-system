@@ -7,7 +7,7 @@ Zawiera ona informacje o użytkownikach:
  * **FirstName** [nvarchar(50)] - imię użytkownika
  * **LastName** [nvarchar(50)] - nazwisko użytkownika
  * **Phone** [varchar(15), unique] - numer telefonu użytkownika 
-    * warunki: LEN(Phone) = 15 AND ISNUMERIC(Phone) = 1
+    * warunki: LEN(Phone) <= 15 AND ISNUMERIC(Phone) = 1
  * **Email** [nvarchar(50), unique] - email użytkownika
     * warunki: Email LIKE '%_@%.%'
  * **Address** [nvarchar(50)] - adres użytkownika
@@ -15,10 +15,10 @@ Zawiera ona informacje o użytkownikach:
  * **PostalCode** [varcahr(10)] - kod pocztowy użytkownika
 ``` SQL
 CREATE TABLE Users (
-   UserID int  NOT NULL,
+   UserID int  NOT NULL IDENTITY(1, 1),
    FirstName nvarchar(50)  NOT NULL,
    LastName nvarchar(50)  NOT NULL,
-   Phone varchar(15)  NOT NULL CHECK (LEN(Phone) = 15 and ISNUMERIC(Phone) = 1),
+   Phone varchar(15)  NOT NULL CHECK (ISNUMERIC(Phone) = 1 AND LEN(PHONE) <= 15),
    Email nvarchar(50)  NOT NULL CHECK (Email LIKE '%_@%.%'),
    Address nvarchar(50)  NOT NULL,
    City nvarchar(30)  NOT NULL,
@@ -36,7 +36,7 @@ Zawiera informacje o pracownikach:
  * **FirstName** [nvarchar(50)] - imię pracownika
  * **LastName** [nvarchar(50)] - nazwisko pracownika
  * **Phone** [varcahr(15), unique] - numer telefonu pracownika
-    * warunki: LEN(Phone) = 15 AND ISNUMERIC(Phone) = 1
+    * warunki: LEN(Phone) <= 15 AND ISNUMERIC(Phone) = 1
  * **Email** [nvarchar(50), unique] - email pracownika
     * warunki: Email LIKE '%_@%.%'
  * **Address** [nvarchar(50)] - adres pracownika
@@ -45,10 +45,10 @@ Zawiera informacje o pracownikach:
  * **PositionID** [int] - identyfikator pozycji pracownika
 ```SQL
 CREATE TABLE Employees (
-   EmployeeID int  NOT NULL,
+   EmployeeID int  NOT NULL IDENTITY(1, 1),
    FirstName nvarchar(50)  NOT NULL,
    LastName nvarchar(50)  NOT NULL,
-   Phone varchar(15)  NOT NULL CHECK (LEN(Phone) = 15 and ISNUMERIC(Phone) = 1),
+   Phone varchar(15)  NOT NULL CHECK (ISNUMERIC(Phone) = 1 AND LEN(PHONE) <= 15),
    Email nvarchar(50)  NOT NULL CHECK (Email LIKE '%_@%.%'),
    Address nvarchar(50)  NOT NULL,
    City nvarchar(30)  NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE Employees (
    PositionID int  NOT NULL,
    CONSTRAINT EmployeePhone UNIQUE (Phone),
    CONSTRAINT EmployeeEmail UNIQUE (Email),
-   CONSTRAINT Employees_pk PRIMARY KEY  (EmployeeID)
+   CONSTRAINT EmployeeID PRIMARY KEY  (EmployeeID)
 );
 ```
 
@@ -67,7 +67,7 @@ Zawiera informacje o możliwych pozycjach pracowników:
  * **PositionName** [nvarchar(30)] - nazwa pozycji
 ```SQL
 CREATE TABLE Employees_Postions (
-   PositionID int  NOT NULL,
+   PositionID int  NOT NULL IDENTITY(1, 1),
    PositionName nvarchar(30)  NOT NULL,
    CONSTRAINT Employees_Postions_pk PRIMARY KEY  (PositionID)
 );
@@ -79,7 +79,7 @@ Zwiera informacje o tłumaczach:
  * **FirstName** [nvarchar(50)] - imię tłumacza
  * **LastName** [nvarchar(50)] - nazwisko tłumacza
  * **Phone** [varchar(15), unique] - numer telefonu tłumacza
-    * warunki: LEN(Phone) = 15 AND ISNUMERIC(Phone) = 1
+    * warunki: LEN(Phone) <= 15 AND ISNUMERIC(Phone) = 1
  * **Email** [nvarchar(50), unique] - email tłumacza
     * warunki: Email LIKE '%_@%.%'
  * **Address** [nvarchar(50)] - adres tłumacza
@@ -87,17 +87,17 @@ Zwiera informacje o tłumaczach:
  * **PostalCode** [varchar(10)] - kod pocztowy tłumacza
 ```SQL
 CREATE TABLE Translators (
-   TranslatorID int  NOT NULL,
+   TranslatorID int  NOT NULL IDENTITY(1, 1),
    FirstName nvarchar(50)  NOT NULL,
    LastName nvarchar(50)  NOT NULL,
-   Phone varchar(15)  NOT NULL CHECK (LEN(Phone) = 15 and ISNUMERIC(Phone) = 1),
+   Phone varchar(15)  NOT NULL CHECK (ISNUMERIC(Phone) = 1 AND LEN(PHONE) <= 15),
    Email nvarchar(50)  NOT NULL CHECK (Email LIKE '%_@%.%'),
    Address nvarchar(50)  NOT NULL,
    City nvarchar(30)  NOT NULL,
    PostalCode varchar(10)  NOT NULL,
    CONSTRAINT TranslatorPhone UNIQUE (Phone),
    CONSTRAINT TranslatorEmail UNIQUE (Email),
-   CONSTRAINT UserID PRIMARY KEY  (TranslatorID)
+   CONSTRAINT TranslatorID PRIMARY KEY  (TranslatorID)
 );
 ```
 
@@ -110,7 +110,7 @@ Zawiera informajce o językach jakimi posługują się tłumacze:
 CREATE TABLE Translators_Languages (
    TranslatorID int  NOT NULL,
    LanguageID int  NOT NULL,
-   CONSTRAINT Translators_Languages_pk PRIMARY KEY  (TranslatorID)
+   CONSTRAINT Translators_Languages_pk PRIMARY KEY  (TranslatorID,LanguageID)
 );
 ```
 
@@ -121,7 +121,7 @@ Zawiera możliwe języki tłumaczenia:
  * **LanguaneName** [nvarchar(30)] - nazwa języka
 ```SQL
 CREATE TABLE Languages (
-   LanguageID int  NOT NULL,
+   LanguageID int  NOT NULL IDENTITY(1, 1),
    LanguageName nvarchar(30)  NOT NULL,
    CONSTRAINT Languages_pk PRIMARY KEY  (LanguageID)
 );

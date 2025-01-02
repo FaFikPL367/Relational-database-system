@@ -45,6 +45,11 @@ ALTER TABLE In_person_Meetings ADD CONSTRAINT Meetings_In_person_Meetings
     FOREIGN KEY (MeetingID)
     REFERENCES Meetings (MeetingID);
 
+-- Reference: Meetings_Modules_Types (table: Meetings)
+ALTER TABLE Meetings ADD CONSTRAINT Meetings_Modules_Types
+    FOREIGN KEY (TypeID)
+    REFERENCES Types (TypeID);
+
 -- Reference: Meetings_Online_Async_Meetings (table: Online_Async_Meetings)
 ALTER TABLE Online_Async_Meetings ADD CONSTRAINT Meetings_Online_Async_Meetings
     FOREIGN KEY (MeetingID)
@@ -59,11 +64,6 @@ ALTER TABLE Online_Sync_Meetings ADD CONSTRAINT Meetings_Online_Sync_Meetings
 ALTER TABLE Meetings ADD CONSTRAINT Meetings_Subjects
     FOREIGN KEY (SubjectID)
     REFERENCES Subjects (SubjectID);
-
--- Reference: Meetings_Types_Meetings (table: Meetings)
-ALTER TABLE Meetings ADD CONSTRAINT Meetings_Types_Meetings
-    FOREIGN KEY (TypeID)
-    REFERENCES Meetings_Types (TypeID);
 
 -- Reference: Meetings_Users_Meetings_Attendance (table: Users_Meetings_Attendance)
 ALTER TABLE Users_Meetings_Attendance ADD CONSTRAINT Meetings_Users_Meetings_Attendance
@@ -93,7 +93,7 @@ ALTER TABLE Online_Sync_Modules ADD CONSTRAINT Modules_Online_Sync_Modules
 -- Reference: Modules_Types_Modules (table: Modules)
 ALTER TABLE Modules ADD CONSTRAINT Modules_Types_Modules
     FOREIGN KEY (TypeID)
-    REFERENCES Modules_Types (TypeID);
+    REFERENCES Types (TypeID);
 
 -- Reference: Modules_Users_Modules_Passes (table: Users_Modules_Passes)
 ALTER TABLE Users_Modules_Passes ADD CONSTRAINT Modules_Users_Modules_Passes
@@ -135,30 +135,25 @@ ALTER TABLE Products ADD CONSTRAINT Products_Category
     FOREIGN KEY (CategoryID)
     REFERENCES Categories (CategoryID);
 
--- Reference: Products_Courses (table: Products)
-ALTER TABLE Products ADD CONSTRAINT Products_Courses
-    FOREIGN KEY (ProductID)
-    REFERENCES Courses (CourseID);
+-- Reference: Products_Courses (table: Courses)
+ALTER TABLE Courses ADD CONSTRAINT Products_Courses
+    FOREIGN KEY (CourseID)
+    REFERENCES Products (ProductID);
 
--- Reference: Products_Meetings (table: Products)
-ALTER TABLE Products ADD CONSTRAINT Products_Meetings
-    FOREIGN KEY (ProductID)
-    REFERENCES Meetings (MeetingID);
+-- Reference: Products_Meetings (table: Meetings)
+ALTER TABLE Meetings ADD CONSTRAINT Products_Meetings
+    FOREIGN KEY (MeetingID)
+    REFERENCES Products (ProductID);
 
--- Reference: Products_Studies (table: Products)
-ALTER TABLE Products ADD CONSTRAINT Products_Studies
-    FOREIGN KEY (ProductID)
-    REFERENCES Studies (StudiesID);
+-- Reference: Products_Studies (table: Studies)
+ALTER TABLE Studies ADD CONSTRAINT Products_Studies
+    FOREIGN KEY (StudiesID)
+    REFERENCES Products (ProductID);
 
--- Reference: Products_Subjects (table: Products)
-ALTER TABLE Products ADD CONSTRAINT Products_Subjects
-    FOREIGN KEY (ProductID)
-    REFERENCES Subjects (SubjectID);
-
--- Reference: Products_Webinars (table: Products)
-ALTER TABLE Products ADD CONSTRAINT Products_Webinars
-    FOREIGN KEY (ProductID)
-    REFERENCES Webinars (WebinarID);
+-- Reference: Products_Webinars (table: Webinars)
+ALTER TABLE Webinars ADD CONSTRAINT Products_Webinars
+    FOREIGN KEY (WebinarID)
+    REFERENCES Products (ProductID);
 
 -- Reference: Studies_Employees (table: Studies)
 ALTER TABLE Studies ADD CONSTRAINT Studies_Employees
@@ -174,11 +169,6 @@ ALTER TABLE Users_Studies ADD CONSTRAINT Studies_Users_Studies
 ALTER TABLE Subjects ADD CONSTRAINT Subjects_Studies
     FOREIGN KEY (StudiesID)
     REFERENCES Studies (StudiesID);
-
--- Reference: Subjects_Users_Meetings_Attendance (table: Users_Meetings_Attendance)
-ALTER TABLE Users_Meetings_Attendance ADD CONSTRAINT Subjects_Users_Meetings_Attendance
-    FOREIGN KEY (SubjectID)
-    REFERENCES Subjects (SubjectID);
 
 -- Reference: Translators_In_person_Modules (table: In_person_Modules)
 ALTER TABLE In_person_Modules ADD CONSTRAINT Translators_In_person_Modules
@@ -210,10 +200,10 @@ ALTER TABLE Users_Meetings_Attendance ADD CONSTRAINT Users_Meetings_Attendance_U
     FOREIGN KEY (UserID)
     REFERENCES Users (UserID);
 
--- Reference: Users_Modules_Passes_Users_Courses (table: Users_Modules_Passes)
-ALTER TABLE Users_Modules_Passes ADD CONSTRAINT Users_Modules_Passes_Users_Courses
-    FOREIGN KEY (UserID,CourseID)
-    REFERENCES Users_Courses (UserID,CourseID);
+-- Reference: Users_Modules_Passes_Users (table: Users_Modules_Passes)
+ALTER TABLE Users_Modules_Passes ADD CONSTRAINT Users_Modules_Passes_Users
+    FOREIGN KEY (UserID)
+    REFERENCES Users (UserID);
 
 -- Reference: Users_Practices_Attendance_Practices (table: Users_Practices_Attendance)
 ALTER TABLE Users_Practices_Attendance ADD CONSTRAINT Users_Practices_Attendance_Practices
@@ -237,7 +227,7 @@ ALTER TABLE Users_Webinars ADD CONSTRAINT Users_Webinars_Users
 
 -- Reference: Webinars_Employees (table: Webinars)
 ALTER TABLE Webinars ADD CONSTRAINT Webinars_Employees
-    FOREIGN KEY (TeacherID)
+    FOREIGN KEY (CoordinatorID)
     REFERENCES Employees (EmployeeID);
 
 -- Reference: Webinars_Languages (table: Webinars)
@@ -254,4 +244,6 @@ ALTER TABLE Webinars ADD CONSTRAINT Webinars_Translators
 ALTER TABLE Users_Webinars ADD CONSTRAINT Webinars_Users_Webinars
     FOREIGN KEY (WebinarID)
     REFERENCES Webinars (WebinarID);
+
+-- End of file.
 ```

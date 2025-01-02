@@ -4,6 +4,8 @@
     <file url="file://$PROJECT_DIR$/Implementacja/Indeksy/idx_course_date.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Indeksy/idx_studies_date.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Indeksy/idx_webinar_date.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Triggery/add_student_to_modules_trigger.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Triggery/add_student_to_product_trigger.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Widoki/course_information.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Widoki/future_course_sign.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Widoki/future_courses.sql" dialect="TSQL" />

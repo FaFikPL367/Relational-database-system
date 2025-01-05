@@ -1,0 +1,1 @@
+create index Subjects_studiesID on Subjects (StudiesID);

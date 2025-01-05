@@ -1,0 +1,1 @@
+create index Products_categoryID on Products (CategoryID);

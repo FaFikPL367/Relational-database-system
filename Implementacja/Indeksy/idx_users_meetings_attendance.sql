@@ -1,0 +1,2 @@
+create index Users_meetings_attendance_userID on Users_Meetings_Attendance (UserID);
+CREATE index Users_meetings_attendance_meetingID on Users_Meetings_Attendance (MeetingID);

@@ -1,0 +1,2 @@
+create index Online_sync_meetings_translatorID on Online_Sync_Meetings (TranslatorID);
+create index Online_sync_meetings_languageID on Online_Sync_Meetings (LanguageID);

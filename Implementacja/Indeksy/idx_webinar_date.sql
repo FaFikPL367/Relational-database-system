@@ -1,1 +1,0 @@
-create index idx_webinar_date on Webinars (DateAndBeginningTime, Duration)

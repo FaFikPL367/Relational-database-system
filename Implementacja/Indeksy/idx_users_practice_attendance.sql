@@ -1,0 +1,3 @@
+create index Users_practices_attendance_userID on Users_Practices_Attendance (UserID);
+create index Users_practices_attendance_studiesID on Users_Practices_Attendance (StudiesID);
+create index Users_practices_attendance_practiceID on Users_Practices_Attendance (PracticeID);

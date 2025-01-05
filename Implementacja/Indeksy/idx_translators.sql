@@ -1,0 +1,1 @@
+create index Translators_full_name on Translators (FirstName, LastName);

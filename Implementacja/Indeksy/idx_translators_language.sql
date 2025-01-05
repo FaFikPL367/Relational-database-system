@@ -1,0 +1,2 @@
+CREATE INDEX Translator_language_translatorID on Translators_Languages (TranslatorID);
+CREATE INDEX Translator_language_languageID on Translators_Languages (LanguageID);

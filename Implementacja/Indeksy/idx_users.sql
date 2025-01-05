@@ -1,0 +1,1 @@
+CREATE INDEX Users_full_name on Users (FirstName, LastName);

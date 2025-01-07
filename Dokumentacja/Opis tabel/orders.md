@@ -11,10 +11,11 @@ możliwych do zamówienia usług (produktów):
 	- 'Studies' - studia
 	- 'Subject' - przedmiot (zajęcia prowadzone w ramach pewnych studiów)
 	- 'Webinar' - webinar
+	- 'Reunion' - pojedynczy zjazd na studiach
 ```SQL
 CREATE TABLE Categories (
-   CategoryID int  NOT NULL,
-   Name nvarchar(15)  NOT NULL CHECK (Name IN ('Course', 'Meeting', 'Studies', 'Subject', 'Webinar')),
+   CategoryID int  NOT NULL IDENTITY(1, 1),
+   Name nvarchar(15)  NOT NULL CHECK (Name IN ('Course', 'Meeting', 'Studies', 'Subject', 'Webinar', 'Reunion')),
    CONSTRAINT Categories_pk PRIMARY KEY  (CategoryID)
 );
 ```
@@ -49,17 +50,19 @@ trzeba dokonać płatności w formacie 'rok-miesiąc-dzień' (jeśli jest podany
 to musi być późniejszy od poprzedniego terminu płatności)
 - **PaymentDate** [date] - data dokonania płatności za dane zamówienie składowe
 w formacie 'rok-miesiąc-dzień'
-- **Price** [money] - wpłacona kwota (musi być dodatnia)
+- **FullPrice** [money] - pełna cena za dany produkt
 - **ProductID** [int] - identyfikator zamawianego produktu
+- **Payment** [money] - wartość jaka została zapłacona za dany produkt np. za wpisowa na kurs czy studia
 ```SQL
 CREATE TABLE Orders_Details (
-   SubOrderID int  NOT NULL,
+   SubOrderID int  NOT NULL IDENTITY(1, 1),
    OrderID int  NOT NULL,
    PaymentDeadline date  NOT NULL,
-   ExtendedPaymentDeadline date  NULL CHECK (ExtendedPaymentDeadline > PaymentDeadline),
+   ExtendedPaymentDeadline date  NULL,
    PaymentDate date  NULL,
-   Price money  NOT NULL CHECK (Price > 0),
+   FullPrice money  NOT NULL CHECK (Price >= 0),
    ProductID int  NOT NULL,
+   Payment money  NOT NULL CHECK (Payment >= 0),
    CONSTRAINT Orders_Details_pk PRIMARY KEY  (SubOrderID)
 );
 ```

@@ -1,4 +1,7 @@
 ```SQL
+-- Created by Vertabelo (http://vertabelo.com)
+-- Last modification date: 2025-01-07 22:07:46.968
+
 -- foreign keys
 -- Reference: Courses_Users_Courses (table: Users_Courses)
 ALTER TABLE Users_Courses ADD CONSTRAINT Courses_Users_Courses
@@ -59,6 +62,11 @@ ALTER TABLE Online_Async_Meetings ADD CONSTRAINT Meetings_Online_Async_Meetings
 ALTER TABLE Online_Sync_Meetings ADD CONSTRAINT Meetings_Online_Sync_Meetings
     FOREIGN KEY (MeetingID)
     REFERENCES Meetings (MeetingID);
+
+-- Reference: Meetings_Studies_Reunion (table: Meetings)
+ALTER TABLE Meetings ADD CONSTRAINT Meetings_Studies_Reunion
+    FOREIGN KEY (ReunionID)
+    REFERENCES Studies_Reunion (ReunionID);
 
 -- Reference: Meetings_Subjects (table: Meetings)
 ALTER TABLE Meetings ADD CONSTRAINT Meetings_Subjects
@@ -150,6 +158,11 @@ ALTER TABLE Studies ADD CONSTRAINT Products_Studies
     FOREIGN KEY (StudiesID)
     REFERENCES Products (ProductID);
 
+-- Reference: Products_Studies_Reunion (table: Studies_Reunion)
+ALTER TABLE Studies_Reunion ADD CONSTRAINT Products_Studies_Reunion
+    FOREIGN KEY (ReunionID)
+    REFERENCES Products (ProductID);
+
 -- Reference: Products_Webinars (table: Webinars)
 ALTER TABLE Webinars ADD CONSTRAINT Products_Webinars
     FOREIGN KEY (WebinarID)
@@ -159,6 +172,11 @@ ALTER TABLE Webinars ADD CONSTRAINT Products_Webinars
 ALTER TABLE Studies ADD CONSTRAINT Studies_Employees
     FOREIGN KEY (CoordinatorID)
     REFERENCES Employees (EmployeeID);
+
+-- Reference: Studies_Reunion_Studies (table: Studies_Reunion)
+ALTER TABLE Studies_Reunion ADD CONSTRAINT Studies_Reunion_Studies
+    FOREIGN KEY (StudiesID)
+    REFERENCES Studies (StudiesID);
 
 -- Reference: Studies_Users_Studies (table: Users_Studies)
 ALTER TABLE Users_Studies ADD CONSTRAINT Studies_Users_Studies

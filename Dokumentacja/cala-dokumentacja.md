@@ -446,7 +446,8 @@ CREATE TABLE Subjects (
 Zawiera informacje o pojedynczym spotkaniu na studiach z danego przedmiotu:
  * **MeetingID** [int] - klucz główny, identyfikator spotkania
  * **TeacheID** [int] - klucz obcy, identyfikator nauczyciela
- * **SubjectID** [int] - klucz obcy - identyfikator przedmiotu, z którego jest dane spotkanie
+ * **SubjectID** [int] - klucz obcy, identyfikator przedmiotu, z którego jest dane spotkanie
+ * **ReunionID** [int] - klucz obcy, identyfikaotr zjazdu
  * **Date** [date] - data spotkania
  * **BeginningTime** [time(0)] - godzina rozpoczęcia spotkania
  * **Duration** [time(0)] - czas trwania spotkania
@@ -458,12 +459,12 @@ Zawiera informacje o pojedynczym spotkaniu na studiach z danego przedmiotu:
  * **TypeID** [int] - klucz obcy, identyfikator typu spotkania np. stacjonarne itd.
 ```SQL
 CREATE TABLE Meetings (
-   MeetingID int  NOT NULL,
+   MeetingID int  NOT NULL IDENTITY(1, 1),
    TeacherID int  NOT NULL,
    SubjectID int  NOT NULL,
-   Date date  NOT NULL,
-   BeginningTime time(0)  NOT NULL,
-   Duration time(0)  NOT NULL DEFAULT 01:30:00 CHECK (Duration > '00:00:00'),
+   ReunionID int  NOT NULL,
+   DateAndBeginningTime datetime  NOT NULL,
+   Duration time(0)  NOT NULL DEFAULT '01:30:00' CHECK (Duration > '00:00:00'),
    Price money  NOT NULL DEFAULT 120 CHECK (Price > 0),
    TypeID int  NOT NULL,
    CONSTRAINT MeetingID PRIMARY KEY  (MeetingID)
@@ -614,6 +615,23 @@ CREATE TABLE Users_Studies (
    CONSTRAINT Users_Studies_pk PRIMARY KEY  (UserID,StudiesID)
 );
 ```
+
+## <hr>
+## Tabela **Studies_Reunion**
+Zawiera ona informacje o zjazdach występujących na danych studiach:
+ * **ReunionID** [int] - klucz główny, identyfikator zjazdu
+ * **StudiesID** [int] - klucz poboczny, identyfikator studiów
+ * **StartDate** [date] - data startu danego zjazdu
+ * **EndDate** [date] - data końca danego zjadu
+```SQL
+CREATE TABLE Studies_Reunion (
+   ReunionID int  NOT NULL,
+   StudiesID int  NOT NULL,
+   StartDate date  NOT NULL,
+   EndDate date  NOT NULL,
+   CONSTRAINT Studies_Reunion_pk PRIMARY KEY  (ReunionID)
+);
+```
 ---
 # Kategoria Webinars
 ---
@@ -686,10 +704,11 @@ możliwych do zamówienia usług (produktów):
 	- 'Studies' - studia
 	- 'Subject' - przedmiot (zajęcia prowadzone w ramach pewnych studiów)
 	- 'Webinar' - webinar
+	- 'Reunion' - pojedynczy zjazd na studiach
 ```SQL
 CREATE TABLE Categories (
-   CategoryID int  NOT NULL,
-   Name nvarchar(15)  NOT NULL CHECK (Name IN ('Course', 'Meeting', 'Studies', 'Subject', 'Webinar')),
+   CategoryID int  NOT NULL IDENTITY(1, 1),
+   Name nvarchar(15)  NOT NULL CHECK (Name IN ('Course', 'Meeting', 'Studies', 'Subject', 'Webinar', 'Reunion')),
    CONSTRAINT Categories_pk PRIMARY KEY  (CategoryID)
 );
 ```
@@ -717,24 +736,26 @@ Zawiera informacje szczegółowe dotyczące danego zamówienia
 oraz jego zamówień składowych:
 - **SubOrderID** [int] - klucz główny, identyfikator zamówienia składowego
 - **OrderID** [int] - identyfikator zamówienia
-- PaymentDeadline [date] - termin, do którego trzeba dokonać
-**płatności** w formacie 'rok-miesiąc-dzień'
+- **PaymentDeadline** [date] - termin, do którego trzeba dokonać
+płatności w formacie 'rok-miesiąc-dzień'
 - **ExtendedPaymentDeadline** [date] - odroczony termin, do którego
 trzeba dokonać płatności w formacie 'rok-miesiąc-dzień' (jeśli jest podany,
 to musi być późniejszy od poprzedniego terminu płatności)
 - **PaymentDate** [date] - data dokonania płatności za dane zamówienie składowe
 w formacie 'rok-miesiąc-dzień'
-- **Price** [money] - wpłacona kwota (musi być dodatnia)
+- **FullPrice** [money] - pełna cena za dany produkt
 - **ProductID** [int] - identyfikator zamawianego produktu
+- **Payment** [money] - wartość jaka została zapłacona za dany produkt np. za wpisowa na kurs czy studia
 ```SQL
 CREATE TABLE Orders_Details (
-   SubOrderID int  NOT NULL,
+   SubOrderID int  NOT NULL IDENTITY(1, 1),
    OrderID int  NOT NULL,
    PaymentDeadline date  NOT NULL,
-   ExtendedPaymentDeadline date  NULL CHECK (ExtendedPaymentDeadline > PaymentDeadline),
+   ExtendedPaymentDeadline date  NULL,
    PaymentDate date  NULL,
-   Price money  NOT NULL CHECK (Price > 0),
+   FullPrice money  NOT NULL CHECK (Price >= 0),
    ProductID int  NOT NULL,
+   Payment money  NOT NULL CHECK (Payment >= 0),
    CONSTRAINT Orders_Details_pk PRIMARY KEY  (SubOrderID)
 );
 ```
@@ -752,10 +773,14 @@ CREATE TABLE Products (
 );
 ```
 
+
 ---
 # Zależności między tabelami
 ---
 ```SQL
+-- Created by Vertabelo (http://vertabelo.com)
+-- Last modification date: 2025-01-07 22:07:46.968
+
 -- foreign keys
 -- Reference: Courses_Users_Courses (table: Users_Courses)
 ALTER TABLE Users_Courses ADD CONSTRAINT Courses_Users_Courses
@@ -816,6 +841,11 @@ ALTER TABLE Online_Async_Meetings ADD CONSTRAINT Meetings_Online_Async_Meetings
 ALTER TABLE Online_Sync_Meetings ADD CONSTRAINT Meetings_Online_Sync_Meetings
     FOREIGN KEY (MeetingID)
     REFERENCES Meetings (MeetingID);
+
+-- Reference: Meetings_Studies_Reunion (table: Meetings)
+ALTER TABLE Meetings ADD CONSTRAINT Meetings_Studies_Reunion
+    FOREIGN KEY (ReunionID)
+    REFERENCES Studies_Reunion (ReunionID);
 
 -- Reference: Meetings_Subjects (table: Meetings)
 ALTER TABLE Meetings ADD CONSTRAINT Meetings_Subjects
@@ -907,6 +937,11 @@ ALTER TABLE Studies ADD CONSTRAINT Products_Studies
     FOREIGN KEY (StudiesID)
     REFERENCES Products (ProductID);
 
+-- Reference: Products_Studies_Reunion (table: Studies_Reunion)
+ALTER TABLE Studies_Reunion ADD CONSTRAINT Products_Studies_Reunion
+    FOREIGN KEY (ReunionID)
+    REFERENCES Products (ProductID);
+
 -- Reference: Products_Webinars (table: Webinars)
 ALTER TABLE Webinars ADD CONSTRAINT Products_Webinars
     FOREIGN KEY (WebinarID)
@@ -916,6 +951,11 @@ ALTER TABLE Webinars ADD CONSTRAINT Products_Webinars
 ALTER TABLE Studies ADD CONSTRAINT Studies_Employees
     FOREIGN KEY (CoordinatorID)
     REFERENCES Employees (EmployeeID);
+
+-- Reference: Studies_Reunion_Studies (table: Studies_Reunion)
+ALTER TABLE Studies_Reunion ADD CONSTRAINT Studies_Reunion_Studies
+    FOREIGN KEY (StudiesID)
+    REFERENCES Studies (StudiesID);
 
 -- Reference: Studies_Users_Studies (table: Users_Studies)
 ALTER TABLE Users_Studies ADD CONSTRAINT Studies_Users_Studies

@@ -49,7 +49,8 @@ CREATE TABLE Subjects (
 Zawiera informacje o pojedynczym spotkaniu na studiach z danego przedmiotu:
  * **MeetingID** [int] - klucz główny, identyfikator spotkania
  * **TeacheID** [int] - klucz obcy, identyfikator nauczyciela
- * **SubjectID** [int] - klucz obcy - identyfikator przedmiotu, z którego jest dane spotkanie
+ * **SubjectID** [int] - klucz obcy, identyfikator przedmiotu, z którego jest dane spotkanie
+ * **ReunionID** [int] - klucz obcy, identyfikator zjazdu
  * **Date** [date] - data spotkania
  * **BeginningTime** [time(0)] - godzina rozpoczęcia spotkania
  * **Duration** [time(0)] - czas trwania spotkania
@@ -61,12 +62,12 @@ Zawiera informacje o pojedynczym spotkaniu na studiach z danego przedmiotu:
  * **TypeID** [int] - klucz obcy, identyfikator typu spotkania np. stacjonarne itd.
 ```SQL
 CREATE TABLE Meetings (
-   MeetingID int  NOT NULL,
+   MeetingID int  NOT NULL IDENTITY(1, 1),
    TeacherID int  NOT NULL,
    SubjectID int  NOT NULL,
-   Date date  NOT NULL,
-   BeginningTime time(0)  NOT NULL,
-   Duration time(0)  NOT NULL DEFAULT 01:30:00 CHECK (Duration > '00:00:00'),
+   ReunionID int  NOT NULL,
+   DateAndBeginningTime datetime  NOT NULL,
+   Duration time(0)  NOT NULL DEFAULT '01:30:00' CHECK (Duration > '00:00:00'),
    Price money  NOT NULL DEFAULT 120 CHECK (Price > 0),
    TypeID int  NOT NULL,
    CONSTRAINT MeetingID PRIMARY KEY  (MeetingID)
@@ -217,6 +218,24 @@ CREATE TABLE Users_Studies (
    CONSTRAINT Users_Studies_pk PRIMARY KEY  (UserID,StudiesID)
 );
 ```
+
+## <hr>
+## Tabela **Studies_Reunion**
+Zawiera ona informacje o zjazdach występujących na danych studiach:
+ * **ReunionID** [int] - klucz główny, identyfikator zjazdu
+ * **StudiesID** [int] - klucz poboczny, identyfikator studiów
+ * **StartDate** [date] - data startu danego zjazdu
+ * **EndDate** [date] - data końca danego zjadu
+```SQL
+CREATE TABLE Studies_Reunion (
+   ReunionID int  NOT NULL,
+   StudiesID int  NOT NULL,
+   StartDate date  NOT NULL,
+   EndDate date  NOT NULL,
+   CONSTRAINT Studies_Reunion_pk PRIMARY KEY  (ReunionID)
+);
+```
+
 
 
 

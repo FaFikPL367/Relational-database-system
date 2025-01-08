@@ -1,4 +1,4 @@
-create procedure add_employee
+CREATE procedure add_employee
     @FirstName nvarchar(50),
     @LastName nvarchar(50),
     @Phone varchar(15),
@@ -25,14 +25,9 @@ begin
 
         -- Pobranie ID nowo utworzonego uzytkownika
         set @NewEmployeeID = scope_identity();
-
-        print 'Pomyślne dodanie uzytkownika';
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
-        set @NewEmployeeID = null; -- W razie błędu zwróć NULL
+        -- Przerzucenie błędu dalej
+        throw;
     end catch
 end;
-go
-

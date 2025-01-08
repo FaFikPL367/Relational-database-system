@@ -1,4 +1,4 @@
-create procedure add_course_modules
+CREATE procedure add_course_modules
     @TeacherID int,
     @CourseID int,
     @Name nvarchar(50),
@@ -53,13 +53,9 @@ as begin
         -- W innych przypadkach można dodać moduł
         insert Modules (TeacherID, CourseID, Name, Description, DateAndBeginningTime, Duration, TypeID)
         values (@TeacherID, @CourseID, @Name, @Description, @DateAndBeginningTime, @Duration, @TypeID)
-
-        print 'Pomyślnie dodano moduł';
     end try
     begin catch
-        -- Obsługa błędów
-        PRINT 'Pojawił się błąd: ' + ERROR_MESSAGE();
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
-end
-go
-
+end;

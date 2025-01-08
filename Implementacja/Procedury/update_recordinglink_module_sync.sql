@@ -19,13 +19,9 @@ as begin
         update Online_Sync_Modules
         set RecordingLink = @RecordingLink
         where ModuleID = @ModuleID
-
-        print 'Pomyślne dodanie linku do nagrania'
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
-end
-go
-
+end;

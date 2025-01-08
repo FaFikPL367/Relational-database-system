@@ -18,13 +18,9 @@ begin
         -- Pobranie ID nowo utworzonego uzytkownika
         set @NewUserID = scope_identity();
 
-        print 'Pomyślne dodanie uzytkownika';
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
-        set @NewUserID = null; -- W razie błędu zwróć NULL
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
 end;
-go
-

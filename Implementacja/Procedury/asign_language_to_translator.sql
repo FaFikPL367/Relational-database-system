@@ -1,4 +1,4 @@
-create procedure assign_translator_to_languages
+CREATE procedure assign_translator_to_languages
     @TranslatorID int,
     @LanguageID int
 as begin
@@ -24,13 +24,9 @@ as begin
         -- W innych przypadkach dodajemy pare
         insert Translators_Languages (TranslatorID, LanguageID)
         values (@TranslatorID, @LanguageID)
-
-        print 'Pomyślne dodanie jezyka do tlumacza';
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
-end
-go
-
+end;

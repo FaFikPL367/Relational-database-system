@@ -1,4 +1,4 @@
-create procedure add_translator
+CREATE procedure add_translator
     @FirstName nvarchar(50),
     @LastName nvarchar(50),
     @Phone varchar(15),
@@ -17,14 +17,9 @@ begin
 
         -- Pobranie ID nowo utworzonego uzytkownika
         set @NewTranslatorID = scope_identity();
-
-        print 'Pomyślne dodanie uzytkownika';
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
-        set @NewTranslatorID = null; -- W razie błędu zwróć NULL
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
 end;
-go
-

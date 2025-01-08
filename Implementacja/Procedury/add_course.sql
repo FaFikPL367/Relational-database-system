@@ -8,6 +8,8 @@ CREATE procedure add_course
     @Status bit
 as begin
     begin try
+        begin transaction;
+
         -- Sprawdzenie poprawności wpisywanych danych
         if not exists(select 1 from Employees where EmployeeID = @CoordinatorID and
                                                     PositionID = 4)
@@ -39,12 +41,16 @@ as begin
         insert Courses (CourseID, CoordinatorID, Name, Description, StartDate, EndDate, Price)
         values (@NewProductID, @CoordinatorID, @Name, @Description, @StartDate, @EndDate, @Price)
 
-        print 'Poprawnie dodany kurs';
+        commit transaction;
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
-    end catch
-end
-go
+        -- Wycofanie transakcji w przypadku błędu
+        if @@TRANCOUNT > 0
+        begin
+            rollback transaction;
+        end;
 
+        -- Przerzucenie ERRORa dalej
+        throw;
+    end catch
+end;

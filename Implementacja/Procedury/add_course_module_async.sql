@@ -18,13 +18,9 @@ as begin
 
         insert Online_Async_Modules(ModuleID, RecordingLink)
         values (@ModuleID, @RecordingLink)
-
-        print 'Pomyślnie dodany moduł asynchroniczny';
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
-end
-go
-
+end;

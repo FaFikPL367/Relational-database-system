@@ -1,8 +1,12 @@
-create view employees_information as
+CREATE view employees_information as
     select EmployeeID,
-           concat(FirstName, ' ', LastName) as fullname,
+           FirstName,
+           LastName,
            Phone,
            Email,
-           concat(Address, ' ,', City, ' ,', PostalCode) as fullAddress,
+           Address,
+           City,
+           PostalCode,
            PositionName
     from Employees inner join Employees_Postions on Employees.PositionID = Employees_Postions.PositionID
+

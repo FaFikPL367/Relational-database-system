@@ -1079,12 +1079,15 @@ create view course_information as
 ### Employees_information
 Widok przedstawia informacje danych pracowników w systemie.
 ```SQL
-create view employees_information as
+CREATE view employees_information as
     select EmployeeID,
-           concat(FirstName, ' ', LastName) as fullname,
+           FirstName,
+           LastName,
            Phone,
            Email,
-           concat(Address, ' ,', City, ' ,', PostalCode) as fullAddress,
+           Address,
+           City,
+           PostalCode,
            PositionName
     from Employees inner join Employees_Postions on Employees.PositionID = Employees_Postions.PositionID
 ```
@@ -1108,7 +1111,7 @@ Widok przedstawia informacje o przyszłych kursach.
 create view future_courses as
     select *
     from course_information
-    where getdate() < StartDate
+    where getdate() < StartDate;
 ```
 
 ---
@@ -1116,10 +1119,14 @@ create view future_courses as
 ### Future_studie_sign
 Widok przedstawia informacje o ilości osób zapisanych na przyszłe studia.
 ```SQL
-create view future_studie_sign as
-    select future_studies.StudiesID, count(UserID) as Total_users
-    from future_studies inner join Users_Studies on Users_Studies.StudiesID = future_studies.StudiesID
-    group by future_studies.StudiesID;
+CREATE view future_course_sign as
+    select future_courses.CourseID,
+           Name,
+           StartDate,
+           EndDate,
+           count(UserID) as Total_users
+    from future_courses left join Users_Courses on Users_Courses.CourseID = future_courses.CourseID
+    group by future_courses.CourseID, Name, StartDate, EndDate;
 ```
 
 ---
@@ -1138,10 +1145,14 @@ create view future_studies as
 ### Future_webinar_sign
 Widok przedstawia informacje o ilości zapisanych osób na przyszłe webinary.
 ```SQL
-create view future_webinar_sign as
-    select future_webinars.WebinarID, count(UserID) as Total_users
-    from future_webinars inner join Users_Webinars on Users_Webinars.WebinarID = future_webinars.WebinarID
-    group by future_webinars.WebinarID;
+CREATE view future_webinar_sign as
+    select future_webinars.WebinarID, 
+           Name,
+           DateAndBeginningTime,
+           Duration,
+           count(UserID) as Total_users
+    from future_webinars left join Users_Webinars on Users_Webinars.WebinarID = future_webinars.WebinarID
+    group by future_webinars.WebinarID, Name, Duration, DateAndBeginningTime
 ```
 
 ---
@@ -1267,12 +1278,15 @@ create view studie_information as
 ### Translators_information
 Widok przedstawia informacje o tłumaczach pracujących na platformie.
 ```SQL
-create view translators_information as
+CREATE view translators_information as
     select TranslatorID,
-           concat(FirstName, ' ', LastName) as fullName,
+           FirstName,
+           LastName,
            Phone,
            Email,
-           concat(Address, ' ,', City, ' ,', PostalCode) as fullAddress
+           Address,
+           City,
+           PostalCode
     from Translators;
 ```
 
@@ -1294,12 +1308,15 @@ create view translators_language as
 ### Users_information
 Widok przedstawia informacje o użytkownikach systemu.
 ```SQL
-create view users_information as
+CREATE view users_information as
     select UserID,
-           concat(FirstName, ' ', LastName) as fullName,
+           FirstName,
+           LastName,
            Phone,
            Email,
-           concat(Address, ' ,', City, ' ,', PostalCode) as fullAddress
+           Address,
+           City,
+           PostalCode
     from Users;
 ```
 
@@ -1327,7 +1344,6 @@ create view webinar_information as
     left join Translators on Webinars.TranslatorID = Translators.TranslatorID
     left join Languages on Webinars.LanguageID = Languages.LanguageID;
 ```
-
 ---
 ## Funkcje
 ---
@@ -1574,12 +1590,10 @@ as begin
 
         insert Online_Async_Modules(ModuleID, RecordingLink)
         values (@ModuleID, @RecordingLink)
-
-        print 'Pomyślnie dodany moduł asynchroniczny';
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
 end;
 ```
@@ -1643,12 +1657,10 @@ as begin
 
         insert In_person_Modules(ModuleID, Classroom, TranslatorID, LanguageID)
         values (@ModuleID, @Classroom, @TranslatorID, @LanguageID)
-
-        print 'Pomyślnie dodany moduł stacjonarny';
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
 end;
 ```
@@ -1700,12 +1712,10 @@ as begin
 
         insert Online_Sync_Modules(ModuleID, MeetingLink, RecordingLink, TranslatorID, LanguageID)
         values (@ModuleID, @MeetingLink, @RecordingLink, @TranslatorID, @LanguageID)
-
-        print 'Pomyślnie dodany moduł synchroniczny';
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
 end;
 ```
@@ -1715,7 +1725,7 @@ end;
 ### Add_course_module
 Procedura służąca do dodawania modułów do danego kursu.
 ```SQl
-create procedure add_course_modules
+CREATE procedure add_course_modules
     @TeacherID int,
     @CourseID int,
     @Name nvarchar(50),
@@ -1770,12 +1780,10 @@ as begin
         -- W innych przypadkach można dodać moduł
         insert Modules (TeacherID, CourseID, Name, Description, DateAndBeginningTime, Duration, TypeID)
         values (@TeacherID, @CourseID, @Name, @Description, @DateAndBeginningTime, @Duration, @TypeID)
-
-        print 'Pomyślnie dodano moduł';
     end try
     begin catch
-        -- Obsługa błędów
-        PRINT 'Pojawił się błąd: ' + ERROR_MESSAGE();
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
 end;
 ```
@@ -1795,6 +1803,8 @@ CREATE procedure add_course
     @Status bit
 as begin
     begin try
+        begin transaction;
+
         -- Sprawdzenie poprawności wpisywanych danych
         if not exists(select 1 from Employees where EmployeeID = @CoordinatorID and
                                                     PositionID = 4)
@@ -1826,11 +1836,17 @@ as begin
         insert Courses (CourseID, CoordinatorID, Name, Description, StartDate, EndDate, Price)
         values (@NewProductID, @CoordinatorID, @Name, @Description, @StartDate, @EndDate, @Price)
 
-        print 'Poprawnie dodany kurs';
+        commit transaction;
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
+        -- Wycofanie transakcji w przypadku błędu
+        if @@TRANCOUNT > 0
+        begin
+            rollback transaction;
+        end;
+
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
 end;
 ```
@@ -1840,7 +1856,7 @@ end;
 ### Add_employee
 Procedura służąca do dodania nowego pracownika do systemu.
 ```SQl
-create procedure add_employee
+CREATE procedure add_employee
     @FirstName nvarchar(50),
     @LastName nvarchar(50),
     @Phone varchar(15),
@@ -1852,6 +1868,7 @@ create procedure add_employee
     @NewEmployeeID int OUTPUT
 as
 begin
+
     begin try
         -- Sprawdzenie czy dana pozycja istnieje
         if not exists(select 1 from Employees_Postions where PositionID = @PositionID)
@@ -1866,13 +1883,10 @@ begin
 
         -- Pobranie ID nowo utworzonego uzytkownika
         set @NewEmployeeID = scope_identity();
-
-        print 'Pomyślne dodanie uzytkownika';
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
-        set @NewEmployeeID = null; -- W razie błędu zwróć NULL
+        -- Przerzucenie błędu dalej
+        throw;
     end catch
 end;
 ```
@@ -1882,7 +1896,7 @@ end;
 ### Add_translator
 Procedura służąca na dodanie nowego tłumacza do systemu.
 ```SQl
-create procedure add_translator
+CREATE procedure add_translator
     @FirstName nvarchar(50),
     @LastName nvarchar(50),
     @Phone varchar(15),
@@ -1901,13 +1915,10 @@ begin
 
         -- Pobranie ID nowo utworzonego uzytkownika
         set @NewTranslatorID = scope_identity();
-
-        print 'Pomyślne dodanie uzytkownika';
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
-        set @NewTranslatorID = null; -- W razie błędu zwróć NULL
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
 end;
 ```
@@ -1937,12 +1948,10 @@ begin
         -- Pobranie ID nowo utworzonego uzytkownika
         set @NewUserID = scope_identity();
 
-        print 'Pomyślne dodanie uzytkownika';
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
-        set @NewUserID = null; -- W razie błędu zwróć NULL
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
 end;
 ```
@@ -1967,6 +1976,8 @@ CREATE procedure add_webinar
     @Status bit
 as begin
     begin try
+        begin transaction;
+
         -- Sprawdzenie poprawności wpisywanych danych
         if not exists(select 1 from Employees where EmployeeID = @CoordinatorID and
                                                     PositionID = 2)
@@ -2013,11 +2024,16 @@ as begin
         insert Webinars (WebinarID, Name, Description, DateAndBeginningTime, Duration, TeacherID, TranslatorID, Price, LanguageID, RecordingLink, MeetingLink, CoordinatorID)
         values (@NewProductID, @Name, @Description, @DateAndBeginningTIme, @Duration, @TeacherID, @TranslatorID, @Price, @LanguageID, @RecordingLink, @MeetingLink, @CoordinatorID)
 
-        print 'Pomyślne dodanie webinaru';
+        commit transaction;
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
+        if @@TRANCOUNT > 0
+        begin 
+            rollback transaction;
+        end;
+        
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
 end;
 ```
@@ -2027,7 +2043,7 @@ end;
 ### Assign_language_to_translator
 Procedura służąca do dodania języka do tłumacza (języka, którego tłumaczy).
 ```SQl
-create procedure assign_translator_to_languages
+CREATE procedure assign_translator_to_languages
     @TranslatorID int,
     @LanguageID int
 as begin
@@ -2053,12 +2069,10 @@ as begin
         -- W innych przypadkach dodajemy pare
         insert Translators_Languages (TranslatorID, LanguageID)
         values (@TranslatorID, @LanguageID)
-
-        print 'Pomyślne dodanie jezyka do tlumacza';
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
 end;
 ```
@@ -2078,26 +2092,26 @@ as begin
         begin
             throw 50001, 'Tłumacz o podanym ID nie istnieje', 1;
         end
-
+        
         -- Sprawdzenie czy język istnieje
         if not exists(select 1 from Languages where LanguageID = @LanguageID)
         begin
             throw 50002, 'Język o podanym ID nie istnieje', 1;
         end
-
+        
         -- Sprawdzenie czy dana para istnieje
         if dbo.check_translator_language(@TranslatorID, @LanguageID) = cast(0 as bit)
         begin
             throw 50003, 'Taka para już istnieje', 2;
         end
-
+        
         -- W innym przypadku ją usuwamy
         delete from Translators_Languages
         where TranslatorID = @TranslatorID and LanguageID = @languageID;
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
+        -- Przerzucenie błędu dalej
+        throw;
     end catch
 end;
 ```
@@ -2127,14 +2141,10 @@ as begin
         update Modules
         set TypeID = @TypeID
         where ModuleID = @ModuleID
-
-        -- Usunięcie modułu z tabeli ze starego typu
-
-        print 'Pomyślne zmienie typu modułu';
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
 end;
 ```
@@ -2144,7 +2154,7 @@ end;
 ### Update_recordinglink_module_sync
 Procedura służąca do dodania linku do nagrania w modułach prowadząnych online-synchronicznie.
 ```SQl
-create procedure update_recordinglink_module_sync
+CREATE procedure update_recordinglink_module_sync
     @ModuleID int,
     @RecordingLink nvarchar(100)
 as begin
@@ -2165,12 +2175,10 @@ as begin
         update Online_Sync_Modules
         set RecordingLink = @RecordingLink
         where ModuleID = @ModuleID
-
-        print 'Pomyślne dodanie linku do nagrania'
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
 end;
 ```
@@ -2195,12 +2203,10 @@ as begin
         update Webinars
         set RecordingLink = @RecordingLink
         where WebinarID = @WebinarID
-
-        print 'Pomyślne dodanie linku do nagrania'
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
 end;
 ```

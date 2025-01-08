@@ -1,7 +1,10 @@
-create view translators_information as
+CREATE view translators_information as
     select TranslatorID,
-           concat(FirstName, ' ', LastName) as fullName,
+           FirstName,
+           LastName,
            Phone,
            Email,
-           concat(Address, ' ,', City, ' ,', PostalCode) as fullAddress
+           Address,
+           City,
+           PostalCode
     from Translators;

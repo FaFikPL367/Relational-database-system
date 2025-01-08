@@ -1,7 +1,10 @@
-create view users_information as
+CREATE view users_information as
     select UserID,
-           concat(FirstName, ' ', LastName) as fullName,
+           FirstName,
+           LastName,
            Phone,
            Email,
-           concat(Address, ' ,', City, ' ,', PostalCode) as fullAddress
+           Address,
+           City,
+           PostalCode
     from Users;

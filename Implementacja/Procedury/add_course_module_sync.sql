@@ -40,13 +40,9 @@ as begin
 
         insert Online_Sync_Modules(ModuleID, MeetingLink, RecordingLink, TranslatorID, LanguageID)
         values (@ModuleID, @MeetingLink, @RecordingLink, @TranslatorID, @LanguageID)
-
-        print 'Pomyślnie dodany moduł synchroniczny';
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
-end
-go
-
+end;

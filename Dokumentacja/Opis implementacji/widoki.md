@@ -29,12 +29,15 @@ create view course_information as
 ### Employees_information
 Widok przedstawia informacje danych pracowników w systemie.
 ```SQL
-create view employees_information as
+CREATE view employees_information as
     select EmployeeID,
-           concat(FirstName, ' ', LastName) as fullname,
+           FirstName,
+           LastName,
            Phone,
            Email,
-           concat(Address, ' ,', City, ' ,', PostalCode) as fullAddress,
+           Address,
+           City,
+           PostalCode,
            PositionName
     from Employees inner join Employees_Postions on Employees.PositionID = Employees_Postions.PositionID
 ```
@@ -58,7 +61,7 @@ Widok przedstawia informacje o przyszłych kursach.
 create view future_courses as
     select *
     from course_information
-    where getdate() < StartDate
+    where getdate() < StartDate;
 ```
 
 ---
@@ -66,10 +69,14 @@ create view future_courses as
 ### Future_studie_sign
 Widok przedstawia informacje o ilości osób zapisanych na przyszłe studia.
 ```SQL
-create view future_studie_sign as
-    select future_studies.StudiesID, count(UserID) as Total_users
-    from future_studies inner join Users_Studies on Users_Studies.StudiesID = future_studies.StudiesID
-    group by future_studies.StudiesID;
+CREATE view future_course_sign as
+    select future_courses.CourseID,
+           Name,
+           StartDate,
+           EndDate,
+           count(UserID) as Total_users
+    from future_courses left join Users_Courses on Users_Courses.CourseID = future_courses.CourseID
+    group by future_courses.CourseID, Name, StartDate, EndDate;
 ```
 
 ---
@@ -88,10 +95,14 @@ create view future_studies as
 ### Future_webinar_sign
 Widok przedstawia informacje o ilości zapisanych osób na przyszłe webinary.
 ```SQL
-create view future_webinar_sign as
-    select future_webinars.WebinarID, count(UserID) as Total_users
-    from future_webinars inner join Users_Webinars on Users_Webinars.WebinarID = future_webinars.WebinarID
-    group by future_webinars.WebinarID;
+CREATE view future_webinar_sign as
+    select future_webinars.WebinarID, 
+           Name,
+           DateAndBeginningTime,
+           Duration,
+           count(UserID) as Total_users
+    from future_webinars left join Users_Webinars on Users_Webinars.WebinarID = future_webinars.WebinarID
+    group by future_webinars.WebinarID, Name, Duration, DateAndBeginningTime
 ```
 
 ---
@@ -217,12 +228,15 @@ create view studie_information as
 ### Translators_information
 Widok przedstawia informacje o tłumaczach pracujących na platformie.
 ```SQL
-create view translators_information as
+CREATE view translators_information as
     select TranslatorID,
-           concat(FirstName, ' ', LastName) as fullName,
+           FirstName,
+           LastName,
            Phone,
            Email,
-           concat(Address, ' ,', City, ' ,', PostalCode) as fullAddress
+           Address,
+           City,
+           PostalCode
     from Translators;
 ```
 
@@ -244,12 +258,15 @@ create view translators_language as
 ### Users_information
 Widok przedstawia informacje o użytkownikach systemu.
 ```SQL
-create view users_information as
+CREATE view users_information as
     select UserID,
-           concat(FirstName, ' ', LastName) as fullName,
+           FirstName,
+           LastName,
            Phone,
            Email,
-           concat(Address, ' ,', City, ' ,', PostalCode) as fullAddress
+           Address,
+           City,
+           PostalCode
     from Users;
 ```
 

@@ -13,6 +13,8 @@ CREATE procedure add_webinar
     @Status bit
 as begin
     begin try
+        begin transaction;
+
         -- Sprawdzenie poprawności wpisywanych danych
         if not exists(select 1 from Employees where EmployeeID = @CoordinatorID and
                                                     PositionID = 2)
@@ -59,12 +61,16 @@ as begin
         insert Webinars (WebinarID, Name, Description, DateAndBeginningTime, Duration, TeacherID, TranslatorID, Price, LanguageID, RecordingLink, MeetingLink, CoordinatorID)
         values (@NewProductID, @Name, @Description, @DateAndBeginningTIme, @Duration, @TeacherID, @TranslatorID, @Price, @LanguageID, @RecordingLink, @MeetingLink, @CoordinatorID)
 
-        print 'Pomyślne dodanie webinaru';
+        commit transaction;
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
+        if @@TRANCOUNT > 0
+        begin
+            rollback transaction;
+        end;
+
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
-end
-go
+end;
 

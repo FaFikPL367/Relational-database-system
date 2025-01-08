@@ -52,13 +52,9 @@ as begin
 
         insert In_person_Modules(ModuleID, Classroom, TranslatorID, LanguageID)
         values (@ModuleID, @Classroom, @TranslatorID, @LanguageID)
-
-        print 'Pomyślnie dodany moduł stacjonarny';
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
-end
-go
-
+end;

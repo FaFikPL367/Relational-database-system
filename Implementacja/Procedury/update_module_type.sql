@@ -18,15 +18,9 @@ as begin
         update Modules
         set TypeID = @TypeID
         where ModuleID = @ModuleID
-
-        -- Usunięcie modułu z tabeli ze starego typu
-
-        print 'Pomyślne zmienie typu modułu';
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
+        -- Przerzucenie ERRORa dalej
+        throw;
     end catch
-end
-go
-
+end;

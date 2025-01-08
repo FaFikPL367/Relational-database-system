@@ -26,9 +26,7 @@ as begin
         where TranslatorID = @TranslatorID and LanguageID = @languageID;
     end try
     begin catch
-        -- Obsługa błedu
-        print 'Pojawienie sie błedu: ' + error_message();
+        -- Przerzucenie błędu dalej
+        throw;
     end catch
-end
-go
-
+end;

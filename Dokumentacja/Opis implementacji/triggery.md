@@ -61,8 +61,8 @@ as begin
         begin
             -- Sprawdzenie czy już jest zapisany na dany webinar
             if exists(select UserID from inserted inner join Orders_Details on inserted.SubOrderID = Orders_Details.SubOrderID
-                                    inner join Orders on Orders_Details.OrderID = Orders.OrderID
-                                    where UserID in (select distinct UserID from Users_Webinars inner join inserted on inserted.ProductID = Users_Webinars.WebinarID))
+                inner join Orders on Orders_Details.OrderID = Orders.OrderID
+                where UserID in (select distinct UserID from Users_Webinars inner join inserted on inserted.ProductID = Users_Webinars.WebinarID))
             begin
                 throw 50001, 'Użytkownik o podanym ID jest już zapisany na ten webinar', 1;
             end

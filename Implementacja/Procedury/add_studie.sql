@@ -12,7 +12,7 @@ as begin
 
         -- Sprawdzenie poprawności wpisywanych danych
         if not exists(select 1 from Employees where EmployeeID = @CoordinatorID and
-                                                    PositionID = 2)
+                                                    PositionID = 3)
         begin
             throw 50001, 'Koordynator o danym ID nie istnieje lub nie jest kordynatorem studiów', 1;
         end

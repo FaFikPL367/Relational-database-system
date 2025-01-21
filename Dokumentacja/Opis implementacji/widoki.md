@@ -1,5 +1,5 @@
 # Widoki
----
+
 ### Course_information
 Widok przedstawia informacje o stworzonych kursach dostępnych i nie dostępnych. Przedstawia również informacje o ilości modułów i maksymalnej ilości miejsc na kursie (wyznaczana na podstawie limitu w modułach stacjonarnych).
 ```SQL
@@ -300,3 +300,233 @@ create view webinar_information as
 ```
 
 ---
+
+### Course_module_types
+Widok ten przedstawia ile jest modułów każdego typu w każdym kursie.
+```SQL
+create view course_module_types as
+    with in_person_count as (
+        select CourseID, count(Modules.ModuleID) as in_person
+        from Modules inner join In_person_Modules on Modules.ModuleID = In_person_Modules.ModuleID
+        group by CourseID
+    ), online_sync_count as (
+        select CourseID, count(Modules.ModuleID) as online_sync
+        from Modules inner join Online_Sync_Modules on Modules.ModuleID = Online_Sync_Modules.ModuleID
+        group by CourseID
+    ), online_async_count as (
+        select CourseID, count(Modules.ModuleID) as online_async
+        from Modules inner join Online_Async_Modules on Modules.ModuleID = Online_Async_Modules.ModuleID
+        group by CourseID
+    )
+
+    select Courses.CourseID, in_person, online_sync, online_async
+    from Courses left join in_person_count on Courses.CourseID = in_person_count.CourseID
+    left join online_async_count on Courses.CourseID = online_async_count.CourseID
+    left join online_sync_count on Courses.CourseID = online_sync_count.CourseID
+```
+
+---
+
+### Course_passes
+Widok ten przedstawia listę ze zdawalnością w modułach odpowiednich kursów dla osób zapisanych.
+```SQL
+create view course_passes as
+    select CourseID,
+           Modules.ModuleID,
+           FirstName,
+           LastName,
+           Passed
+    from Users_Modules_Passes inner join Modules on Users_Modules_Passes.ModuleID = Modules.ModuleID
+    inner join Users on Users_Modules_Passes.UserID = Users.UserID
+```
+
+---
+
+### Course_sing_limit
+Widok przedstawia dla każdego kursu ile miejsc się na niego sprzedało i jaki jest limit.
+```SQL
+create view course_sign_limit as
+    with course_limits as (
+        select CourseID, min(Limit) as total_limit
+        from Modules inner join In_person_Modules on Modules.ModuleID = In_person_Modules.ModuleID
+        group by CourseID
+    )
+
+    select Courses.CourseID, total_product_orders, total_limit
+    from Courses left join products_orders on products_orders.ProductID = Courses.CourseID
+    left join course_limits on course_limits.CourseID = Courses.CourseID
+```
+
+---
+
+### Dont_make_payment_in_time
+Widok ten przedstawia użytkowników, którzy nie zapłacili do wymaganego czasu (nawet jak czas został przedłużony).
+```SQL
+create view dont_make_payment_in_time as
+    select UserID,
+           case
+            when ExtendedPaymentDeadline is not null then ExtendedPaymentDeadline
+            else PaymentDeadline
+        end offical_payment_date,
+        ProductID
+    from Orders_Details inner join Orders on Orders_Details.OrderID = Orders.OrderID
+    where
+        case
+            when ExtendedPaymentDeadline is not null then ExtendedPaymentDeadline
+            else PaymentDeadline
+        end < getdate() and Payment is null
+```
+
+---
+
+### Financial_report
+Widok przedstawia raport finansowy z każdego produktu w bazie.
+```SQL
+create view financial_report as
+    with count_products_sales as (
+        select Orders_Details.ProductID, sum(Payment) as total_payment
+        from Orders_Details inner join Products on Orders_Details.ProductID = Products.ProductID
+        inner join Categories on Products.CategoryID = Categories.CategoryID
+        where Name <> 'Reunion'
+        group by Orders_Details.ProductID
+    )
+
+    select Products.ProductID, Name
+    from Products left join Categories on Products.CategoryID = Categories.CategoryID
+    left join count_products_sales on Products.ProductID = count_products_sales.ProductID
+    where Name != 'Reunion'
+```
+
+---
+
+### Future_meetings
+Widok przedstawia przyszłe spotkania studyjne.
+```SQL
+create view future_meetings as
+    select *
+    from meetings_information
+    where getdate() < DateAndBeginningTime
+```
+
+---
+
+### Future_meetings_sign
+Widok przedstawia ile osób zapisało się na przyszłe spotkania.
+```SQL
+create view future_meetings_sign as
+    with meetings_sign_count as (
+        select MeetingID, count(UserID) as sign_count
+        from Users_Meetings_Attendance
+        group by MeetingID
+    )
+
+    select future_meetings.MeetingID, sign_count
+    from future_meetings inner join meetings_sign_count on future_meetings.MeetingID = meetings_sign_count.MeetingID;
+```
+
+---
+
+### Meeting_sign_limit
+Widok przedstawia ilość osób zapisanych na dane spotkanie i jego limit.
+```SQL
+create view meeting_sign_limit as
+    with meeting_limits as (
+        select Meetings.MeetingID, min(Limit) as total_limit
+        from Meetings inner join In_person_Meetings on Meetings.MeetingID = In_person_Meetings.MeetingID
+        group by Meetings.MeetingID
+    )
+
+    select Meetings.MeetingID, total_product_orders, total_limit
+    from Meetings left join products_orders on Meetings.MeetingID = products_orders.ProductID
+    left join meeting_limits on meeting_limits.MeetingID = Meetings.MeetingID
+```
+
+---
+
+### Meetings_information
+Widok przedstawia ogólne informacje o spotkaniach studyjnych.
+```SQL
+create view meetings_information as
+    select MeetingID,
+           FirstName,
+           LastName,
+           Name,
+           ReunionID,
+           DateAndBeginningTime,
+           Duration,
+           Price,
+           TypeName
+    from Meetings inner join Employees on Meetings.TeacherID = Employees.EmployeeID
+    inner join Subjects on Meetings.SubjectID = Subjects.SubjectID
+    inner join Types on Meetings.TypeID = Types.TypeID
+```
+
+---
+
+### Orders_Payment_informations
+Widok przedstawia informacje o szczegółach wszystkich zamówień.
+```SQL
+create view orders_payment_informations as
+    select Orders.OrderID,
+           SubOrderID,
+           FirstName,
+           LastName,
+           Orders_Details.ProductID,
+           Name,
+           case
+               when ExtendedPaymentDeadline is null then PaymentDeadline
+               else ExtendedPaymentDeadline
+           end as offical_payment_deadline,
+           FullPrice,
+           PaymentDate
+    from Orders_Details inner join Orders on Orders_Details.OrderID = Orders.OrderID
+    inner join Users on Orders.UserID = Users.UserID
+    inner join Products on Orders_Details.ProductID = Products.ProductID
+    inner join Categories on Products.CategoryID = Categories.CategoryID
+```
+
+---
+
+### Products_orders
+Widok przedstawia ile razy każdy produkt został zamówiony.
+```SQL
+create view products_orders as
+    select ProductID, count(SubOrderID) as total_product_orders
+    from Orders_Details
+    group by ProductID
+```
+
+---
+
+### Studie_sign_limit
+Widok przedstawia ile osób zapisało się na studia i jaki jest ich limit.
+```SQL
+create view studie_sign_limit as
+    with studie_limits as (
+        select Studies.StudiesID, min(Limit) as total_limit
+        from Studies inner join Subjects on Studies.StudiesID = Subjects.StudiesID
+        inner join Meetings on Subjects.SubjectID = Meetings.SubjectID
+        inner join In_person_Meetings on Meetings.MeetingID = In_person_Meetings.MeetingID
+        group by Studies.StudiesID
+    )
+
+    select Studies.StudiesID, total_product_orders, total_limit
+    from Studies left join products_orders on products_orders.ProductID = Studies.StudiesID
+    left join studie_limits on studie_limits.StudiesID = Studies.StudiesID
+```
+
+---
+
+### Studies_meetings_list
+Widok ten przedstawia listę obecności dla spotkań stydujnych wraz z datą odbycia się ich.
+```SQL
+create view studies_meetings_list as
+    select
+        Users_Meetings_Attendance.MeetingID,
+        format(DateAndBeginningTime, 'yyyy-mm-dd') as date,
+        FirstName,
+        LastName,
+        Present
+    from Users_Meetings_Attendance inner join Users on Users_Meetings_Attendance.UserID = Users.UserID
+    inner join Meetings on Users_Meetings_Attendance.MeetingID = Meetings.MeetingID
+```

@@ -303,18 +303,40 @@ def studies(studies_quantity, max_quantity_subjects_in_study, min_quantity_subje
     # 7. Dogenerowanie reszty danych do spotkań
     for meeting in meetings:
         meeting["Duration"] = '01:30:00'
-        meeting["Price"] = fake.text(max_nb_chars=200)
+        meeting["Price"] = random.randint(100, 200)
         meeting["TypeID"] = random.randint(1, 3)
         meeting["Status"] = 1
     
     # Dodanie spotkań do bazy
-    # TODO - PO DODANIU PROCEDURY DO BAZY
+    for meeting in meetings:
+        cursor.execute(
+            """
+                EXEC add_meeting
+                    @TeacherID = ?,
+                    @SubjectID = ?,
+                    @ReunionID = ?,
+                    @DateAndBeginningTime = ?,
+                    @Duration = ?,
+                    @Price = ?,
+                    @TypeID = ?,
+                    @Status = ?
+            """,
+            meeting["TeacherID"],
+            meeting["SubjectID"],
+            meeting["ReunionID"],
+            meeting["DateAndBeginningTime"],
+            meeting["Duration"],
+            meeting["Price"],
+            meeting["TypeID"],
+            meeting["Status"]
+        )
+    
+    # Zatwierdzenie zmian
+    conn.commit()
+    print("Pomyślne dodanie spotkań do bazy")
 
 
     
-
-
-
 
 
 

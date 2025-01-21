@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/add_course.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/add_reunion.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/add_studie.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Triggery/add_student_to_modules_trigger.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Triggery/add_student_to_product_trigger.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Widoki/course_information.sql" dialect="TSQL" />
@@ -16,5 +19,6 @@
     <file url="file://$PROJECT_DIR$/Implementacja/Widoki/onlince_sync_module_information.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Widoki/online_async_module_information.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Widoki/studie_information.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/create_db.sql" dialect="TSQL" />
   </component>
 </project>

@@ -153,7 +153,7 @@ end
 ---
 
 ### Check_classroom_availability
-Funkcja dostaje numer klasy oraz ID modułu. Jej celem jest sprawdzenie czy podany moduł może się odbyć w tej sali na podstawie czasu rozpoczęcia danego modułu.
+Funkcja dostaje numer klasy oraz ID modułu lub spotkania. Jej celem jest sprawdzenie czy podany moduł lub spotkanie może się odbyć w tej sali na podstawie czasu rozpoczęcia danego modułu lub spotkania.
 ```SQL
 create function check_classroom_availability(
     @Classroom int,
@@ -219,5 +219,39 @@ as begin
     end
 
     return @Result
+end
+```
+
+
+---
+## Check_user_enrollment_for_product
+Funkcja dostaje ID użytkownika i ID produktu (studiów/kursu/webinaru) i sprawdza, czy użytkownik zapisał się do danych studiów/kursu/webinaru
+```SQL
+create function check_user_enrollment_for_product(
+    @UserID int,
+    @ProductID int
+)
+returns bit
+as begin
+    -- 1 - para istnieje, 0 - para nie istnieje
+    declare @Result bit;
+
+    -- Sprawdzenie czy dana para istnieje
+    if exists(select 1 from Users_Studies where UserID = @UserID and
+                                                        StudiesID = @ProductID
+       union select 1 from Users_Courses where UserID = @UserID and
+                                                        CourseID = @ProductID
+       union select 1 from Users_Webinars where UserID = @UserID and
+                                                        WebinarID = @ProductID)
+    begin
+        set @Result = 1;
+    end
+
+    else
+    begin
+        set @Result = 0;
+    end
+
+    return @Result;
 end
 ```

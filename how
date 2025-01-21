@@ -1,0 +1,215 @@
+[33mcommit 6e2067459d1f4265008b4551683219b9995a7919[m[33m ([m[1;36mHEAD[m[33m, [m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m
+Merge: 1648d50 a0b1e4e
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Wed Jan 22 00:32:22 2025 +0100
+
+    Merge branch 'main' of https://github.com/FaFikPL367/Projekt---Bazy-danych
+
+[33mcommit 1648d50fa33517a18bb07259f332caf614672baa[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Wed Jan 22 00:28:29 2025 +0100
+
+    Dodanie dodatkowych widoków
+
+[33mcommit a0b1e4e413808bc929af17cbab0597a4ca4323a6[m
+Merge: 2a66271 904c83c
+Author: x-M-T-U-x <msdialog@student.agh.edu.pl>
+Date:   Tue Jan 21 23:26:14 2025 +0000
+
+    Merge pull request #1 from FaFikPL367/Maciek
+    
+    Dodawanie zamówień i podzamówień oraz usuwanie użytkownika z danego p…
+
+[33mcommit 904c83c7d81ce6c9a2d573aaab06ce789c33e42a[m[33m ([m[1;31morigin/Maciek[m[33m)[m
+Author: Maciej-Slowik <msdialog@student.agh.edu.pl>
+Date:   Wed Jan 22 00:24:52 2025 +0100
+
+    Dodawanie zamówień i podzamówień oraz usuwanie użytkownika z danego produktu (studiów/kursu/webinaru) i ustawianie daty przedłużonego terminu
+
+[33mcommit 2a66271b1c8bc30d7814f7e2029b19c65e632821[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Tue Jan 21 21:15:02 2025 +0100
+
+    Dodanie .gitignore
+
+[33mcommit 309e5eca952e43ae1cf4d29c2151e2de6a782d2e[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Tue Jan 21 20:46:31 2025 +0100
+
+    Zmiany w plikach do raportu
+
+[33mcommit 1b497fc83b3799654d5f48f6f4e98ed835634c52[m
+Merge: a13d250 5f5c2c2
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Tue Jan 21 18:52:32 2025 +0100
+
+    Merge branch 'main' of https://github.com/FaFikPL367/Projekt---Bazy-danych
+
+[33mcommit a13d250d047d70233ac8da2bd95d837d692008a2[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Tue Jan 21 18:52:26 2025 +0100
+
+    Add not finish generator for data
+
+[33mcommit 5f5c2c2bc5b4b7e118a529b2de55999c49a245cb[m
+Author: Maciej-Slowik <msdialog@student.agh.edu.pl>
+Date:   Tue Jan 21 18:19:38 2025 +0100
+
+    Procedury do dodawania spotkań online synchronicznie i asynchronicznie
+
+[33mcommit 125a69dbf102ac456670466105d0092e5f93cc4e[m
+Author: Maciej-Slowik <msdialog@student.agh.edu.pl>
+Date:   Tue Jan 21 18:10:43 2025 +0100
+
+    Procedury do dodawania spotkania i spotkania stacjonarnego
+
+[33mcommit 55672f838ef98a48995fe1157359551b16fecce0[m
+Author: Maciej-Slowik <msdialog@student.agh.edu.pl>
+Date:   Tue Jan 21 17:54:05 2025 +0100
+
+    Zmiana w funkcji do sprawdzenia dostępności sali, funkcja do sprawdzenia dostępności produktu, zmiana Modules_Types na Types
+
+[33mcommit 7f8d55897379dd62b1c3a17dfc75043d6c3d2c1a[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Wed Jan 8 23:10:10 2025 +0100
+
+    Poprawki po sprawdzeniu raportu 5
+
+[33mcommit 2105cfc273df79fee09706dfc76d8831ddad4244[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Tue Jan 7 23:21:33 2025 +0100
+
+    Drobne poprawki przed piątym raportem
+
+[33mcommit 4b1ea2d254ef2a44119505c245fd3292a9ba0d33[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Mon Jan 6 00:03:54 2025 +0100
+
+    Dodanie indeksów && Opisanie triggerów
+
+[33mcommit 954d9a6d69223e8e68857f8d31f2ed2afcb11c91[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Thu Jan 2 13:35:26 2025 +0100
+
+    Dodanie kilku triggerów && uzupełnienie dokumntacji z widoków, funkcji i procedur && poprawienie opisu tabel
+
+[33mcommit 5f0fc2c0e5f332b0f5a0d807c29170f504b6406b[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Tue Dec 31 12:54:00 2024 +0100
+
+    Dodanie nowych widoków && Dodanie początkowych indeksów
+
+[33mcommit 9d1b908efffc2f0aad626f449c89410ed7842ab1[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Mon Dec 30 13:30:59 2024 +0100
+
+    Dodanie nowych procedur do kursów && Dodanie nowych skryptów do generowania danych do kursów
+
+[33mcommit 1012b0451e540e3e91398fee9fe5b81a9044c4a5[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Fri Dec 27 17:20:33 2024 +0100
+
+    Dodanie procedur i funkcji do webinarów i użytkowników && Dodanie generowania webinarów
+
+[33mcommit 67ffa9ca741c1b8917168afdfa1eadf083f0f0db[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Mon Dec 23 18:45:18 2024 +0100
+
+    Skrypty do generowanie użytkowników && kod SQL do wygenerowanie bazy danych
+
+[33mcommit 2926058a5cafe0758dd3d4ab40a8b735636ae074[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Tue Dec 17 22:17:45 2024 +0100
+
+    Wszystko do raportu 4
+
+[33mcommit 180026cc84ed780d86fcdce7907e0e98006a9ea6[m
+Author: Maciej-Slowik <msdialog@student.agh.edu.pl>
+Date:   Tue Dec 17 00:13:08 2024 +0000
+
+    Update webinars.md
+
+[33mcommit 050ba27ca239f670c9e6575d71d2b893c3edf047[m
+Author: Maciej-Slowik <msdialog@student.agh.edu.pl>
+Date:   Tue Dec 17 00:06:32 2024 +0000
+
+    Update courses.md
+
+[33mcommit e44769d19b584d1ebbe0f3a1b6d9234b8a634e33[m
+Author: Maciej-Slowik <msdialog@student.agh.edu.pl>
+Date:   Tue Dec 17 00:59:48 2024 +0100
+
+    Updated courses.md, orders.md and webinars.md
+
+[33mcommit 5ef51cf6282608917cf5abadb8c22f887d51bf22[m
+Merge: d440fb6 5591ef5
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Mon Dec 16 22:57:29 2024 +0100
+
+    Merge branch 'main' of https://github.com/FaFikPL367/Projekt---Bazy-danych
+
+[33mcommit d440fb6b33221ddb9fcebbf2bc44e790a7302a75[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Mon Dec 16 22:57:19 2024 +0100
+
+    Update studies.md
+
+[33mcommit 5591ef5ea15cfaecf00f4d5a7414cd0aea936925[m
+Author: Maciej-Slowik <msdialog@student.agh.edu.pl>
+Date:   Mon Dec 16 22:03:38 2024 +0100
+
+    Updated courses.md
+
+[33mcommit 12b7e4a82054786f44b3bad085d9801ffd1e09d2[m
+Author: Maciej-Slowik <msdialog@student.agh.edu.pl>
+Date:   Mon Dec 16 20:58:08 2024 +0000
+
+    Update courses.md
+
+[33mcommit 35545d39ed640502e8785c3f64720bf703640291[m
+Author: Maciej Słowik <msdialog@student.agh.edu.pl>
+Date:   Sun Dec 15 20:58:51 2024 +0100
+
+    Dokumentacja kategorii Courses, Orders i Webinars
+
+[33mcommit f6fcc6583a9b7e89836a99f7a5411f4a6fc55b16[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Fri Dec 13 17:58:14 2024 +0100
+
+    Małe poprawki w dokumentacji
+
+[33mcommit f4df5c901be9a8430da0ef20731df09c286523ce[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Thu Dec 12 19:15:25 2024 +0100
+
+    Dodanie opisu dla 'Users' i 'Studies' wraz z warunkami integralności
+
+[33mcommit 0ebb1b05703fe5ba46e741aea7680d5b1e4b6eb2[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Mon Dec 9 23:36:16 2024 +0100
+
+    Raport 3 - całkowity diagram oraz wygenerowany kod DDL
+
+[33mcommit 1d972a15fdf3253472768c931108302c5cc8966e[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Wed Dec 4 19:31:43 2024 +0100
+
+    Raport 2 - pierwszy diagram
+
+[33mcommit 0e5fb1c53450978e2c855bf69662773bd3d7b807[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Mon Nov 25 21:33:29 2024 +0100
+
+    Poprawki do: RAPORT 1
+
+[33mcommit f771ff39c806b83e6b3802d9c91396d07d925994[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Sun Nov 24 13:33:31 2024 +0100
+
+    Dodanie plików markdown i pytań
+
+[33mcommit 1c2fe9b32b2d8c077d0d669e04fc35416708a318[m
+Author: pawel.sosnowski678@gmail.com <pawel.sosnowski678@gmail.com>
+Date:   Sun Nov 24 11:56:39 2024 +0100
+
+    Rozpoczecie projektu

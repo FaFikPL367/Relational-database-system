@@ -25,3 +25,5 @@
 # Inne typowe pliki do wykluczenia
 *.iml  # Pliki modułów IntelliJ IDEA (mogą być generowane automatycznie)
 *.iws  # Stare pliki konfiguracyjne IntelliJ IDEA
+
+Implementacja\Generatory danych\.env

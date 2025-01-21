@@ -977,3 +977,155 @@ as begin
 end
 ```
 
+
+---
+
+### Delete_user_from_product
+Procedura usuwa użytkownika z danych studiów/kursu/webinaru
+```SQL
+create function delete_user_from_product(
+    @UserID int,
+    @ProductID int
+)
+as begin
+    begin try
+        -- Sprawdzenie czy użytkownik istnieje
+        if not exists(select 1 from Users where UserID = @UserID)
+        begin
+            throw 50001, 'Użytkownik o podanym ID nie istnieje', 1;
+        end
+
+        -- Sprawdzenie czy dana para istnieje
+        if dbo.check_user_enlistment_for_product(@UserID, @ProductID) = cast(0 as bit)
+        begin
+            throw 50002, 'Taka para nie istnieje', 2;
+        end
+
+        -- W innym przypadku ją usuwamy
+        if exists(select 1 from Studies where StudiesID = @ProductID)
+        begin
+            delete from Users_Studies
+            where UserID = @UserID and StudiesID = @ProductID;
+        end
+        
+        else if exists(select 1 from Courses where CourseID = @ProductID)
+        begin
+            delete from Users_Courses
+            where UserID = @UserID and CourseID = @ProductID;
+        end
+        
+        else
+        begin
+            delete from Users_Webinars
+            where UserID = @UserID and WebinarID = @ProductID;
+        end
+    end try
+    begin catch
+        -- Przerzucenie błędu dalej
+        throw;
+    end catch
+end;
+```
+
+
+---
+
+### Set_extended_payment_deadline
+Procedura pozwala na ustawienie daty przedłużonego terminu podzamówienia
+```SQL
+create procedure set_extended_payment_deadline (
+    @SubOrderID int,
+    @ExtendedPaymentDeadline date
+)
+as begin
+    begin try
+        -- Sprawdzenie czy podzamówienie istnieje
+        if not exists(select 1 from Orders_Details where SubOrderID = @SubOrderID)
+        begin
+            throw 50000, 'Podzamówienie o podanym ID nie istnieje', 1;
+        end
+
+        -- Sprawdzenie czy data przedłużonego terminu jest późniejsza od początkowej daty
+        if ((select PaymentDeadline from Orders_Details where SubOrderID = @SubOrderID) > @ExtendedPaymentDeadline)
+        begin
+            throw 50001, 'Podana data jest nieprawidłowa', 1;
+        end
+
+        -- Aktualizacja daty przedłużonego terminu
+        update Orders_Details
+        set ExtendedPaymentDeadline = @ExtendedPaymentDeadline
+        where SubOrderID = @SubOrderID
+    end try
+    begin catch
+        -- Przerzucenie ERRORa dalej
+        throw;
+    end catch
+end;
+```
+
+
+---
+
+### Add_order
+Procedura pozwala na dodanie zamówienia
+```SQL
+CREATE procedure add_order
+    @OrderID int,
+    @UserID int,
+    @OrderDate date,
+    @PaymentLink nvarchar(100)
+as begin
+    begin try
+        -- Sprawdzenie czy dany użytkownik istnieje
+        if not exists(select 1 from Users where UserID = @UserID)
+        begin
+            throw 50000, 'Użytkownik o podanym ID nie istnieje', 1;
+        end
+
+        -- Dodanie danych do tabeli
+        insert Orders(OrderID, UserID, OrderDate, PaymentLink)
+        values (@OrderID, @UserID, @OrderDate, @PaymentLink)
+    end try
+    begin catch
+        -- Przerzucenie ERRORa dalej
+        throw;
+    end catch
+end;
+```
+
+
+---
+
+### Add_suborder
+Procedura pozwala na dodanie podzamówienia
+```SQL
+CREATE procedure add_suborder
+    @SubOrderID int,
+    @OrderID int,
+    @PaymentDeadline date,
+    @FullPrice money,
+    @ProductID int
+as begin
+    begin try
+        -- Sprawdzenie czy dane zamówienie istnieje
+        if not exists(select 1 from Orders where OrderID = @OrderID)
+        begin
+            throw 50000, 'Zamówienie o podanym ID nie istnieje', 1;
+        end
+        
+        -- Sprawdzenie czy dany produkt istnieje
+        if not exists(select 1 from Products where ProductID = @ProductID)
+        begin
+            throw 50000, 'Produkt o podanym ID nie istnieje', 1;
+        end
+
+        -- Dodanie danych do tabeli
+        insert Orders_Details(SubOrderID, OrderID, PaymentDeadline, ExtendedPaymentDeadline, PaymentDate, FullPrice, ProductID, Payment)
+        values (@SubOrderID, @OrderID, @PaymentDeadline, null, null, @FullPrice, @ProductID, null)
+    end try
+    begin catch
+        -- Przerzucenie ERRORa dalej
+        throw;
+    end catch
+end;
+```

@@ -13,7 +13,7 @@ as begin
         end
 
         -- Sprawdzenie poprawności podanego typu
-        if not exists(select 1 from Modules inner join Modules_Types on Modules.TypeID = Modules_Types.TypeID
+        if not exists(select 1 from Modules inner join Types on Modules.TypeID = Types.TypeID
                                where TypeName = 'Online Sync' and ModuleID = @ModuleID)
         begin
             throw 50001, 'Podany moduł nie jest typu online-synchronicznie', 1;

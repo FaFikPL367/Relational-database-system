@@ -1,13 +1,13 @@
 create function check_classroom_availability(
     @Classroom int,
-    @ModuleID int
+    @ModuleOrMeetingID int
 ) returns bit
 as begin
     -- Domyślnie sala dostępna
     declare @Result bit = 0;
 
-    declare @StartDate datetime = (select DateAndBeginningTime from Modules where ModuleID = @ModuleID)
-    declare @EndDate datetime = dateadd(minute, datediff(minute, 0, (select Duration from Modules where ModuleID = @ModuleID)), @StartDate)
+    declare @StartDate datetime = (select DateAndBeginningTime from Modules where ModuleID = @ModuleOrMeetingID union select DateAndBeginningTime from Meetings where MeetingID = @ModuleOrMeetingID)
+    declare @EndDate datetime = dateadd(minute, datediff(minute, 0, (select Duration from Modules where ModuleID = @ModuleOrMeetingID union select Duration from Meetings where MeetingID = @ModuleOrMeetingID)), @StartDate)
 
     -- Pobranie danych o czasie danego modułu dla danej sali
     declare @tmpInPersonModules table (

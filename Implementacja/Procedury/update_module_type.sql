@@ -10,7 +10,7 @@ as begin
         end
 
         -- Sprawdzenie czy dany typ istnieje
-        if not exists(select 1 from Modules_Types where TypeID = @TypeID)
+        if not exists(select 1 from Types where TypeID = @TypeID)
         begin
             throw 50001, 'Podany typ nie istnieje', 1;
         end

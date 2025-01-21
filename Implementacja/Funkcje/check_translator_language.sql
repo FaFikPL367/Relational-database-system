@@ -4,6 +4,7 @@ create function check_translator_language(
 )
 returns bit
 as begin
+    -- 1 - para istnieje, 0 - para nie istnieje
     declare @Result bit;
 
     -- Sprawdzenie czy dana para istnieje
@@ -13,6 +14,7 @@ as begin
         set @Result = 1;
     end
 
+    -- Domyślnie zakładamy, że jak nie ma tłumacza to język czegoś to Polski
     else if @TranslatorID is null and @LanguageID = 19
     begin
         set @Result = 1;

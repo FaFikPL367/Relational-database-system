@@ -5,8 +5,7 @@ create procedure add_user
     @Email nvarchar(50),
     @Address nvarchar(50),
     @City nvarchar(30),
-    @PostalCode varchar(10),
-    @NewUserID int OUTPUT
+    @PostalCode varchar(10)
 as
 begin
     begin try
@@ -14,10 +13,6 @@ begin
         insert Users (FirstName, LastName, Phone, Email, Address, City, PostalCode)
         values (@FirstName, @LastName, @Phone, @Email, @Address,
                 @City, @PostalCode);
-
-        -- Pobranie ID nowo utworzonego uzytkownika
-        set @NewUserID = scope_identity();
-
     end try
     begin catch
         -- Przerzucenie ERRORa dalej

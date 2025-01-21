@@ -15,6 +15,7 @@ as begin
             throw 50001, 'Podany typ nie istnieje', 1;
         end
 
+        -- Aktualizacja typu
         update Modules
         set TypeID = @TypeID
         where ModuleID = @ModuleID

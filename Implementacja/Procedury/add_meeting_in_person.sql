@@ -6,7 +6,7 @@ CREATE procedure add_meeting_in_person
     @Limit int
 as begin
     begin try
-        -- Sprawdzenie czy dany moduł istnieje
+        -- Sprawdzenie czy dane spotkanie istnieje
         if not exists(select 1 from Meetings where MeetingID = @MeetingID)
         begin
             throw 50000, 'Spotkanie o podanym ID nie istnieje', 1;
@@ -37,19 +37,22 @@ as begin
             throw 50004, 'Limit nie może być wartością mniejszą bądź równą 0', 1;
         end
 
-        -- Sprawdzenie czy podana sala jest wolna w tym okresie
-        if dbo.check_classroom_availability(@Classroom, @MeetingID) = cast(1 as bit)
-        begin
-            throw 50005, 'Sala w okresie trwania spotkania nie dostępna', 1;
-        end
-
         -- Sprawdzenie dostępności tłumacza
-        if dbo.check_translator_availability(@TranslatorID, (select DateAndBeginningTime from Meetings where MeetingID = @MeetingID),
-           (select Duration from Meetings where MeetingID = @MeetingID)) = cast(1 as bit)
+        declare @DateAndBeginningTime datetime = (select DateAndBeginningTime from Meetings where MeetingID = @MeetingID);
+        declare @duration time(0) = (select Duration from Meetings where MeetingID = @MeetingID);
+
+        if dbo.check_translator_availability(@TranslatorID, @DateAndBeginningTime,@Duration) = cast(1 as bit)
         begin
             throw 50006, 'Tłumacz w okresie trwania danego spotkania jest nie dostępny', 1;
         end
 
+        -- Sprawdzenie czy dana sala jest dostępna
+        if dbo.check_classroom_availability(@Classroom, @DateAndBeginningTime, @Duration) = cast(1 as bit)
+        begin
+            throw 50007, 'Sala w danym terminie nie jest dostępna', 1;
+        end
+
+        -- Dodanie danych
         insert In_person_Meetings(MeetingID, Classroom, TranslatorID, LanguageID, Limit)
         values (@MeetingID, @Classroom, @TranslatorID, @LanguageID, @Limit)
     end try

@@ -1,4 +1,4 @@
-## Funkcje
+# Funkcje
 ---
 ### Check_translator_language
 Funkcja dostaje parę indeksów, język i tłumacz, a następnie sprawdza czy dany tłumacz zna podany język.
@@ -9,6 +9,7 @@ create function check_translator_language(
 )
 returns bit
 as begin
+    -- 1 - para istnieje, 0 - para nie istnieje
     declare @Result bit;
 
     -- Sprawdzenie czy dana para istnieje
@@ -18,6 +19,7 @@ as begin
         set @Result = 1;
     end
 
+    -- Domyślnie zakładamy, że jak nie ma tłumacza to język czegoś to Polski
     else if @TranslatorID is null and @LanguageID = 19
     begin
         set @Result = 1;
@@ -42,6 +44,7 @@ create function check_translator_availability(
     @Duration time(0)
 ) returns bit
 as begin
+    -- 1 - jakieś spotkania nakładają się, 0 - nic się nei nakłada
     declare @Result bit = 0;
 
     declare @StartDate datetime = @DateAndBeginningTime;
@@ -96,7 +99,7 @@ end
 ---
 
 ### Check_teachers_availability
-Funkcja otrzymuje ID nauczyciela, datę i czas rozpoczęcia zajęć oraz czas ich trwania. Jej celem jest sprawdzenei czy dany nauczyciel nie ma w tym czasie innych aktywności (spotkania stydujne, webinary, moduły).
+Funkcja otrzymuje ID nauczyciela, datę i czas rozpoczęcia zajęć oraz czas ich trwania. Jej celem jest sprawdzenei czy dany nauczyciel nie ma w tym czasie innych aktywności (spotkania studyjne, webinary, moduły).
 ```SQL
 create function check_teachers_availability(
     @TeacherID int,
@@ -104,44 +107,40 @@ create function check_teachers_availability(
     @Duration time(0)
 ) returns bit
 as begin
+    -- 1 - nauczyciel zajęty w danym terminie, 0 - nauczyciel wolny w danym terminie
     declare @Result bit = 0;
 
-    declare @StartDate datetime;
-    declare @EndDate datetime;
-    set @StartDate = @DateAndBeginningTime
-    set @EndDate = dateadd(minute, datediff(minute, 0, @Duration), @DateAndBeginningTime);
+    declare @StartDate datetime = @DateAndBeginningTime
+    declare @EndDate datetime = dateadd(minute, datediff(minute, 0, @Duration), @DateAndBeginningTime);
 
-    -- Sprawdzenie czy nie ma w tym czasie żadnego spotkania studyjnego
-    if exists(select 1 from Meetings where Meetings.TeacherID = @TeacherID and (
-        @StartDate between Meetings.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Meetings.Duration), Meetings.DateAndBeginningTime) or
-        @EndDate between Meetings.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Meetings.Duration), Meetings.DateAndBeginningTime) or
-        (@StartDate between Meetings.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Meetings.Duration), Meetings.DateAndBeginningTime) and
-         @EndDate between Meetings.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Meetings.Duration), Meetings.DateAndBeginningTime)) or
-        (Meetings.DateAndBeginningTime between @StartDate and @EndDate and dateadd(minute, datediff(minute, 0, Meetings.Duration), Meetings.DateAndBeginningTime) between @StartDate and @EndDate)
-        ))
-    begin
-        set @Result = 1;
-    end
+    -- Zadeklarowanie tabeli ze wszystkimi spotkaniami nauczyciela
+    declare @TeacherActivities table (
+        DateAndBeginningTime datetime,
+        Duration time(0)
+                                     );
 
-    -- Sprawdzenie czy nie ma w tym czasie żadnego webinaru
-    if exists(select 1 from Webinars where Webinars.TeacherID = @TeacherID and (
-        @StartDate between Webinars.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Webinars.Duration), Webinars.DateAndBeginningTime) or
-        @EndDate between Webinars.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Webinars.Duration), Webinars.DateAndBeginningTime) or
-        (@StartDate between Webinars.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Webinars.Duration), Webinars.DateAndBeginningTime) and
-         @EndDate between Webinars.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Webinars.Duration), Webinars.DateAndBeginningTime)) or
-         (Webinars.DateAndBeginningTime between @StartDate and @EndDate and dateadd(minute, datediff(minute, 0, Webinars.Duration), Webinars.DateAndBeginningTime) between @StartDate and @EndDate)
-        ))
-    begin
-        set @Result = 1;
-    end
+    -- Moduły
+    insert @TeacherActivities
+    select DateAndBeginningTime, Duration
+    from Modules where TeacherID = @TeacherID
 
-    -- Sprawdzenie czy nie ma w tym czasie żadnego modułu
-    if exists(select 1 from Modules where Modules.TeacherID = @TeacherID and (
-        @StartDate between Modules.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Modules.Duration), Modules.DateAndBeginningTime) or
-        @EndDate between Modules.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Modules.Duration), Modules.DateAndBeginningTime) or
-        (@StartDate between Modules.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Modules.Duration), Modules.DateAndBeginningTime) and
-         @EndDate between Modules.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Modules.Duration), Modules.DateAndBeginningTime)) or
-         (Modules.DateAndBeginningTime between @StartDate and @EndDate and dateadd(minute, datediff(minute, 0, Modules.Duration), Modules.DateAndBeginningTime) between @StartDate and @EndDate)
+    -- Spotkania studujne
+    insert @TeacherActivities
+    select DateAndBeginningTime, Duration
+    from Meetings where TeacherID = @TeacherID
+
+    -- Webinary
+    insert @TeacherActivities
+    select DateAndBeginningTime, Duration
+    from Webinars where TeacherID = @TeacherID
+
+    -- Sprawdzenie czy date się nie nakładają
+    if exists(select 1 from @TeacherActivities where (
+        @StartDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or
+        @EndDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or
+        (@StartDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) and
+         @EndDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime)) or
+        (DateAndBeginningTime between @StartDate and @EndDate and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) between @StartDate and @EndDate)
         ))
     begin
         set @Result = 1;
@@ -158,53 +157,36 @@ Funkcja dostaje numer klasy oraz ID modułu. Jej celem jest sprawdzenie czy poda
 ```SQL
 create function check_classroom_availability(
     @Classroom int,
-    @ModuleID int
+    @DateAndBeginningTime datetime,
+    @Duration time(0)
 ) returns bit
 as begin
-    -- Domyślnie sala dostępna
+    -- 1 - sala zajęta, 0 - sala wolna
     declare @Result bit = 0;
 
-    declare @StartDate datetime = (select DateAndBeginningTime from Modules where ModuleID = @ModuleID)
-    declare @EndDate datetime = dateadd(minute, datediff(minute, 0, (select Duration from Modules where ModuleID = @ModuleID)), @StartDate)
+    declare @StartDate datetime = @DateAndBeginningTime
+    declare @EndDate datetime = dateadd(minute, datediff(minute, 0, @Duration), @DateAndBeginningTime);
 
-    -- Pobranie danych o czasie danego modułu dla danej sali
-    declare @tmpInPersonModules table (
-        ModuleID int,
+    -- 1. Pobranie danych o czasie danego modułu dla danej sali
+    declare @ClassroomUsage table (
         DateAndBeginningTime datetime,
         Duration time(0)
-                                      );
+                                 )
 
-    insert @tmpInPersonModules
-    select In_person_Modules.ModuleID, DateAndBeginningTime, Duration
+    -- Moduły stacjonarne
+    insert @ClassroomUsage
+    select DateAndBeginningTime, Duration
     from In_person_Modules inner join Modules on In_person_Modules.ModuleID = Modules.ModuleID
     where Classroom = @Classroom
 
-    -- Sprawdzenie czy w danym okresie nie ma żadnego modułu w danej sali
-    if exists(select 1 from @tmpInPersonModules where (
-        @StartDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or
-        @EndDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or
-        (@StartDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) and
-         @EndDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime)) or
-        (DateAndBeginningTime between @StartDate and @EndDate and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) between @StartDate and @EndDate)
-        ))
-    begin
-        set @Result = 1;
-    end
-
-    -- Pobranie danych o czasie danego spotkania w danej sali
-    declare @tmpInPersonMettings table (
-        MettingID int,
-        DateAndBeginningTime datetime,
-        Duration time(0)
-                                      );
-
-    insert @tmpInPersonMettings
-    select In_person_Meetings.MeetingID, DateAndBeginningTime, Duration
+    -- Spotkania stacjonarne
+    insert @ClassroomUsage
+    select  DateAndBeginningTime, Duration
     from In_person_Meetings inner join Meetings on In_person_Meetings.MeetingID = Meetings.MeetingID
     where Classroom = @Classroom
 
     -- Sprawdzenie czy w danym okresie nie ma żadnego spotkania studyjnego w danej sali
-    if exists(select 1 from @tmpInPersonMettings where (
+    if exists(select 1 from @ClassroomUsage where (
         @StartDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or
         @EndDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or
         (@StartDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) and
@@ -216,5 +198,26 @@ as begin
     end
 
     return @Result;
+end
+```
+
+---
+## Check_product_availability
+Funkcja dostaje ID danego produktu i sprawdza czy jest on dostępny dla użytkowników, czyli czy STATUS jest równy 1.
+```SQL
+create function check_product_availability(
+    @ProductID int
+) returns bit
+as begin
+    -- 1 - produkt dostępy, 0 - produkt nie dostępny
+    declare @Result bit = 0;
+
+    -- Sprawdzenie statusu
+    if (select Status from Products where ProductID = @ProductID) = 1
+    begin
+        set @Result = 1;
+    end
+
+    return @Result
 end
 ```

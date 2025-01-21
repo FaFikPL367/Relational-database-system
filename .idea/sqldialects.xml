@@ -1,9 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/Implementacja/Funkcje/check_classroom_availability.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Funkcje/check_product_availability.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Funkcje/check_teachers_availability.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Funkcje/check_translator_availability.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Funkcje/check_translator_language.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Procedury/add_course.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/add_course_module_async.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/add_course_module_in_person.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/add_course_module_sync.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/add_course_modules.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/add_employee.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/add_meeting.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/add_meeting_async.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/add_meeting_in_person.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/add_meeting_sync.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Procedury/add_reunion.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Procedury/add_studie.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/add_translator.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/add_user.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/add_webinar.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/asign_language_to_translator.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/delete_language_from_translator.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/update_module_type.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/update_recordinglink_module_sync.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Procedury/update_recordinglink_webinar.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Triggery/add_student_to_modules_trigger.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Triggery/add_student_to_product_trigger.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Widoki/course_information.sql" dialect="TSQL" />
@@ -15,10 +37,15 @@
     <file url="file://$PROJECT_DIR$/Implementacja/Widoki/future_webinar_sign.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Widoki/future_webinars.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Widoki/in_person_module_information.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Widoki/languages_count_translators.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Widoki/module_information.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Widoki/onlince_sync_module_information.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Widoki/online_async_module_information.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/Implementacja/Widoki/studie_information.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Widoki/translators_information.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Widoki/translators_languages.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Widoki/users_information.sql" dialect="TSQL" />
+    <file url="file://$PROJECT_DIR$/Implementacja/Widoki/webinar_information.sql" dialect="TSQL" />
     <file url="file://$PROJECT_DIR$/create_db.sql" dialect="TSQL" />
   </component>
 </project>

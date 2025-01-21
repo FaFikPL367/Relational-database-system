@@ -6,8 +6,7 @@ create procedure add_meeting(
     @Duration time(0),
     @Price money,
     @TypeID int,
-    @Status bit,
-    @NewMeetingID int OUTPUT
+    @Status bit
 )
 as begin
     begin try
@@ -34,17 +33,17 @@ as begin
 
         -- Rezerwacja ID w produktach
         declare @NewProductID int;
+        declare @CategoryID int = (select CategoryID from Categories where Name = 'Meeting')
 
         insert Products (CategoryID, Status)
-        values (3, @Status)
+        values (@CategoryID, @Status)
 
         -- Pobranie ID po dodaniu do produktów
-        set @NewMeetingID = SCOPE_IDENTITY();
+        set @NewProductID = SCOPE_IDENTITY();
 
         -- Wstawienie danych to tabeli
-        insert Meetings (TeacherID, SubjectID, ReunionID, DateAndBeginningTime, Duration, Price, TypeID)
-        values ( @TeacherID, @SubjectID, @ReunionID, @DateAndBeginningTime, @Duration, @Price, @TypeID);
-
+        insert Meetings (MeetingID, TeacherID, SubjectID, ReunionID, DateAndBeginningTime, Duration, Price, TypeID)
+        values ( @NewProductID,@TeacherID, @SubjectID, @ReunionID, @DateAndBeginningTime, @Duration, @Price, @TypeID);
     end try
     begin catch
         -- Przerzucenie ERRORa dalej

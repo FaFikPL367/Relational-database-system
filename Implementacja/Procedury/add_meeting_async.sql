@@ -16,6 +16,7 @@ as begin
             throw 50001, 'Podane spotkanie nie jest typu online-asynchronicznie', 1;
         end
 
+        -- Dodanie danych do tabeli
         insert Online_Async_Meetings(MeetingID, RecordingLink)
         values (@MeetingID, @RecordingLink)
     end try

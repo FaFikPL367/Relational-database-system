@@ -18,7 +18,7 @@ as begin
         -- Sprawdzenie czy dana para istnieje
         if dbo.check_translator_language(@TranslatorID, @LanguageID) = cast(0 as bit)
         begin
-            throw 50003, 'Taka para już istnieje', 2;
+            throw 50003, 'Taka para nie istnieje', 2;
         end
 
         -- W innym przypadku ją usuwamy

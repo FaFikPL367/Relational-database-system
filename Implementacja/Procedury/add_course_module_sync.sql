@@ -32,12 +32,15 @@ as begin
         end
 
         -- Sprawdzzenie dostępności tłumacza
-        if dbo.check_translator_availability(@TranslatorID, (select DateAndBeginningTime from Modules where ModuleID = @ModuleID),
-           (select Duration from Modules where ModuleID = @ModuleID)) = cast(1 as bit)
+        declare @DateAndBeginningTime datetime = (select DateAndBeginningTime from Modules where ModuleID = @ModuleID)
+        declare @Duration time(0) = (select Duration from Modules where ModuleID = @ModuleID)
+
+        if dbo.check_translator_availability(@TranslatorID, @DateAndBeginningTime, @Duration) = cast(1 as bit)
         begin
             throw 50004, 'Tłumacz w okresie danego modułu jest nie dostępny', 1;
         end
 
+        -- Dodanie danych
         insert Online_Sync_Modules(ModuleID, MeetingLink, RecordingLink, TranslatorID, LanguageID)
         values (@ModuleID, @MeetingLink, @RecordingLink, @TranslatorID, @LanguageID)
     end try

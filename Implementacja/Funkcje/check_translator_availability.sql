@@ -4,6 +4,7 @@ create function check_translator_availability(
     @Duration time(0)
 ) returns bit
 as begin
+    -- 1 - jakieś spotkania nakładają się, 0 - nic się nei nakłada
     declare @Result bit = 0;
 
     declare @StartDate datetime = @DateAndBeginningTime;

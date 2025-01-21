@@ -8,4 +8,4 @@ create view module_information as
            Duration,
            TypeName
     from Modules inner join Employees on Modules.TeacherID = Employees.EmployeeID
-    inner join Modules_Types on Modules.TypeID = Modules_Types.TypeID;
+    inner join Types on Modules.TypeID = Types.TypeID;

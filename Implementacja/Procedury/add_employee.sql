@@ -6,8 +6,7 @@ CREATE procedure add_employee
     @Address nvarchar(50),
     @City nvarchar(30),
     @PostalCode varchar(10),
-    @PositionID int,
-    @NewEmployeeID int OUTPUT
+    @PositionID int
 as
 begin
 
@@ -22,9 +21,6 @@ begin
         insert Employees (FirstName, LastName, Phone, Email, Address, City, PostalCode, PositionID)
         values (@FirstName, @LastName, @Phone, @Email, @Address,
                 @City, @PostalCode, @PositionID);
-
-        -- Pobranie ID nowo utworzonego uzytkownika
-        set @NewEmployeeID = scope_identity();
     end try
     begin catch
         -- Przerzucenie błędu dalej

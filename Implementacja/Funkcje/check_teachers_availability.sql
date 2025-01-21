@@ -4,44 +4,40 @@ create function check_teachers_availability(
     @Duration time(0)
 ) returns bit
 as begin
+    -- 1 - nauczyciel zajęty w danym terminie, 0 - nauczyciel wolny w danym terminie
     declare @Result bit = 0;
 
-    declare @StartDate datetime;
-    declare @EndDate datetime;
-    set @StartDate = @DateAndBeginningTime
-    set @EndDate = dateadd(minute, datediff(minute, 0, @Duration), @DateAndBeginningTime);
+    declare @StartDate datetime = @DateAndBeginningTime
+    declare @EndDate datetime = dateadd(minute, datediff(minute, 0, @Duration), @DateAndBeginningTime);
 
-    -- Sprawdzenie czy nie ma w tym czasie żadnego spotkania studyjnego
-    if exists(select 1 from Meetings where Meetings.TeacherID = @TeacherID and (
-        @StartDate between Meetings.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Meetings.Duration), Meetings.DateAndBeginningTime) or
-        @EndDate between Meetings.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Meetings.Duration), Meetings.DateAndBeginningTime) or
-        (@StartDate between Meetings.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Meetings.Duration), Meetings.DateAndBeginningTime) and
-         @EndDate between Meetings.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Meetings.Duration), Meetings.DateAndBeginningTime)) or
-        (Meetings.DateAndBeginningTime between @StartDate and @EndDate and dateadd(minute, datediff(minute, 0, Meetings.Duration), Meetings.DateAndBeginningTime) between @StartDate and @EndDate)
-        ))
-    begin
-        set @Result = 1;
-    end
+    -- Zadeklarowanie tabeli ze wszystkimi spotkaniami nauczyciela
+    declare @TeacherActivities table (
+        DateAndBeginningTime datetime,
+        Duration time(0)
+                                     );
 
-    -- Sprawdzenie czy nie ma w tym czasie żadnego webinaru
-    if exists(select 1 from Webinars where Webinars.TeacherID = @TeacherID and (
-        @StartDate between Webinars.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Webinars.Duration), Webinars.DateAndBeginningTime) or
-        @EndDate between Webinars.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Webinars.Duration), Webinars.DateAndBeginningTime) or
-        (@StartDate between Webinars.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Webinars.Duration), Webinars.DateAndBeginningTime) and
-         @EndDate between Webinars.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Webinars.Duration), Webinars.DateAndBeginningTime)) or
-         (Webinars.DateAndBeginningTime between @StartDate and @EndDate and dateadd(minute, datediff(minute, 0, Webinars.Duration), Webinars.DateAndBeginningTime) between @StartDate and @EndDate)
-        ))
-    begin
-        set @Result = 1;
-    end
+    -- Moduły
+    insert @TeacherActivities
+    select DateAndBeginningTime, Duration
+    from Modules where TeacherID = @TeacherID
 
-    -- Sprawdzenie czy nie ma w tym czasie żadnego modułu
-    if exists(select 1 from Modules where Modules.TeacherID = @TeacherID and (
-        @StartDate between Modules.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Modules.Duration), Modules.DateAndBeginningTime) or
-        @EndDate between Modules.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Modules.Duration), Modules.DateAndBeginningTime) or
-        (@StartDate between Modules.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Modules.Duration), Modules.DateAndBeginningTime) and
-         @EndDate between Modules.DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Modules.Duration), Modules.DateAndBeginningTime)) or
-         (Modules.DateAndBeginningTime between @StartDate and @EndDate and dateadd(minute, datediff(minute, 0, Modules.Duration), Modules.DateAndBeginningTime) between @StartDate and @EndDate)
+    -- Spotkania studujne
+    insert @TeacherActivities
+    select DateAndBeginningTime, Duration
+    from Meetings where TeacherID = @TeacherID
+
+    -- Webinary
+    insert @TeacherActivities
+    select DateAndBeginningTime, Duration
+    from Webinars where TeacherID = @TeacherID
+
+    -- Sprawdzenie czy date się nie nakładają
+    if exists(select 1 from @TeacherActivities where (
+        @StartDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or
+        @EndDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or
+        (@StartDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) and
+         @EndDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime)) or
+        (DateAndBeginningTime between @StartDate and @EndDate and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) between @StartDate and @EndDate)
         ))
     begin
         set @Result = 1;

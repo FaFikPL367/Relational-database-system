@@ -3,7 +3,7 @@ create procedure update_recordinglink_module_sync
     @RecordingLink nvarchar(100)
 as begin
     begin try
-        -- Sprawdzenie czy dany webinar istnieje
+        -- Sprawdzenie czy dany moduł istnieje
         if not exists(select 1 from Modules where ModuleID = @ModuleID)
         begin
             throw 50001, 'Podany moduł nie istnieje', 1;

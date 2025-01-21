@@ -30,9 +30,10 @@ as begin
         -- W innym przypadku możemy dodać
         -- Rezerwacja ID w produktach
         declare @NewProductID int;
+        declare @CategoryID int = (select CategoryID from Categories where Name = 'Course')
 
         insert into Products (CategoryID, Status)
-        values (2, @Status)
+        values (@CategoryID, @Status)
 
         -- Pobranie ID po dodaniu do produktów
         set @NewProductID = SCOPE_IDENTITY();

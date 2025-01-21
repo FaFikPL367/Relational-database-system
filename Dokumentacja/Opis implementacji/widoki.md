@@ -1,4 +1,4 @@
-## Widoki
+# Widoki
 ---
 ### Course_information
 Widok przedstawia informacje o stworzonych kursach dostępnych i nie dostępnych. Przedstawia również informacje o ilości modułów i maksymalnej ilości miejsc na kursie (wyznaczana na podstawie limitu w modułach stacjonarnych).
@@ -47,10 +47,14 @@ CREATE view employees_information as
 ### Future_course_sign
 Widok przestawia informacje o ilości osób zapisanych na przyszłe kursy. Przyszłe kursy oznaczają wydarzenia o dalszej dacie niż aktualna.
 ```SQL
-create view future_course_sign as
-    select future_courses.CourseID, count(UserID) as Total_users
-    from future_courses inner join Users_Courses on Users_Courses.CourseID = future_courses.CourseID
-    group by future_courses.CourseID;
+CREATE view future_course_sign as
+    select future_courses.CourseID,
+           Name,
+           StartDate,
+           EndDate,
+           count(UserID) as Total_users
+    from future_courses left join Users_Courses on Users_Courses.CourseID = future_courses.CourseID
+    group by future_courses.CourseID, Name, StartDate, EndDate
 ```
 
 ---
@@ -61,7 +65,7 @@ Widok przedstawia informacje o przyszłych kursach.
 create view future_courses as
     select *
     from course_information
-    where getdate() < StartDate;
+    where getdate() < StartDate
 ```
 
 ---
@@ -69,14 +73,14 @@ create view future_courses as
 ### Future_studie_sign
 Widok przedstawia informacje o ilości osób zapisanych na przyszłe studia.
 ```SQL
-CREATE view future_course_sign as
-    select future_courses.CourseID,
+CREATE view future_studie_sign as
+    select future_studies.StudiesID,
            Name,
            StartDate,
            EndDate,
            count(UserID) as Total_users
-    from future_courses left join Users_Courses on Users_Courses.CourseID = future_courses.CourseID
-    group by future_courses.CourseID, Name, StartDate, EndDate;
+    from future_studies left join Users_Studies on Users_Studies.StudiesID = future_studies.StudiesID
+    group by future_studies.StudiesID, Name, StartDate, EndDate;
 ```
 
 ---
@@ -159,7 +163,7 @@ create view module_information as
            Duration,
            TypeName
     from Modules inner join Employees on Modules.TeacherID = Employees.EmployeeID
-    inner join Modules_Types on Modules.TypeID = Modules_Types.TypeID;
+    inner join Types on Modules.TypeID = Types.TypeID;
 ```
 
 ---

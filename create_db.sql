@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2025-01-20 20:13:49.343
+-- Last modification date: 2025-01-21 19:16:21.009
 
 -- tables
 -- Table: Categories
@@ -73,7 +73,7 @@ CREATE TABLE Languages (
 
 -- Table: Meetings
 CREATE TABLE Meetings (
-    MeetingID int  NOT NULL IDENTITY(1, 1),
+    MeetingID int  NOT NULL,
     TeacherID int  NOT NULL,
     SubjectID int  NOT NULL,
     ReunionID int  NOT NULL,
@@ -235,7 +235,7 @@ CREATE TABLE Translators_Languages (
 -- Table: Types
 CREATE TABLE Types (
     TypeID int  NOT NULL IDENTITY(1, 1),
-    TypeName varchar(20)  NOT NULL DEFAULT 'In-person' CHECK (TypeName IN ('In-person', 'Online Sync', 'Online Async', 'Hybrid')),
+    TypeName varchar(20)  NOT NULL CHECK (TypeName IN ('In-person', 'Online Sync', 'Online Async', 'Hybrid')),
     CONSTRAINT TypeID PRIMARY KEY  (TypeID)
 );
 

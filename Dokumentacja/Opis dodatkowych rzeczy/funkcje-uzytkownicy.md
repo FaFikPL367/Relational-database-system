@@ -25,7 +25,6 @@
 2. **Dyrektor platformy**
     - Odraczanie płatności dla wybranych klientów
     - Dostęp do raportów generowanych przez system (raporty finansowe, raporty z "listą dłużników", raport związane z przyszłymi wydarzeniami i frekwencją na nich)
-    - Możliwość zwalniania i zatrudniania pracowników
     - Możliwość wyrzucania uczestników z kursów/webinarów/studiów
 3. **Koordynator webinarów**
     - Dodawanie i usuwanie webinarów oraz modyfikowanie ich właściwości
@@ -36,6 +35,7 @@
     - Możliwość decydowania o zaliczeniu kursu (może zmienić decyzję systemu w szeczólnych przypadkach nawet jak uczestnik zaliczył 80% modułów)
 5. **Koordynator studiów**
     - Dodawanie i usuwanie studiów do oferty
+    - Możliwość dodawania zjadów do studiów
     - Możliwość tworzenia sylabusa studiów poprzez dodawanie przedmiotów:
       - Możliwość przypisywania wykładowców i tłumaczy do danych przedmiotów
       - Możliwość określenia typu danego spotkania przedmotu (stacjnonarnie, online, hybrydowo)
@@ -84,4 +84,14 @@
 - Wysyłanie powiadomień o zaległych płatnościach
 - Blokowanie dostępu do nagrań z webinarów po upływie 30 dni
 - Generowanie linku do płatności dla użytkownika
+
+## <div class="page"/>
+---
+## Diagram bazy danych
+
+## <img src="schemat_bazy_danych.png" width="2000"/>
+
+## <div class="page"/>
+
+
 

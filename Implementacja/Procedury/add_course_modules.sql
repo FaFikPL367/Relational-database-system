@@ -19,7 +19,7 @@ as begin
             throw 50002, 'Kurs o podanym ID nie sitnieje', 1;
         end
 
-        if not exists(select 1 from Modules_Types where TypeID = @TypeID)
+        if not exists(select 1 from Types where TypeID = @TypeID)
         begin
             throw 50003, 'Typ o podanym ID nie istnieje', 1;
         end
@@ -31,8 +31,7 @@ as begin
         end
 
         -- Sprawdzenie czy moduł nakłada się z innym w tym samym kursie
-        declare @EndDate DATETIME;
-        set @EndDate = DATEADD(MINUTE, DATEDIFF(MINUTE, 0, @Duration), @DateAndBeginningTime);
+        declare @EndDate DATETIME = DATEADD(MINUTE, DATEDIFF(MINUTE, 0, @Duration), @DateAndBeginningTime);;
         IF EXISTS (
             SELECT 1
             FROM Modules

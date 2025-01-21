@@ -38,18 +38,21 @@ as begin
         end
 
         -- Sprawdzenie czy podana sala jest wolna w tym okresie
-        if dbo.check_classroom_availability(@Classroom, @ModuleID) = cast(1 as bit)
+        declare @DateAndBeginningTime datetime = (select DateAndBeginningTime from Modules where ModuleID = @ModuleID)
+        declare @Duration time(0) = (select Duration from Modules where ModuleID = @ModuleID)
+
+        if dbo.check_classroom_availability(@Classroom, @DateAndBeginningTime, @Duration) = cast(1 as bit)
         begin
             throw 50005, 'Sala w okresie trwania modułu nie dostępna', 1;
         end
 
         -- Sprawdzzenie dostępności tłumacza
-        if dbo.check_translator_availability(@TranslatorID, (select DateAndBeginningTime from Modules where ModuleID = @ModuleID),
-           (select Duration from Modules where ModuleID = @ModuleID)) = cast(1 as bit)
+        if dbo.check_translator_availability(@TranslatorID, @DateAndBeginningTime, @Duration) = cast(1 as bit)
         begin
             throw 50006, 'Tłumacz w okresie danego modułu jest nie dostępny', 1;
         end
 
+        -- Dodanie danych
         insert In_person_Modules(ModuleID, Classroom, TranslatorID, LanguageID)
         values (@ModuleID, @Classroom, @TranslatorID, @LanguageID)
     end try

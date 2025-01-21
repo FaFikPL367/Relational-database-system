@@ -1,4 +1,4 @@
-## Procedury
+# Procedury
 ---
 ### Add_course_module_async
 Procedura, która dodaje dany moduł z danymi do tabeli z modułami prowadzonymi online-asynchronicznie.
@@ -15,12 +15,13 @@ as begin
         end
 
         -- Sprawdzenie poprawności podanego typu
-        if not exists(select 1 from Modules inner join Modules_Types on Modules.TypeID = Modules_Types.TypeID
+        if not exists(select 1 from Modules inner join Types on Modules.TypeID = Types.TypeID
                                where TypeName = 'Online Async' and ModuleID = @ModuleID)
         begin
             throw 50001, 'Podany moduł nie jest typu online-asynchronicznie', 1;
         end
 
+        -- Dodanie danych
         insert Online_Async_Modules(ModuleID, RecordingLink)
         values (@ModuleID, @RecordingLink)
     end try
@@ -51,7 +52,7 @@ as begin
         end
 
         -- Sprawdzenie poprawności podanego typu
-        if not exists(select 1 from Modules inner join Modules_Types on Modules.TypeID = Modules_Types.TypeID
+        if not exists(select 1 from Modules inner join Types on Modules.TypeID = Types.TypeID
                                where TypeName = 'In-person' and ModuleID = @ModuleID)
         begin
             throw 50001, 'Podany moduł nie jest typu stacjonarnego', 1;
@@ -76,18 +77,21 @@ as begin
         end
 
         -- Sprawdzenie czy podana sala jest wolna w tym okresie
-        if dbo.check_classroom_availability(@Classroom, @ModuleID) = cast(1 as bit)
+        declare @DateAndBeginningTime datetime = (select DateAndBeginningTime from Modules where ModuleID = @ModuleID)
+        declare @Duration time(0) = (select Duration from Modules where ModuleID = @ModuleID)
+
+        if dbo.check_classroom_availability(@Classroom, @DateAndBeginningTime, @Duration) = cast(1 as bit)
         begin
             throw 50005, 'Sala w okresie trwania modułu nie dostępna', 1;
         end
 
         -- Sprawdzzenie dostępności tłumacza
-        if dbo.check_translator_availability(@TranslatorID, (select DateAndBeginningTime from Modules where ModuleID = @ModuleID),
-           (select Duration from Modules where ModuleID = @ModuleID)) = cast(1 as bit)
+        if dbo.check_translator_availability(@TranslatorID, @DateAndBeginningTime, @Duration) = cast(1 as bit)
         begin
             throw 50006, 'Tłumacz w okresie danego modułu jest nie dostępny', 1;
         end
 
+        -- Dodanie danych
         insert In_person_Modules(ModuleID, Classroom, TranslatorID, LanguageID)
         values (@ModuleID, @Classroom, @TranslatorID, @LanguageID)
     end try
@@ -118,7 +122,7 @@ as begin
         end
 
         -- Sprawdzenie poprawności podanego typu
-        if not exists(select 1 from Modules inner join Modules_Types on Modules.TypeID = Modules_Types.TypeID
+        if not exists(select 1 from Modules inner join Types on Modules.TypeID = Types.TypeID
                                where TypeName = 'Online Sync' and ModuleID = @ModuleID)
         begin
             throw 50001, 'Podany moduł nie jest typu online-synchronicznie', 1;
@@ -137,12 +141,15 @@ as begin
         end
 
         -- Sprawdzzenie dostępności tłumacza
-        if dbo.check_translator_availability(@TranslatorID, (select DateAndBeginningTime from Modules where ModuleID = @ModuleID),
-           (select Duration from Modules where ModuleID = @ModuleID)) = cast(1 as bit)
+        declare @DateAndBeginningTime datetime = (select DateAndBeginningTime from Modules where ModuleID = @ModuleID)
+        declare @Duration time(0) = (select Duration from Modules where ModuleID = @ModuleID)
+
+        if dbo.check_translator_availability(@TranslatorID, @DateAndBeginningTime, @Duration) = cast(1 as bit)
         begin
             throw 50004, 'Tłumacz w okresie danego modułu jest nie dostępny', 1;
         end
 
+        -- Dodanie danych
         insert Online_Sync_Modules(ModuleID, MeetingLink, RecordingLink, TranslatorID, LanguageID)
         values (@ModuleID, @MeetingLink, @RecordingLink, @TranslatorID, @LanguageID)
     end try
@@ -179,7 +186,7 @@ as begin
             throw 50002, 'Kurs o podanym ID nie sitnieje', 1;
         end
 
-        if not exists(select 1 from Modules_Types where TypeID = @TypeID)
+        if not exists(select 1 from Types where TypeID = @TypeID)
         begin
             throw 50003, 'Typ o podanym ID nie istnieje', 1;
         end
@@ -191,8 +198,7 @@ as begin
         end
 
         -- Sprawdzenie czy moduł nakłada się z innym w tym samym kursie
-        declare @EndDate DATETIME;
-        set @EndDate = DATEADD(MINUTE, DATEDIFF(MINUTE, 0, @Duration), @DateAndBeginningTime);
+        declare @EndDate DATETIME = DATEADD(MINUTE, DATEDIFF(MINUTE, 0, @Duration), @DateAndBeginningTime);;
         IF EXISTS (
             SELECT 1
             FROM Modules
@@ -258,9 +264,10 @@ as begin
         -- W innym przypadku możemy dodać
         -- Rezerwacja ID w produktach
         declare @NewProductID int;
+        declare @CategoryID int = (select CategoryID from Categories where Name = 'Course')
 
         insert into Products (CategoryID, Status)
-        values (2, @Status)
+        values (@CategoryID, @Status)
 
         -- Pobranie ID po dodaniu do produktów
         set @NewProductID = SCOPE_IDENTITY();
@@ -297,8 +304,7 @@ CREATE procedure add_employee
     @Address nvarchar(50),
     @City nvarchar(30),
     @PostalCode varchar(10),
-    @PositionID int,
-    @NewEmployeeID int OUTPUT
+    @PositionID int
 as
 begin
 
@@ -313,9 +319,6 @@ begin
         insert Employees (FirstName, LastName, Phone, Email, Address, City, PostalCode, PositionID)
         values (@FirstName, @LastName, @Phone, @Email, @Address,
                 @City, @PostalCode, @PositionID);
-
-        -- Pobranie ID nowo utworzonego uzytkownika
-        set @NewEmployeeID = scope_identity();
     end try
     begin catch
         -- Przerzucenie błędu dalej
@@ -336,8 +339,7 @@ CREATE procedure add_translator
     @Email nvarchar(50),
     @Address nvarchar(50),
     @City nvarchar(30),
-    @PostalCode varchar(10),
-    @NewTranslatorID int OUTPUT
+    @PostalCode varchar(10)
 as
 begin
     begin try
@@ -345,9 +347,6 @@ begin
         insert Translators (FirstName, LastName, Phone, Email, Address, City, PostalCode)
         values (@FirstName, @LastName, @Phone, @Email, @Address,
                 @City, @PostalCode);
-
-        -- Pobranie ID nowo utworzonego uzytkownika
-        set @NewTranslatorID = scope_identity();
     end try
     begin catch
         -- Przerzucenie ERRORa dalej
@@ -368,8 +367,7 @@ create procedure add_user
     @Email nvarchar(50),
     @Address nvarchar(50),
     @City nvarchar(30),
-    @PostalCode varchar(10),
-    @NewUserID int OUTPUT
+    @PostalCode varchar(10)
 as
 begin
     begin try
@@ -377,10 +375,6 @@ begin
         insert Users (FirstName, LastName, Phone, Email, Address, City, PostalCode)
         values (@FirstName, @LastName, @Phone, @Email, @Address,
                 @City, @PostalCode);
-
-        -- Pobranie ID nowo utworzonego uzytkownika
-        set @NewUserID = scope_identity();
-
     end try
     begin catch
         -- Przerzucenie ERRORa dalej
@@ -446,9 +440,10 @@ as begin
         -- W innym przypadku możemy dodać
         -- Rezerwacja ID w produktach
         declare @NewProductID int;
+        declare @CategoryID int = (select CategoryID from Categories where Name = 'Webinar')
 
         insert Products (CategoryID, Status)
-        values (1, @Status)
+        values (@CategoryID, @Status)
 
         -- Pobranie ID po dodaniu do produktów
         set @NewProductID = SCOPE_IDENTITY();
@@ -461,10 +456,10 @@ as begin
     end try
     begin catch
         if @@TRANCOUNT > 0
-        begin 
+        begin
             rollback transaction;
         end;
-        
+
         -- Przerzucenie ERRORa dalej
         throw;
     end catch
@@ -525,19 +520,19 @@ as begin
         begin
             throw 50001, 'Tłumacz o podanym ID nie istnieje', 1;
         end
-        
+
         -- Sprawdzenie czy język istnieje
         if not exists(select 1 from Languages where LanguageID = @LanguageID)
         begin
             throw 50002, 'Język o podanym ID nie istnieje', 1;
         end
-        
+
         -- Sprawdzenie czy dana para istnieje
         if dbo.check_translator_language(@TranslatorID, @LanguageID) = cast(0 as bit)
         begin
-            throw 50003, 'Taka para już istnieje', 2;
+            throw 50003, 'Taka para nie istnieje', 2;
         end
-        
+
         -- W innym przypadku ją usuwamy
         delete from Translators_Languages
         where TranslatorID = @TranslatorID and LanguageID = @languageID;
@@ -566,11 +561,12 @@ as begin
         end
 
         -- Sprawdzenie czy dany typ istnieje
-        if not exists(select 1 from Modules_Types where TypeID = @TypeID)
+        if not exists(select 1 from Types where TypeID = @TypeID)
         begin
             throw 50001, 'Podany typ nie istnieje', 1;
         end
 
+        -- Aktualizacja typu
         update Modules
         set TypeID = @TypeID
         where ModuleID = @ModuleID
@@ -587,12 +583,12 @@ end;
 ### Update_recordinglink_module_sync
 Procedura służąca do dodania linku do nagrania w modułach prowadząnych online-synchronicznie.
 ```SQl
-CREATE procedure update_recordinglink_module_sync
+create procedure update_recordinglink_module_sync
     @ModuleID int,
     @RecordingLink nvarchar(100)
 as begin
     begin try
-        -- Sprawdzenie czy dany webinar istnieje
+        -- Sprawdzenie czy dany moduł istnieje
         if not exists(select 1 from Modules where ModuleID = @ModuleID)
         begin
             throw 50001, 'Podany moduł nie istnieje', 1;
@@ -643,3 +639,341 @@ as begin
     end catch
 end;
 ```
+
+---
+
+### Add_meeting
+Procedura służy do dodania spotkania studyjnego.
+```SQL
+create procedure add_meeting(
+    @TeacherID int,
+    @SubjectID int,
+    @ReunionID int,
+    @DateAndBeginningTime datetime,
+    @Duration time(0),
+    @Price money,
+    @TypeID int,
+    @Status bit
+)
+as begin
+    begin try
+        -- Sprawdzenie poprawności wpisanych danych
+        if not exists(select 1 from Employees where EmployeeID = @TeacherID)
+        begin
+            throw 50001, 'Nauczyciel o danym ID nie istnieje', 1;
+        end
+
+        if not exists(select 1 from Subjects where SubjectID = @SubjectID)
+        begin
+            throw 50002, 'Przedmiot o danym ID nie istnieje', 1;
+        end
+
+        if not exists(select 1 from Studies_Reunion where ReunionID = @ReunionID)
+        begin
+            throw 50003, 'Zjazd o danym ID nie istnieje', 1;
+        end
+
+        if @Price < 0
+        begin
+            throw 50004, 'Cena nie może być mniejsza od 0', 1;
+        end
+
+        -- Rezerwacja ID w produktach
+        declare @NewProductID int;
+        declare @CategoryID int = (select CategoryID from Categories where Name = 'Meeting')
+
+        insert Products (CategoryID, Status)
+        values (@CategoryID, @Status)
+
+        -- Pobranie ID po dodaniu do produktów
+        set @NewProductID = SCOPE_IDENTITY();
+
+        -- Wstawienie danych to tabeli
+        insert Meetings (MeetingID, TeacherID, SubjectID, ReunionID, DateAndBeginningTime, Duration, Price, TypeID)
+        values ( @NewProductID,@TeacherID, @SubjectID, @ReunionID, @DateAndBeginningTime, @Duration, @Price, @TypeID);
+    end try
+    begin catch
+        -- Przerzucenie ERRORa dalej
+        throw;
+    end catch
+end;
+```
+
+---
+
+### Add_meeting_async
+Procedura służy do dodawania informacji o spotkaniu online-asynchronicznym do tabeli z tymi spotkaniami.
+```SQL
+CREATE procedure add_meeting_async
+    @MeetingID int,
+    @RecordingLink nvarchar(100)
+as begin
+    begin try
+        -- Sprawdzenie czy dane spotkanie istnieje
+        if not exists(select 1 from Meetings where MeetingID = @MeetingID)
+        begin
+            throw 50000, 'Spotkanie o podanym ID nie istnieje', 1;
+        end
+
+        -- Sprawdzenie poprawności podanego typu
+        if not exists(select 1 from Meetings inner join Types on Meetings.TypeID = Types.TypeID
+                               where TypeName = 'Online Async' and MeetingID = @MeetingID)
+        begin
+            throw 50001, 'Podane spotkanie nie jest typu online-asynchronicznie', 1;
+        end
+
+        -- Dodanie danych do tabeli
+        insert Online_Async_Meetings(MeetingID, RecordingLink)
+        values (@MeetingID, @RecordingLink)
+    end try
+    begin catch
+        -- Przerzucenie ERRORa dalej
+        throw;
+    end catch
+end;
+```
+
+---
+### Add_meeting_in_person
+Procedura służy do dodawania informacji o spotkaniu stacjonarnym do tabeli z tymi spotkaniami.
+```SQL
+CREATE procedure add_meeting_in_person
+    @MeetingID int,
+    @Classroom int,
+    @TranslatorID int,
+    @LanguageID int,
+    @Limit int
+as begin
+    begin try
+        -- Sprawdzenie czy dane spotkanie istnieje
+        if not exists(select 1 from Meetings where MeetingID = @MeetingID)
+        begin
+            throw 50000, 'Spotkanie o podanym ID nie istnieje', 1;
+        end
+
+        -- Sprawdzenie poprawności podanego typu
+        if not exists(select 1 from Meetings inner join Types on Meetings.TypeID = Types.TypeID
+                               where TypeName = 'In-person' and MeetingID = @MeetingID)
+        begin
+            throw 50001, 'Podane spotkanie nie jest typu stacjonarnego', 1;
+        end
+
+        -- Sprawdzenie czy dany tłumacz istnieje
+        if not exists(select 1 from Translators where TranslatorID = @TranslatorID) and @TranslatorID is not null
+        begin
+            throw 50002, 'Tłumacz o podanym ID nie istnieje', 1;
+        end
+
+        -- Sprawdzenie czy dany język istnieje
+        if not exists(select 1 from Languages where LanguageID = @LanguageID)
+        begin
+            throw 50003, 'Język o podanym ID nie istnieje', 1;
+        end
+
+        -- Sprawdzenie czy limit jest poprawnie wpisany
+        if @Limit <= 0
+        begin
+            throw 50004, 'Limit nie może być wartością mniejszą bądź równą 0', 1;
+        end
+
+        -- Sprawdzenie dostępności tłumacza
+        declare @DateAndBeginningTime datetime = (select DateAndBeginningTime from Meetings where MeetingID = @MeetingID);
+        declare @duration time(0) = (select Duration from Meetings where MeetingID = @MeetingID);
+
+        if dbo.check_translator_availability(@TranslatorID, @DateAndBeginningTime,@Duration) = cast(1 as bit)
+        begin
+            throw 50006, 'Tłumacz w okresie trwania danego spotkania jest nie dostępny', 1;
+        end
+
+        -- Sprawdzenie czy dana sala jest dostępna
+        if dbo.check_classroom_availability(@Classroom, @DateAndBeginningTime, @Duration) = cast(1 as bit)
+        begin
+            throw 50007, 'Sala w danym terminie nie jest dostępna', 1;
+        end
+
+        -- Dodanie danych
+        insert In_person_Meetings(MeetingID, Classroom, TranslatorID, LanguageID, Limit)
+        values (@MeetingID, @Classroom, @TranslatorID, @LanguageID, @Limit)
+    end try
+    begin catch
+        -- Przerzucenie ERRORa dalej
+        throw;
+    end catch
+end;
+```
+
+---
+
+### Add_meeting_sync
+Procedura służy do dodania informacji o spotkaniu stacjonarnym do tabeli z tymi spotkaniami.
+```SQL
+CREATE procedure add_meeting_sync
+    @MeetingID int,
+    @MeetingLink nvarchar(100),
+    @RecordingLink nvarchar(100),
+    @TranslatorID int,
+    @LanguageID int
+as begin
+    begin try
+        -- Sprawdzenie czy dane spotkanie istnieje
+        if not exists(select 1 from Meetings where MeetingID = @MeetingID)
+        begin
+            throw 50000, 'Spotkanie o podanym ID nie istnieje', 1;
+        end
+
+        -- Sprawdzenie poprawności podanego typu
+        if not exists(select 1 from Meetings inner join Types on Meetings.TypeID = Types.TypeID
+                               where TypeName = 'Online Sync' and MeetingID = @MeetingID)
+        begin
+            throw 50001, 'Podane spotkanie nie jest typu online-synchronicznie', 1;
+        end
+
+        -- Sprawdzenie czy dany tłumacz istnieje
+        if not exists(select 1 from Translators where TranslatorID = @TranslatorID) and @TranslatorID is not null
+        begin
+            throw 50002, 'Tłumacz o podanym ID nie istnieje', 1;
+        end
+
+        -- Sprawdzenie czy dany język istnieje
+        if not exists(select 1 from Languages where LanguageID = @LanguageID)
+        begin
+            throw 50003, 'Język o podanym ID nie istnieje', 1;
+        end
+
+        -- Sprawdzenie dostępności tłumacza
+        declare @DateAndBeginningTime datetime = (select DateAndBeginningTime from Meetings where MeetingID = @MeetingID);
+        declare @duration time(0) = (select Duration from Meetings where MeetingID = @MeetingID);
+
+        if dbo.check_translator_availability(@TranslatorID, @DateAndBeginningTime, @Duration) = cast(1 as bit)
+        begin
+            throw 50004, 'Tłumacz w okresie danego spotkania jest niedostępny', 1;
+        end
+
+        -- Dodanie danych
+        insert Online_Sync_Meetings(MeetingID, MeetingLink, RecordingLink, TranslatorID, LanguageID)
+        values (@MeetingID, @MeetingLink, @RecordingLink, @TranslatorID, @LanguageID)
+    end try
+    begin catch
+        -- Przerzucenie ERRORa dalej
+        throw;
+    end catch
+end;
+```
+
+---
+
+### Add_reunion
+Procedura służy do dodawania zjazu do danych studiów wraz z podaniem jego czasu odbycia się.
+```SQL
+create procedure add_reunion
+    @StudiesID int,
+    @StartDate date,
+    @EndDate date,
+    @Status bit
+as begin
+    begin try
+        begin transaction;
+
+        -- Sprawdzenie poprawności wpisanych danych
+        if not exists(select 1 from Studies where StudiesID = @StudiesID)
+        begin
+            throw 50001, 'Studia o podanym ID nie istnieją', 1;
+        end
+
+        if @StartDate >= @EndDate
+        begin
+            throw 50002, 'Data startowa nie może być późniejsza niż data końca', 1;
+        end
+
+        -- W innym przypadku możemy dodać
+        -- Rezerwacja ID w produktach
+        declare @NewProductID int;
+        declare @CategoryID int = (select CategoryID from Categories where Name = 'Reunion')
+
+        insert into Products (CategoryID, Status)
+        values (@CategoryID, @Status)
+
+        -- Pobranie ID po dodaniu do produktów
+        set @NewProductID = SCOPE_IDENTITY();
+
+        insert Studies_Reunion(ProductID, StudiesID, StartDate, EndDate)
+        values (@NewProductID, @StudiesID, @StartDate, @EndDate)
+
+        commit transaction;
+    end try
+    begin catch
+        -- Wycofanie transakcji w przypadku błędu
+        if @@TRANCOUNT > 0
+        begin
+            rollback transaction;
+        end;
+
+        -- Przerzucenie ERRORa dalej
+        throw;
+    end catch
+end
+```
+
+---
+
+### Add_studie
+Procedura pozwala na dodanie studiów do bazy wraz z jej wszystkimi informacjami.
+```SQL
+create procedure add_studie
+    @CoordinatorID int,
+    @Name nvarchar(30),
+    @Description nvarchar(max),
+    @StartDate date,
+    @EndDate date,
+    @Price money,
+    @Status bit
+as begin
+    begin try
+        begin transaction;
+
+        -- Sprawdzenie poprawności wpisywanych danych
+        if not exists(select 1 from Employees where EmployeeID = @CoordinatorID and
+                                                    PositionID = 2)
+        begin
+            throw 50001, 'Koordynator o danym ID nie istnieje lub nie jest kordynatorem studiów', 1;
+        end
+
+        if @Price < 0
+        begin
+            throw 50002, 'Cena nie może być mniejsza od 0', 1;
+        end
+
+        if @StartDate >= @EndDate
+        begin
+            throw 50003, 'Nie poprawnie wpisane daty', 1;
+        end
+
+        -- W innym przypadku możemy dodać
+        -- Rezerwacja ID w produktach
+        declare @NewProductID int;
+        declare @CategoryID int = (select CategoryID from Categories where Name = 'Studies')
+
+        insert into Products (CategoryID, Status)
+        values (@CategoryID, @Status)
+
+        -- Pobranie ID po dodaniu do produktów
+        set @NewProductID = SCOPE_IDENTITY();
+
+        insert Studies (StudiesID, CoordinatorID, Name, Description, StartDate, EndDate)
+        values (@NewProductID, @CoordinatorID, @Name, @Description, @StartDate, @EndDate)
+
+        commit transaction;
+    end try
+    begin catch
+        -- Wycofanie transakcji w przypadku błędu
+        if @@TRANCOUNT > 0
+        begin
+            rollback transaction;
+        end;
+
+        -- Przerzucenie ERRORa dalej
+        throw;
+    end catch
+end
+```
+

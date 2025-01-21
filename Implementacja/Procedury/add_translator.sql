@@ -5,8 +5,7 @@ CREATE procedure add_translator
     @Email nvarchar(50),
     @Address nvarchar(50),
     @City nvarchar(30),
-    @PostalCode varchar(10),
-    @NewTranslatorID int OUTPUT
+    @PostalCode varchar(10)
 as
 begin
     begin try
@@ -14,9 +13,6 @@ begin
         insert Translators (FirstName, LastName, Phone, Email, Address, City, PostalCode)
         values (@FirstName, @LastName, @Phone, @Email, @Address,
                 @City, @PostalCode);
-
-        -- Pobranie ID nowo utworzonego uzytkownika
-        set @NewTranslatorID = scope_identity();
     end try
     begin catch
         -- Przerzucenie ERRORa dalej

@@ -16,6 +16,7 @@ as begin
             throw 50001, 'Podany moduł nie jest typu online-asynchronicznie', 1;
         end
 
+        -- Dodanie danych
         insert Online_Async_Modules(ModuleID, RecordingLink)
         values (@ModuleID, @RecordingLink)
     end try

@@ -1,13 +1,12 @@
 # Kategoria Users
----
 
 ## Tabela **Users**
 Zawiera ona informacje o użytkownikach:
  * **UserID** [int] - klucz główny, identyfikator użytkownika
  * **FirstName** [nvarchar(50)] - imię użytkownika
  * **LastName** [nvarchar(50)] - nazwisko użytkownika
- * **Phone** [varchar(15), unique] - numer telefonu użytkownika 
-    * warunki: LEN(Phone) <= 15 AND ISNUMERIC(Phone) = 1
+ * **Phone** [varchar(20), unique] - numer telefonu użytkownika 
+    * warunki: LEN(Phone) <= 20
  * **Email** [nvarchar(50), unique] - email użytkownika
     * warunki: Email LIKE '%_@%.%'
  * **Address** [nvarchar(50)] - adres użytkownika
@@ -18,7 +17,7 @@ CREATE TABLE Users (
    UserID int  NOT NULL IDENTITY(1, 1),
    FirstName nvarchar(50)  NOT NULL,
    LastName nvarchar(50)  NOT NULL,
-   Phone varchar(15)  NOT NULL CHECK (ISNUMERIC(Phone) = 1 AND LEN(PHONE) <= 15),
+   Phone varchar(20)  NOT NULL CHECK (LEN(PHONE) <= 20),
    Email nvarchar(50)  NOT NULL CHECK (Email LIKE '%_@%.%'),
    Address nvarchar(50)  NOT NULL,
    City nvarchar(30)  NOT NULL,
@@ -35,8 +34,8 @@ Zawiera informacje o pracownikach:
  * **EmployeeID** [int] - klucz główny, identyfikator pracownika
  * **FirstName** [nvarchar(50)] - imię pracownika
  * **LastName** [nvarchar(50)] - nazwisko pracownika
- * **Phone** [varcahr(15), unique] - numer telefonu pracownika
-    * warunki: LEN(Phone) <= 15 AND ISNUMERIC(Phone) = 1
+ * **Phone** [varcahr(20), unique] - numer telefonu pracownika
+    * warunki: LEN(Phone) <= 20
  * **Email** [nvarchar(50), unique] - email pracownika
     * warunki: Email LIKE '%_@%.%'
  * **Address** [nvarchar(50)] - adres pracownika
@@ -48,7 +47,7 @@ CREATE TABLE Employees (
    EmployeeID int  NOT NULL IDENTITY(1, 1),
    FirstName nvarchar(50)  NOT NULL,
    LastName nvarchar(50)  NOT NULL,
-   Phone varchar(15)  NOT NULL CHECK (ISNUMERIC(Phone) = 1 AND LEN(PHONE) <= 15),
+   Phone varchar(20)  NOT NULL CHECK (LEN(PHONE) <= 20),
    Email nvarchar(50)  NOT NULL CHECK (Email LIKE '%_@%.%'),
    Address nvarchar(50)  NOT NULL,
    City nvarchar(30)  NOT NULL,
@@ -78,8 +77,8 @@ Zwiera informacje o tłumaczach:
  * **TranslatorID** [int] - klucz główny, identyfikator tłumacza
  * **FirstName** [nvarchar(50)] - imię tłumacza
  * **LastName** [nvarchar(50)] - nazwisko tłumacza
- * **Phone** [varchar(15), unique] - numer telefonu tłumacza
-    * warunki: LEN(Phone) <= 15 AND ISNUMERIC(Phone) = 1
+ * **Phone** [varchar(20), unique] - numer telefonu tłumacza
+    * warunki: LEN(Phone) <= 20
  * **Email** [nvarchar(50), unique] - email tłumacza
     * warunki: Email LIKE '%_@%.%'
  * **Address** [nvarchar(50)] - adres tłumacza
@@ -90,7 +89,7 @@ CREATE TABLE Translators (
    TranslatorID int  NOT NULL IDENTITY(1, 1),
    FirstName nvarchar(50)  NOT NULL,
    LastName nvarchar(50)  NOT NULL,
-   Phone varchar(15)  NOT NULL CHECK (ISNUMERIC(Phone) = 1 AND LEN(PHONE) <= 15),
+   Phone varchar(20)  NOT NULL CHECK (LEN(PHONE) <= 20),
    Email nvarchar(50)  NOT NULL CHECK (Email LIKE '%_@%.%'),
    Address nvarchar(50)  NOT NULL,
    City nvarchar(30)  NOT NULL,

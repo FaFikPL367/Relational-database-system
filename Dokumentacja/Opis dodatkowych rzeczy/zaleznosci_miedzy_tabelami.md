@@ -1,7 +1,7 @@
-```SQL
--- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2025-01-07 22:07:46.968
+# Kod zależności między tabelami
+---
 
+```SQL
 -- foreign keys
 -- Reference: Courses_Users_Courses (table: Users_Courses)
 ALTER TABLE Users_Courses ADD CONSTRAINT Courses_Users_Courses
@@ -160,7 +160,7 @@ ALTER TABLE Studies ADD CONSTRAINT Products_Studies
 
 -- Reference: Products_Studies_Reunion (table: Studies_Reunion)
 ALTER TABLE Studies_Reunion ADD CONSTRAINT Products_Studies_Reunion
-    FOREIGN KEY (ReunionID)
+    FOREIGN KEY (ProductID)
     REFERENCES Products (ProductID);
 
 -- Reference: Products_Webinars (table: Webinars)
@@ -262,6 +262,4 @@ ALTER TABLE Webinars ADD CONSTRAINT Webinars_Translators
 ALTER TABLE Users_Webinars ADD CONSTRAINT Webinars_Users_Webinars
     FOREIGN KEY (WebinarID)
     REFERENCES Webinars (WebinarID);
-
--- End of file.
 ```

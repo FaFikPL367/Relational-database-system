@@ -2,24 +2,14 @@ create function check_product_availability(
     @ProductID int
 ) returns bit
 as begin
+    -- 1 - produkt dostępy, 0 - produkt nie dostępny
     declare @Result bit = 0;
 
-    -- Sprawdzenie, czy istnieje produkt o danym ID
+    -- Sprawdzenie statusu
+    if (select Status from Products where ProductID = @ProductID) = 1
+    begin
+        set @Result = 1;
+    end
 
-    declare @tmpProducts table
-    (
-        ProductID int,
-        Status    bit
-    )
-    insert @tmpProducts
-    select ProductID, Status
-    from Products
-    where Products.ProductID = @ProductID;
-
-    if not exists(select 1 from @tmpProducts)
-       begin
-            throw 50001, 'Produkt o podanym ID nie istnieje', 1
-        end
-    set @Result = (select 2 from @tmpProducts)
     return @Result
 end

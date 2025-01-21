@@ -1,5 +1,4 @@
 # Kategoria Courses
----
 
 ## Tabela **Courses**
 Zawiera informacje dotyczące kursów:
@@ -88,7 +87,7 @@ Zawiera informację o możliwych typach modułów czy spotkań:
 ```SQL
 CREATE TABLE Types (
    TypeID int  NOT NULL IDENTITY(1, 1),
-   TypeName varchar(20)  NOT NULL DEFAULT 'In-person' CHECK (TypeName IN ('In-person', 'Online Sync', 'Online Async', 'Hybrid')),
+   TypeName varchar(20)  NOT NULL CHECK (TypeName IN ('In-person', 'Online Sync', 'Online Async', 'Hybrid')),
    CONSTRAINT TypeID PRIMARY KEY  (TypeID)
 );
 ```
@@ -112,7 +111,7 @@ CREATE TABLE Online_Async_Modules (
 ## Tabela **Online_Sync_Modules**
 Zawiera informacje o modułach odbywających się online synchronicznie:
 - **ModuleID** [int] - identyfikator modułu
-- **MeetingLink** [nvarchar(100)] - link do spotkania
+- **MeetingLink** [nvarchar(100), unique] - link do spotkania
 - **RecordingLink** [nvarchar(100)] - link do nagrania ze spotkania
 - **TranslatorID** [int] - identyfikator tłumacza
 - **LanguageID** [int] - identyfikator języka
@@ -125,7 +124,6 @@ CREATE TABLE Online_Sync_Modules (
    TranslatorID int  NULL,
    LanguageID int  NOT NULL,
    CONSTRAINT OnlineSyncModulesMeetingLink UNIQUE (MeetingLink),
-   CONSTRAINT OnlineSyncModulesRecordingLink UNIQUE (RecordingLink),
    CONSTRAINT Online_Sync_Modules_pk PRIMARY KEY  (ModuleID)
 );
 ```

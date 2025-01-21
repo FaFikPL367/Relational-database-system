@@ -1,12 +1,11 @@
 # Kategoria Studies
----
 
 ## Tabela **Studies**
 Zawiera informajce o dostępnych studiach:
  * **StudiesID** [int] - klucz główny, identyfikator studiów
  * **CoordinatorID** [int] - identyfikator kordynatora studiów
  * **Name** [nvarchar(30)] - nazwa studiów
- * **Description** [ntext] - obpis studiów
+ * **Description** [nvarchar(max)] - opis studiów
  * **StartDate** [date] - data rozpoczęcia studiów
  * **EndDate** [date] - data zakończenia studiów
  * **Price** [money] - cena wpisowego na studiach
@@ -17,7 +16,7 @@ CREATE TABLE Studies (
    StudiesID int  NOT NULL,
    CoordinatorID int  NOT NULL,
    Name nvarchar(30)  NOT NULL,
-   Description ntext  NOT NULL,
+   Description nvarchar(max)  NOT NULL,
    StartDate date  NOT NULL,
    EndDate date  NOT NULL,
    Price money  NOT NULL DEFAULT 1200 CHECK (Price > 0),
@@ -31,15 +30,13 @@ Zawiera informajce o przedmiotach:
  * **SubjectID** [int] - klucz główny, identyfikator przedmiotu
  * **StudiesID** [int] - klucz obcy, identyfikator studiów
  * **Name** [nvarchar(50)] - nazwa przedmiotu
- * **TeacherID** [int] - identyfikator koordynatora przedmiotu
  * **Description** [ntext] - opis przedmiotu
 ```SQL
 CREATE TABLE Subjects (
-   SubjectID int  NOT NULL,
+   SubjectID int  NOT NULL IDENTITY(1, 1),
    StudiesID int  NOT NULL,
    Name nvarchar(50)  NOT NULL,
-   TeacherID int  NOT NULL,
-   Description ntext  NOT NULL,
+   Description nvarchar(max)  NOT NULL,
    CONSTRAINT Subjects_pk PRIMARY KEY  (SubjectID)
 );
 ```
@@ -62,7 +59,7 @@ Zawiera informacje o pojedynczym spotkaniu na studiach z danego przedmiotu:
  * **TypeID** [int] - klucz obcy, identyfikator typu spotkania np. stacjonarne itd.
 ```SQL
 CREATE TABLE Meetings (
-   MeetingID int  NOT NULL IDENTITY(1, 1),
+   MeetingID int  NOT NULL,
    TeacherID int  NOT NULL,
    SubjectID int  NOT NULL,
    ReunionID int  NOT NULL,
@@ -71,19 +68,6 @@ CREATE TABLE Meetings (
    Price money  NOT NULL DEFAULT 120 CHECK (Price > 0),
    TypeID int  NOT NULL,
    CONSTRAINT MeetingID PRIMARY KEY  (MeetingID)
-);
-```
-
-## <hr>
-## Tabela **Meeting_Types**
-Zawiera informacje o rodzajach typów spotkań:
- * **TypeID** [int] - klucz główny, identyfikator typu
- * **TypeName** [varchar(20)] - nazwa typu
-```SQL
-CREATE TABLE Meetings_Types (
-   TypeID int  NOT NULL,
-   TypeName varchar(20)  NOT NULL,
-   CONSTRAINT TypeID PRIMARY KEY  (TypeID)
 );
 ```
 
@@ -112,17 +96,18 @@ CREATE TABLE In_person_Meetings (
 ## Tabela **Online_Sync_Meetings**
 Zaweira dodatkowe informacje dla spotkań online synchronicznie:
  * **MeetingID** [int] - klucz główny, identyfikator spotkania
- * **MeetingLink** [nvarchar(100)] - link do spotkania
- * **RecodringLink** [nvarchar(100)] - link do nagrania spotkania
+ * **MeetingLink** [nvarchar(100), unique] - link do spotkania
+ * **RecordingLink** [nvarchar(100)] - link do nagrania spotkania
  * **TranslatorID** [int, nullable] - identyfikator tłumacza
  * **LanguageID** [int] - identyfiaktor języka w jakim odbywa się spotkanie
 ```SQL
 CREATE TABLE Online_Sync_Meetings (
    MeetingID int  NOT NULL,
    MeetingLink nvarchar(100)  NOT NULL,
-   RecordingLink nvarchar(100)  NOT NULL,
+   RecordingLink nvarchar(100)  NULL,
    TranslatorID int  NULL,
    LanguageID int  NOT NULL,
+   CONSTRAINT OnlineSyncMeetingMeetingLink UNIQUE (MeetingLink),
    CONSTRAINT Online_Sync_Meetings_pk PRIMARY KEY  (MeetingID)
 );
 ```
@@ -145,15 +130,13 @@ CREATE TABLE Online_Async_Meetings (
 Zawiera informacje o obecności studenta na spotkaniu:
  * **UserID** [int] - część klucz głównego, identyfikator studenta
  * **MeetingID** [int] - część klucza głównego, identyfikator spotkania
- * **SubjectID** [int] - część klucza głównego, identyfikator przedmiotu
- * **Present** [bit, nullable] - informacja o obecności studenta na spotkaniu
+ * **Present** [bit] - informacja o obecności studenta na spotkaniu
 ``` SQL
 CREATE TABLE Users_Meetings_Attendance (
    UserID int  NOT NULL,
    MeetingID int  NOT NULL,
-   SubjectID int  NOT NULL,
    Present bit  NULL,
-   CONSTRAINT Users_Meetings_Attendance_pk PRIMARY KEY  (MeetingID,UserID,SubjectID)
+   CONSTRAINT Users_Meetings_Attendance_pk PRIMARY KEY  (MeetingID,UserID)
 );
 ```
 
@@ -166,22 +149,22 @@ Zawiera informacje o firmach gdzie mogą być odbywane praktyki:
  * **Country** [nvarchar(30)] - kraj gdzie jest zarejestrowana firma
  * **City** [nvarchar(30)] - miasto siedziby firmy
  * **Address** [nvarchar(30)] - adres firmy
- * **Phone** [varchar(15)] - numer telefonu do firmy
-   * warunki: LEN(Phone) = 15 AND ISNUMERIC(Phone) = 1
+ * **Phone** [varchar(20)] - numer telefonu do firmy
+   * warunki: LEN(Phone) <= 20
  * **Email** [nvarchar(50)] - email firmy
    * warunki: Email LIKE '%_@%.%'
 ```SQL
 CREATE TABLE Practices (
-   PracticeID int  NOT NULL,
-   Description ntext  NOT NULL,
+   PracticeID int  NOT NULL IDENTITY(1, 1),
+   Description nvarchar(max)  NOT NULL,
    CompanyName nvarchar(30)  NOT NULL,
    Country nvarchar(30)  NOT NULL,
    City nvarchar(30)  NOT NULL,
-   Address nvarchar(30)  NOT NULL,
-   Phone varchar(15)  NOT NULL CHECK (LEN(Phone) = 15 AND ISNUMERIC(Phone) = 1),
+   Address nvarchar(50)  NOT NULL,
+   Phone varchar(20)  NOT NULL CHECK (LEN(Phone) <= 20),
    Email nvarchar(50)  NOT NULL CHECK (Email LIKE '%_@%.%'),
-   CONSTRAINT Phone UNIQUE (Phone),
-   CONSTRAINT Email UNIQUE (Email),
+   CONSTRAINT PracticePhone UNIQUE (Phone),
+   CONSTRAINT PracticeEmail UNIQUE (Email),
    CONSTRAINT Practices_pk PRIMARY KEY  (PracticeID)
 );
 ```
@@ -192,7 +175,7 @@ Zawiera informacje o zdaniu praktyk przez danego studenta:
  * **UserID** [int] - część klucz głównego, identyfikator studenta
  * **StudiesID** [int] - część klucza głównego, identyfikator studiów
  * **PracticeID** [int] - część klucza głównego, identyfikator praktyk
- * **Present** [bit, nullable] - informacja o zdaniu praktyk
+ * **Present** [bit] - informacja o zdaniu praktyk
 ```SQL
 CREATE TABLE Users_Practices_Attendance (
    UserID int  NOT NULL,
@@ -209,7 +192,7 @@ Zawiera informacje studentach przypisanych do danych studiów:
  * **UserID** [int] - część klucza głównego, identyfikator studenta
  * **StudiesID** [int] - część klucza głównego, identyfikator studiów
  * **Grade** [int] - wartość oceny studenta na koniec studiów
-   * warunki: Grade >=2 AND Grade <= 5
+   * warunki: Grade >= 2 AND Grade <= 5
 ```SQL
 CREATE TABLE Users_Studies (
    UserID int  NOT NULL,
@@ -223,12 +206,15 @@ CREATE TABLE Users_Studies (
 ## Tabela **Studies_Reunion**
 Zawiera ona informacje o zjazdach występujących na danych studiach:
  * **ReunionID** [int] - klucz główny, identyfikator zjazdu
+ * **ProductID** [int] - klucz obcy, informacja o ID jaki ma dany zjazd w produktach (potrzebny do określenia czy dany użytkownik zapłacił
+ za dany zjazd czy nie)
  * **StudiesID** [int] - klucz poboczny, identyfikator studiów
  * **StartDate** [date] - data startu danego zjazdu
  * **EndDate** [date] - data końca danego zjadu
 ```SQL
 CREATE TABLE Studies_Reunion (
-   ReunionID int  NOT NULL,
+   ReunionID int  NOT NULL IDENTITY(1, 1),
+   ProductID int  NOT NULL,
    StudiesID int  NOT NULL,
    StartDate date  NOT NULL,
    EndDate date  NOT NULL,

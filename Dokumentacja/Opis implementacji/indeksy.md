@@ -1,5 +1,5 @@
-## Indeksy
----
+# Indeksy
+
 ### Tabela Orders
 ```SQL
 create index Orders_userID on Orders (UserID);

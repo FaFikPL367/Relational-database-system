@@ -1,0 +1,27 @@
+# Wyklucz cały folder .idea
+.idea/
+
+# Pozwól na współdzielenie istotnych plików .idea
+!.idea/modules.xml
+!.idea/vcs.xml
+!.idea/misc.xml
+!.idea/codeStyles/
+!.idea/inspectionProfiles/
+
+# Wyklucz lokalne ustawienia specyficzne dla użytkownika
+.idea/workspace.xml
+.idea/dictionaries/
+.idea/libraries/
+
+# Wyklucz dane systemowe IDE
+.idea/.name
+.idea/shelf/
+
+# Wyklucz inne pliki generowane przez IDE
+.idea/httpRequests/
+.idea/dataSources/
+.idea/dataSources.local.xml
+
+# Inne typowe pliki do wykluczenia
+*.iml  # Pliki modułów IntelliJ IDEA (mogą być generowane automatycznie)
+*.iws  # Stare pliki konfiguracyjne IntelliJ IDEA

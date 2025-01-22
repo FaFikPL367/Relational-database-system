@@ -1,8 +1,8 @@
 CREATE procedure add_order
-    @OrderID int,
     @UserID int,
     @OrderDate date,
-    @PaymentLink nvarchar(100)
+    @PaymentLink nvarchar(100),
+    @LastID int output
 as begin
     begin try
         -- Sprawdzenie czy dany użytkownik istnieje
@@ -12,8 +12,10 @@ as begin
         end
 
         -- Dodanie danych do tabeli
-        insert Orders(OrderID, UserID, OrderDate, PaymentLink)
-        values (@OrderID, @UserID, @OrderDate, @PaymentLink)
+        insert Orders(UserID, OrderDate, PaymentLink)
+        values (@UserID, @OrderDate, @PaymentLink)
+
+        SET @LastID = SCOPE_IDENTITY();
     end try
     begin catch
         -- Przerzucenie ERRORa dalej

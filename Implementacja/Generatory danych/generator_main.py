@@ -1,10 +1,17 @@
 from dotenv import load_dotenv
 import os
-from Generators import users, webinars, courses
+from Generators import users, webinars, courses, studies
 
 def main():
     # Załadowanie zmiennych środowiskowych
     load_dotenv()
+
+    # Wypisanie zmiennych środowiskowych
+    print("DB_SERVER:", os.getenv('DB_SERVER'))
+    print("DB_DATABASE:", os.getenv('DB_DATABASE'))
+    print("DB_USERNAME:", os.getenv('DB_USERNAME'))
+    print("DB_PASSWORD:", os.getenv('DB_PASSWORD'))
+    print()
 
     # Stworzenie stringu konfiguracyjnego do połączenia do bazy
     connection_string = ";".join([
@@ -21,13 +28,13 @@ def main():
 
     # Kategoria USERS
     users_quantity = 50
-    employees_quantity = 30
+    employees_quantity = 118
     webinars_coordinator_quantity = 5
     studies_coordinator_quantity = 5
     courses_coordinator_quantity = 5
     secretariat_quantity = 2
-    lecturers_quantity = 12
-    translators_quantity = 30
+    lecturers_quantity = 100
+    translators_quantity = 200
     how_many_languages_to_translators = 3 # ile maksymalnie języków może tłumaczyć jeden tłumacz
 
     # Kategoria WEBINARS
@@ -56,6 +63,10 @@ def main():
     plus_minus_days_for_studies = 365 # ile dni wstecz i w przód mogą być dodane do daty rozpoczęcia studiów 
     semestr_quantity = 6
 
+    # Kategoria ORDERS
+    min_users_quantity_for_webinars = 25
+    max_users_quantity_for_webinars = 50
+
 
     # Wykonanie generatorów
 
@@ -72,8 +83,8 @@ def main():
     print()
 
     # # 4. Generowanie STUDIES
-    # studies.studies(studies_quantity, subject_quantity, max_quantity_subjects_in_study, min_quantity_subjects_in_study, practices_quantity, start_hour_studies, end_hour_studies, reunion_quantity, connection_string, courses_quantity, webinars_quantity, plus_minus_days_for_studies)
-
+    studies.studies(studies_quantity, max_quantity_subjects_in_study, min_quantity_subjects_in_study, practices_quantity, start_hour_studies, end_hour_studies, reunion_quantity, connection_string, courses_quantity, webinars_quantity, plus_minus_days_for_studies, semestr_quantity, one_reunion_length)
+    print()
 
 # Wykonanie funkcji main
 if __name__ == "__main__":

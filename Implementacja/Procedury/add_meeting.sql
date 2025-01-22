@@ -10,6 +10,8 @@ create procedure add_meeting(
 )
 as begin
     begin try
+        begin transaction;
+
         -- Sprawdzenie poprawności wpisanych danych
         if not exists(select 1 from Employees where EmployeeID = @TeacherID)
         begin
@@ -44,8 +46,16 @@ as begin
         -- Wstawienie danych to tabeli
         insert Meetings (MeetingID, TeacherID, SubjectID, ReunionID, DateAndBeginningTime, Duration, Price, TypeID)
         values ( @NewProductID,@TeacherID, @SubjectID, @ReunionID, @DateAndBeginningTime, @Duration, @Price, @TypeID);
+
+        commit transaction;
     end try
     begin catch
+        -- Wycofanie transakcji w przypadku błędu
+        if @@TRANCOUNT > 0
+        begin
+            rollback transaction;
+        end;
+
         -- Przerzucenie ERRORa dalej
         throw;
     end catch

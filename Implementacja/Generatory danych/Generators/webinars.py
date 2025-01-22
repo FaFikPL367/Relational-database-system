@@ -46,7 +46,7 @@ def webinars(webinars_quantity, plus_minus_days_for_webinars, start_hour_webinar
     teachers = [teacher[0] for teacher in teachers]
 
     # Wybieramy 1/3 nauczycieli
-    teachers = teachers[0: int(len(teachers)/3)]
+    teachers = teachers[0: 10] # 10 nauczycieli
 
 
     # 2. Pobranie kordynatorów
@@ -62,7 +62,7 @@ def webinars(webinars_quantity, plus_minus_days_for_webinars, start_hour_webinar
     translators.sort()
 
     # Wybieramy 1/3 tłumaczy
-    translators = translators[0: int(len(translators)/3)]
+    translators = translators[0: 10] # 10 tłumaczy
 
     # Pobranie par język-tłumacz
     cursor.execute("SELECT LanguageID, TranslatorID FROM Translators_Languages")

@@ -49,7 +49,7 @@ def courses(courses_quantity, plus_minus_days_for_courses, start_hour_courses, e
     teachers = [teacher[0] for teacher in teachers]
 
     # Wybieramy 1/3 nauczycieli
-    teachers = teachers[int(len(teachers)/3): 2*int(len(teachers)/3)]
+    teachers = teachers[10:30] # 20 nauczycieli
 
     # 2. Pobranie kordynatorów
     cursor.execute("SELECT EmployeeID FROM Employees inner join Employees_Postions on Employees.PositionID = Employees_Postions.PositionID where PositionName = 'Koordynator kursów'")
@@ -63,7 +63,7 @@ def courses(courses_quantity, plus_minus_days_for_courses, start_hour_courses, e
     translators.sort()
 
     # Wybieramy 1/3 tłumaczy
-    translators = translators[int(len(translators)/3): 2*int(len(translators)/3)]
+    translators = translators[10:20] # 10 tłumaczy
 
     # Pobranie par język-tłumacz
     cursor.execute("SELECT LanguageID, TranslatorID FROM Translators_Languages")
@@ -275,7 +275,7 @@ def courses(courses_quantity, plus_minus_days_for_courses, start_hour_courses, e
     cursor.execute("SELECT ModuleID, DateAndBeginningTime FROM Modules inner join Types on Modules.TypeID = Types.TypeID where TypeName = 'Online Async'")
     online_async_modules = cursor.fetchall()
 
-    # 3. Pobranie tłumaczy
+    # 13. Pobranie tłumaczy
     cursor.execute("SELECT TranslatorID FROM Translators")
     translators = cursor.fetchall()
     translators = [translator[0] for translator in translators]
@@ -288,7 +288,7 @@ def courses(courses_quantity, plus_minus_days_for_courses, start_hour_courses, e
     cursor.execute("SELECT LanguageID, TranslatorID FROM Translators_Languages")
     translators_languages = cursor.fetchall()
 
-    # 15. Przypisanie tłumaczy do dat (stacjonarne)
+    # 14. Przypisanie tłumaczy do dat (stacjonarne)
     translators_dates_inperson = []
     assigned_translators = {}
 
@@ -327,7 +327,7 @@ def courses(courses_quantity, plus_minus_days_for_courses, start_hour_courses, e
         else :
             print(f"Brak dostępnych tłumaczy dla daty: {date}")
 
-    # 16. PRzypisanie tłumaczy do dat (online-synchroniczne)
+    # 15. PRzypisanie tłumaczy do dat (online-synchroniczne)
     translators_dates_online_sync = []
 
     for (moduleid, date) in online_sync_modules_dates: 
@@ -366,7 +366,7 @@ def courses(courses_quantity, plus_minus_days_for_courses, start_hour_courses, e
             print(f"Brak dostępnych tłumaczy dla daty: {date}")
 
 
-    # 17. Wygenerowanie danych do online-asynchronicznie
+    # 16. Wygenerowanie danych do online-asynchronicznie
     modules_online_async = []
 
     for (moduleid, data) in online_async_modules:
@@ -392,7 +392,7 @@ def courses(courses_quantity, plus_minus_days_for_courses, start_hour_courses, e
     print("Pomyślnie dodano modułów asynchrnonicznych do bazy")
 
 
-    # 18. Wygenerowanie danych do online-synchronicznie
+    # 17. Wygenerowanie danych do online-synchronicznie
     modules_online_sync = []
 
     for (translator, date, language, moduleid) in translators_dates_online_sync:
@@ -428,7 +428,7 @@ def courses(courses_quantity, plus_minus_days_for_courses, start_hour_courses, e
     print("Pomyślnie dodano modułów synchronicznych do bazy")
 
 
-    # 19. Wygenerowanie danych do modułów stacjonarnych
+    # 18. Wygenerowanie danych do modułów stacjonarnych
     modules_in_person = []
 
     for (translator, date, language, moduleid) in translators_dates_inperson:

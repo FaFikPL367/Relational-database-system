@@ -23,11 +23,9 @@
 .idea/dataSources.local.xml
 
 # Inne typowe pliki do wykluczenia
-*.iml  # Pliki modułów IntelliJ IDEA (mogą być generowane automatycznie)
-*.iws  # Stare pliki konfiguracyjne IntelliJ IDEA
+*.iml  
+*.iws 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 82effea (Dodanie doatkowych widoków)
-Implementacja\Generatory danych\.env
+.env
+!.env.example
+__pycache__/

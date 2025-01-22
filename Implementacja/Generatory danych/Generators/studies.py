@@ -36,7 +36,7 @@ def studies(studies_quantity, max_quantity_subjects_in_study, min_quantity_subje
     lecturers.sort()
 
     # Wybór 1/3 nauczycieli
-    lecturers = lecturers[int(len(lecturers) / 3)*2:]
+    lecturers = lecturers[30:] # 50 nauczycieli
 
     # 0.3 Pobranie ID tłumaczy
     cursor.execute("SELECT TranslatorID FROM Translators")
@@ -44,8 +44,7 @@ def studies(studies_quantity, max_quantity_subjects_in_study, min_quantity_subje
     translators = [translator[0] for translator in translators]
     translators.sort()
 
-    # Wybór 1/3 tłumaczy
-    translators = translators[int(len(translators) / 3)*2:]
+    translators = translators[20:]
 
     # 0.4 Pobranie par tłumacz-język
     cursor.execute("SELECT LanguageID, TranslatorID FROM Translators_Languages")
@@ -260,7 +259,7 @@ def studies(studies_quantity, max_quantity_subjects_in_study, min_quantity_subje
             
             # Dodanie ID zjazdu, daty spotkania i ID przedmiotu do listy spotkań
             meeting = {
-                "ReunionID": index,
+                "ReunionID": index+1,
                 "DateAndBeginningTime": date,
                 "SubjectID": subject_index
             }
@@ -336,27 +335,202 @@ def studies(studies_quantity, max_quantity_subjects_in_study, min_quantity_subje
     print("Pomyślne dodanie spotkań do bazy")
 
 
+    # 8. Znaleznie spotkań stacjonarnych
+    cursor.execute("Select MeetingID, DateAndBeginningTime from Meetings inner join Types on Meetings.TypeID = Types.TypeID where TypeName = 'In person'")
+    in_person_meetings = cursor.fetchall()
+
+    # 9. Znaleznie spotkań online-synchroniczne
+    cursor.execute("Select MeetingID, DateAndBeginningTime from Meetings inner join Types on Meetings.TypeID = Types.TypeID where TypeName = 'Online sync'")
+    online_sync_meetings = cursor.fetchall()
+
+    # 10. Znalezienie spotkań online-asynchronicznie
+    cursor.execute("Select MeetingID, DateAndBeginningTime from Meetings inner join Types on Meetings.TypeID = Types.TypeID where TypeName = 'Online async'")
+    online_async_meetings = cursor.fetchall()
+
+
+    # 11. Wygenrowanie spoktań online-asynchronicznie
+    meetings_online_async = []
+    for (meetingid, meeting_date) in online_async_meetings:
+        meeting_online_async = {
+            "MeetingID": meetingid,
+            "RecordingLink": f"https://example.com/{uuid.uuid4()}"
+        }
+
+        meetings_online_async.append(meeting_online_async)
+    
+    for meeting in meetings_online_async:
+        cursor.execute(
+            """
+                EXEC add_meeting_async
+                    @MeetingID = ?,
+                    @RecordingLink = ?
+            """,
+            meeting["MeetingID"],
+            meeting["RecordingLink"]
+        )
+    
+    # Zatwierdzenie zmian
+    conn.commit()
+    print("Pomyślne dodanie spotkań online-asynchronicznie do bazy")
+
+
+    # 12. Przypisanie tłumaczy do dat spotkań stacjoanrnych
+    assigned_translators = {}
+    meetings_online_inperson = []
+
+    for (meetingid, meeting_date) in in_person_meetings:
+        available_translator = None
+
+        # Zadecydowanie czy dodajemy tłumacza
+        if random.randint(1, 2) == 2:
+            meeting = {
+                "MeetingID": meetingid,
+                "Classroom": random.randint(1001, 2000),
+                "TranslatorID": None,
+                "LanguageID": 19,
+                "Limit": random.randint(10, 30)
+            } 
+
+            meetings_online_inperson.append(meeting)
+            continue
+            
+        # Jeżeli jednak chcemy mieć tłumacza
+        start_time = meeting_date
+        end_time = start_time + timedelta(hours=1, minutes=30)
+
+        for translator in translators:
+            if translator not in assigned_translators:
+                assigned_translators[translator] = []
+            
+            for assigned_time in assigned_translators[translator]:
+                # Sprawdzenie czy terminy się na siebie nakładają
+                if (start_time >= assigned_time and start_time <= assigned_time + timedelta(hours=1, minutes=30)) or \
+                    (end_time >= assigned_time and end_time <= assigned_time + timedelta(hours=1, minutes=30)) or \
+                    (start_time <= assigned_time and end_time >= assigned_time + timedelta(hours=1, minutes=30)) or \
+                    (start_time >= assigned_time and end_time <= assigned_time + timedelta(hours=1, minutes=30)):
+                    break
+            else:
+                available_translator = translator
+            
+        # Sprawdzamy czy tłumacz został wybrany
+        if available_translator:
+            # Odfiltrowanie języków, które tłumaczy tłumacz
+            available_translator_languages = [language[0] for language in translators_languages if language[1] == available_translator]
+
+            meeting = {
+                "MeetingID": meetingid,
+                "Classroom": random.randint(1001, 2000),
+                "TranslatorID": available_translator,
+                "LanguageID": random.choice(available_translator_languages),
+                "Limit": random.randint(10, 30)
+            }
+
+            meetings_online_inperson.append(meeting)
+            assigned_translators[available_translator].append(start_time)
+        else:
+            print(f"Brak dostępnych tłumaczy dla daty: {date}")
     
 
+    # 13. Przypisanie tłumaczy do spotkań online-synchronicznie
+    meetings_online_sync = []
+
+    for (meetingid, meeting_date) in online_sync_meetings:
+        available_translator = None
+
+        # Zadecydowanie czy dodajemy tłumacza
+        if random.randint(1, 2) == 2:
+            meeting = {
+                "MeetingID": meetingid,
+                "MeetingLink": f"https://example.com/{uuid.uuid4()}",
+                "RecordingLink": f"https://example.com/{uuid.uuid4()}" if meeting_date < datetime.now() else None,
+                "TranslatorID": None,
+                "LanguageID": 19
+            } 
+
+            meetings_online_sync.append(meeting)
+            continue
+            
+        # Jeżeli jednak chcemy mieć tłumacza
+        start_time = meeting_date
+        end_time = start_time + timedelta(hours=1, minutes=30)
+
+        for translator in translators:
+            if translator not in assigned_translators:
+                assigned_translators[translator] = []
+            
+            for assigned_time in assigned_translators[translator]:
+                # Sprawdzenie czy terminy się na siebie nakładają
+                if (start_time >= assigned_time and start_time <= assigned_time + timedelta(hours=1, minutes=30)) or \
+                    (end_time >= assigned_time and end_time <= assigned_time + timedelta(hours=1, minutes=30)) or \
+                    (start_time <= assigned_time and end_time >= assigned_time + timedelta(hours=1, minutes=30)) or \
+                    (start_time >= assigned_time and end_time <= assigned_time + timedelta(hours=1, minutes=30)):
+                    break
+            else:
+                available_translator = translator
+            
+        # Sprawdzamy czy tłumacz został wybrany
+        if available_translator:
+            # Odfiltrowanie języków, które tłumaczy tłumacz
+            available_translator_languages = [language[0] for language in translators_languages if language[1] == available_translator]
+
+            meeting = {
+                "MeetingID": meetingid,
+                "MeetingLink": f"https://example.com/{uuid.uuid4()}",
+                "RecordingLink": f"https://example.com/{uuid.uuid4()}" if meeting_date < datetime.now() else None,
+                "TranslatorID": available_translator,
+                "LanguageID": random.choice(available_translator_languages)
+            }
+
+            meetings_online_sync.append(meeting)
+            assigned_translators[available_translator].append(start_time)
+        else:
+            print(f"Brak dostępnych tłumaczy dla daty: {date}")
+    
+
+    # 14. Dodanie spotkań stacjonarnych do bazy
+    for meeting in meetings_online_inperson:
+        cursor.execute(
+            """
+                EXEC add_meeting_in_person
+                    @MeetingID = ?,
+                    @Classroom = ?,
+                    @TranslatorID = ?,
+                    @LanguageID = ?,
+                    @Limit = ?
+            """,
+            meeting["MeetingID"],
+            meeting["Classroom"],
+            meeting["TranslatorID"],
+            meeting["LanguageID"],
+            meeting["Limit"]
+        )
+    
+    # Zatwierdzenie zmian
+    conn.commit()
+    print("Pomyślne dodanie spotkań stacjonarnych do bazy")
 
 
+    # 15. Dodanie spotkań online-synchronicznych do bazy
+    for meeting in meetings_online_sync:
+        cursor.execute(
+            """
+                EXEC add_meeting_sync
+                    @MeetingID = ?,
+                    @MeetingLink = ?,
+                    @RecordingLink = ?,
+                    @TranslatorID = ?,
+                    @LanguageID = ?
+            """,
+            meeting["MeetingID"],
+            meeting["MeetingLink"],
+            meeting["RecordingLink"],
+            meeting["TranslatorID"],
+            meeting["LanguageID"]
+        )
+    
+    # Zatwierdzenie zmian
+    conn.commit()
+    print("Pomyślne dodanie spotkań online-synchronicznych do bazy")
 
+    
 
-
-
-# TESTOWE WYKONANIE
-# Załadowanie zmiennych środowiskowych
-load_dotenv()
-
-# Stworzenie stringu konfiguracyjnego do połączenia do bazy
-connection_string = ";".join([
-    "DRIVER={ODBC Driver 17 for SQL Server}",
-    f"SERVER={os.getenv('DB_SERVER')}",
-    f"DATABASE={os.getenv('DB_DATABASE')}",
-    f"UID={os.getenv('DB_USERNAME')}",
-    f"PWD={os.getenv('DB_PASSWORD')}",
-    "Encrypt=no",
-    "CHARSET=UTF-8"
-])
-
-studies(50, 10, 5, 50, 8, 20, 7, connection_string, 50, 50, 365, 6, 3)

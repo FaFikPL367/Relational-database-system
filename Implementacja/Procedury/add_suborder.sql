@@ -1,9 +1,11 @@
 CREATE procedure add_suborder
-    @SubOrderID int,
     @OrderID int,
     @PaymentDeadline date,
+    @ExtendedPaymentDeadline date,
+    @PaymentDate date,
     @FullPrice money,
-    @ProductID int
+    @ProductID int,
+    @Payment money
 as begin
     begin try
         -- Sprawdzenie czy dane zamówienie istnieje
@@ -19,8 +21,9 @@ as begin
         end
 
         -- Dodanie danych do tabeli
-        insert Orders_Details(SubOrderID, OrderID, PaymentDeadline, ExtendedPaymentDeadline, PaymentDate, FullPrice, ProductID, Payment)
-        values (@SubOrderID, @OrderID, @PaymentDeadline, null, null, @FullPrice, @ProductID, null)
+        insert Orders_Details(OrderID, PaymentDeadline, ExtendedPaymentDeadline, PaymentDate, FullPrice, ProductID, Payment)
+        values (@OrderID, @PaymentDeadline, @ExtendedPaymentDeadline,
+                @PaymentDate, @FullPrice, @ProductID, @Payment)
     end try
     begin catch
         -- Przerzucenie ERRORa dalej

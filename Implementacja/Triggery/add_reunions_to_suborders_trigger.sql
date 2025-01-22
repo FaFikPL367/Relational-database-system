@@ -36,7 +36,7 @@ as begin
 
             insert @allReunionsForStudies (PaymentDeadline, FullPrice, ReunionID)
             select datediff(day, 3, r.StartDate), s.Price / 7, r.ReunionID from Studies_Reunion r
-                join Studies s on r.StudiesID = s.StudiesID
+                join Studies s on r.StudiesID = s.StudiesID and s.StudiesID = @ProductID
 
             insert Orders_Details (OrderID, PaymentDeadline, FullPrice, ProductID)
             select @OrderID, PaymentDeadline, FullPrice, ReunionID

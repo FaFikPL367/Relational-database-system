@@ -66,6 +66,8 @@ def main():
     # Kategoria ORDERS
     min_users_quantity_for_webinars = 25
     max_users_quantity_for_webinars = 50
+    min_users_quantity_for_courses = 25
+    max_users_quantity_for_courses = 50
 
 
     # Wykonanie generatorów

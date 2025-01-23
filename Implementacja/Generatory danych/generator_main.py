@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import os
-from Generators import users, webinars, courses, studies
+from Generators import users, webinars, courses, studies, orders
 
 def main():
     # Załadowanie zmiennych środowiskowych
@@ -68,6 +68,8 @@ def main():
     max_users_quantity_for_webinars = 50
     min_users_quantity_for_courses = 25
     max_users_quantity_for_courses = 50
+    min_users_quantity_for_studies = 25
+    max_users_quantity_for_studies = 50
 
 
     # Wykonanie generatorów
@@ -87,6 +89,9 @@ def main():
     # # 4. Generowanie STUDIES
     studies.studies(studies_quantity, max_quantity_subjects_in_study, min_quantity_subjects_in_study, practices_quantity, start_hour_studies, end_hour_studies, reunion_quantity, connection_string, courses_quantity, webinars_quantity, plus_minus_days_for_studies, semestr_quantity, one_reunion_length)
     print()
+
+    # # 5. Generowanie ORDERS
+    orders.orders(min_users_quantity_for_webinars, max_users_quantity_for_webinars, min_users_quantity_for_courses, max_users_quantity_for_courses, min_users_quantity_for_studies, max_users_quantity_for_studies, connection_string)
 
 # Wykonanie funkcji main
 if __name__ == "__main__":

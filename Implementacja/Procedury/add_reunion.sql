@@ -2,11 +2,9 @@ create procedure add_reunion
     @StudiesID int,
     @StartDate date,
     @EndDate date,
-    @Status bit
+    @Price money
 as begin
     begin try
-        begin transaction;
-
         -- Sprawdzenie poprawności wpisanych danych
         if not exists(select 1 from Studies where StudiesID = @StudiesID)
         begin
@@ -18,29 +16,15 @@ as begin
             throw 50002, 'Data startowa nie może być późniejsza niż data końca', 1;
         end
 
-        -- W innym przypadku możemy dodać
-        -- Rezerwacja ID w produktach
-        declare @NewProductID int;
-        declare @CategoryID int = (select CategoryID from Categories where Name = 'Reunion')
+        if @Price <= 0
+        begin
+            throw 50003, 'Cena za zjazd nie moze być ujeman lub równa 0', 1;
+        end
 
-        insert into Products (CategoryID, Status)
-        values (@CategoryID, @Status)
-
-        -- Pobranie ID po dodaniu do produktów
-        set @NewProductID = SCOPE_IDENTITY();
-
-        insert Studies_Reunion(ProductID, StudiesID, StartDate, EndDate)
-        values (@NewProductID, @StudiesID, @StartDate, @EndDate)
-
-        commit transaction;
+        insert Studies_Reunion(StudiesID, StartDate, EndDate, Price)
+        values (@StudiesID, @StartDate, @EndDate, @Price)
     end try
     begin catch
-        -- Wycofanie transakcji w przypadku błędu
-        if @@TRANCOUNT > 0
-        begin
-            rollback transaction;
-        end;
-
         -- Przerzucenie ERRORa dalej
         throw;
     end catch

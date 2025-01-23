@@ -15,10 +15,11 @@ as begin
         );
 
         -- Zebranie ID spotkań ze wszystkich zjazdów z danych studiów
-        insert @StudiesReunionsMeetingsIDs (ModuleID)
+        insert @StudiesReunionsMeetingsIDs
         select m.MeetingID from Studies s
             join Studies_Reunion r on s.StudiesID = r.StudiesID
             join Meetings m on r.ReunionID = m.ReunionID
+            where s.StudiesID = @StudiesID;
 
         -- Dodanie pola przechowującego informację o obecności użytkownika na danym spotkaniu
         insert Users_Meetings_Attendance (UserID, MeetingID, Present)

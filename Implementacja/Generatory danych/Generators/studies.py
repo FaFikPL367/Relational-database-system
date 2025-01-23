@@ -158,6 +158,7 @@ def studies(studies_quantity, max_quantity_subjects_in_study, min_quantity_subje
                     "StudiesID": webinars_quantity + courses_quantity + index + 1,
                     "StartDate": start_date_reunion,
                     "EndDate": end_date_reunion,
+                    "Price": random.randint(100, 200)
                 }
 
                 reunions.append(reunion)
@@ -170,12 +171,12 @@ def studies(studies_quantity, max_quantity_subjects_in_study, min_quantity_subje
                     @StudiesID = ?,
                     @StartDate = ?,
                     @EndDate = ?,
-                    @Status = ?
+                    @Price = ?
             """,
             reunion["StudiesID"],
             reunion["StartDate"],
             reunion["EndDate"],
-            1
+            reunion["Price"]
         )
     
     # Zatwierdzenie zmian
@@ -336,7 +337,7 @@ def studies(studies_quantity, max_quantity_subjects_in_study, min_quantity_subje
 
 
     # 8. Znaleznie spotkań stacjonarnych
-    cursor.execute("Select MeetingID, DateAndBeginningTime from Meetings inner join Types on Meetings.TypeID = Types.TypeID where TypeName = 'In person'")
+    cursor.execute("Select MeetingID, DateAndBeginningTime from Meetings inner join Types on Meetings.TypeID = Types.TypeID where TypeName = 'In-person'")
     in_person_meetings = cursor.fetchall()
 
     # 9. Znaleznie spotkań online-synchroniczne
@@ -377,6 +378,7 @@ def studies(studies_quantity, max_quantity_subjects_in_study, min_quantity_subje
     # 12. Przypisanie tłumaczy do dat spotkań stacjoanrnych
     assigned_translators = {}
     meetings_online_inperson = []
+    classroom = 1001
 
     for (meetingid, meeting_date) in in_person_meetings:
         available_translator = None
@@ -385,13 +387,14 @@ def studies(studies_quantity, max_quantity_subjects_in_study, min_quantity_subje
         if random.randint(1, 2) == 2:
             meeting = {
                 "MeetingID": meetingid,
-                "Classroom": random.randint(1001, 2000),
+                "Classroom": classroom,
                 "TranslatorID": None,
                 "LanguageID": 19,
-                "Limit": random.randint(10, 30)
+                "Limit": random.randint(30, 50)
             } 
 
             meetings_online_inperson.append(meeting)
+            classroom += 1
             continue
             
         # Jeżeli jednak chcemy mieć tłumacza
@@ -419,14 +422,15 @@ def studies(studies_quantity, max_quantity_subjects_in_study, min_quantity_subje
 
             meeting = {
                 "MeetingID": meetingid,
-                "Classroom": random.randint(1001, 2000),
+                "Classroom": classroom,
                 "TranslatorID": available_translator,
                 "LanguageID": random.choice(available_translator_languages),
-                "Limit": random.randint(10, 30)
+                "Limit": random.randint(30, 50)
             }
 
             meetings_online_inperson.append(meeting)
             assigned_translators[available_translator].append(start_time)
+            classroom += 1
         else:
             print(f"Brak dostępnych tłumaczy dla daty: {date}")
     

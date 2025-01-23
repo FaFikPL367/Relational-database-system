@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2025-01-21 19:16:21.009
+-- Last modification date: 2025-01-23 15:18:25.793
 
 -- tables
 -- Table: Categories
@@ -156,6 +156,16 @@ CREATE TABLE Orders_Details (
     CONSTRAINT Orders_Details_pk PRIMARY KEY  (SubOrderID)
 );
 
+-- Table: Payment_for_reunions
+CREATE TABLE Payment_for_reunions (
+    SubOrderID int  NOT NULL,
+    ReunionID int  NOT NULL,
+    PaymentDeadline date  NOT NULL,
+    PaymentDate date  NULL,
+    IsPaid bit  NULL,
+    CONSTRAINT Payment_for_reunions_pk PRIMARY KEY  (ReunionID,SubOrderID)
+);
+
 -- Table: Practices
 CREATE TABLE Practices (
     PracticeID int  NOT NULL IDENTITY(1, 1),
@@ -194,10 +204,10 @@ CREATE TABLE Studies (
 -- Table: Studies_Reunion
 CREATE TABLE Studies_Reunion (
     ReunionID int  NOT NULL IDENTITY(1, 1),
-    ProductID int  NOT NULL,
     StudiesID int  NOT NULL,
     StartDate date  NOT NULL,
     EndDate date  NOT NULL,
+    Price money  NOT NULL CHECK (Price >= 0),
     CONSTRAINT Studies_Reunion_pk PRIMARY KEY  (ReunionID)
 );
 
@@ -455,6 +465,16 @@ ALTER TABLE Orders ADD CONSTRAINT Orders_Users
     FOREIGN KEY (UserID)
     REFERENCES Users (UserID);
 
+-- Reference: Payment_for_reunions_Orders_Details (table: Payment_for_reunions)
+ALTER TABLE Payment_for_reunions ADD CONSTRAINT Payment_for_reunions_Orders_Details
+    FOREIGN KEY (SubOrderID)
+    REFERENCES Orders_Details (SubOrderID);
+
+-- Reference: Payment_for_reunions_Studies_Reunion (table: Payment_for_reunions)
+ALTER TABLE Payment_for_reunions ADD CONSTRAINT Payment_for_reunions_Studies_Reunion
+    FOREIGN KEY (ReunionID)
+    REFERENCES Studies_Reunion (ReunionID);
+
 -- Reference: Products_Category (table: Products)
 ALTER TABLE Products ADD CONSTRAINT Products_Category
     FOREIGN KEY (CategoryID)
@@ -473,11 +493,6 @@ ALTER TABLE Meetings ADD CONSTRAINT Products_Meetings
 -- Reference: Products_Studies (table: Studies)
 ALTER TABLE Studies ADD CONSTRAINT Products_Studies
     FOREIGN KEY (StudiesID)
-    REFERENCES Products (ProductID);
-
--- Reference: Products_Studies_Reunion (table: Studies_Reunion)
-ALTER TABLE Studies_Reunion ADD CONSTRAINT Products_Studies_Reunion
-    FOREIGN KEY (ProductID)
     REFERENCES Products (ProductID);
 
 -- Reference: Products_Webinars (table: Webinars)

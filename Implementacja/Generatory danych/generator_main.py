@@ -91,7 +91,7 @@ def main():
     print()
 
     # # 5. Generowanie ORDERS
-    orders.orders(min_users_quantity_for_webinars, max_users_quantity_for_webinars, min_users_quantity_for_courses, max_users_quantity_for_courses, min_users_quantity_for_studies, max_users_quantity_for_studies, connection_string)
+    orders.orders(connection_string, min_users_quantity_for_webinars, max_users_quantity_for_webinars, min_users_quantity_for_courses, max_users_quantity_for_courses, min_users_quantity_for_studies, max_users_quantity_for_studies)
 
 # Wykonanie funkcji main
 if __name__ == "__main__":

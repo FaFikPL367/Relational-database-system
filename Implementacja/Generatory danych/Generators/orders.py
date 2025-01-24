@@ -1,7 +1,6 @@
 from faker import Faker
 import pyodbc, random, uuid, os
 from datetime import datetime, timedelta
-from dotenv import load_dotenv
 
 
 # Dla poprawności danych (NIE ZMIENIAĆ !!!)
@@ -25,6 +24,9 @@ def orders(connection_string, min_users_quantity_for_webinars, max_users_quantit
     cursor.execute("SELECT UserID FROM Users")
     users = cursor.fetchall()
     users = [users[0] for users in users]
+
+    # 0.5 Ustawienie kolejności triggerów
+    cursor.execute("EXEC sp_settriggerorder @triggername = 'add_student_to_product_trigger', @order = 'First', @stmttype = 'INSERT'")
 
 
     # 1. Pobrać ID webinarów
@@ -283,7 +285,7 @@ def orders(connection_string, min_users_quantity_for_webinars, max_users_quantit
                     set Passed = ?
                     where UserID = ? and ModuleID = ?
                 """,
-                userid, moduleid, passed
+                passed, userid, moduleid
             )
     
     # Zatwierdzenie zmian
@@ -291,27 +293,24 @@ def orders(connection_string, min_users_quantity_for_webinars, max_users_quantit
     print("Pomyślne dodanie zdań modułów do bazy")
 
 
-    # 4. Ustawienie obecności na spotkaniach studyjnych
-    cursor.execute("SELECT UserID, MeetingID FROM Users_Meetings_Attendance")
+    # 4. Ustawienie obecności na spotkaniach studyjnych zakońcoznych
+    cursor.execute("SELECT UserID, Users_Meetings_Attendance.MeetingID FROM Users_Meetings_Attendance inner join Meetings on Users_Meetings_Attendance.MeetingID = Meetings.MeetingID where Meetings.DateAndBeginningTime < ?", datetime.now())
     users_meetings_presence = cursor.fetchall()
 
     # Dla każdego wpisu decydujemy czy był czy nie
     for (userid, meetingid) in users_meetings_presence:
-        # Sprawdzamy jeszcze czy dane spotkanie się odbyło
-        cursor.execute("SELECT MeetingID FROM Meetings where MeetingID = ? and DateAndBeginningTime < ?", meetingid, datetime.now())
-        if cursor.fetchone() is not None:
-            # Wylosowanie czy był czy nie
-            present = random.choice([True, False, True, True, True, True])
+        # Wylosowanie czy był czy nie
+        present = random.choice([True, False, True, True, True, True])
 
-            # Dodanie wpisu do bazy
-            cursor.execute(
-                """
-                    update Users_Meetings_Attendance
-                    set Present = ?
-                    where UserID = ? and MeetingID = ?
-                """,
-                present, userid, meetingid
-            )
+        # Dodanie wpisu do bazy
+        cursor.execute(
+            """
+                update Users_Meetings_Attendance
+                set Present = ?
+                where UserID = ? and MeetingID = ?
+            """,
+            present, userid, meetingid
+        )
     
     # Zatwierdzenie zmian
     conn.commit()
@@ -351,7 +350,7 @@ def orders(connection_string, min_users_quantity_for_webinars, max_users_quantit
     # Dla każdego decydujemy czy odbył praktyki czy nie
     for (userid, studiesid) in users_studies_sample:
         # Wylosowanie czy odbył praktyki czy nie
-        if random.choice([True, False, True, True, True, True, True, True, True, True]):
+        if random.choice([True, False, True, True, True, True]):
             # Wybranie praktyki
             practiceid = random.choice(practices)
 
@@ -367,4 +366,29 @@ def orders(connection_string, min_users_quantity_for_webinars, max_users_quantit
     # Zatwierdzenie zmian
     conn.commit()
     print("Pomyślne dodanie praktyk do bazy")
+
+
+    # 7. Dodnie płatności za zjazdy
+    cursor.execute("SELECT * From Payment_for_reunions")
+    payment_for_reunions = cursor.fetchall()
+
+    # Wybieranie wpisów, które oznaczymy jako opłacone
+    for payment in payment_for_reunions:
+        # Sprawdzamy czy dany zjazd się już odbył
+        if payment[2] <= datetime.now().date():
+            # Losujemy datę zapłąty z zjazd
+            payment_date = fake.date_time_between(start_date=payment[2] - timedelta(days=5), end_date=payment[2] + timedelta(days=5))
+
+            # Aktualizujemy wpis w bazie
+            cursor.execute("""
+                update Payment_for_reunions
+                set PaymentDate = ?, IsPaid = 1
+                where SubOrderID = ?
+            """, payment_date, payment[0]
+            )
+
+    # Zatwierdzamy zmiany w bazie
+    conn.commit()
+    print("Pomyślne dodanie dat płatności za zjazdy")
+
         

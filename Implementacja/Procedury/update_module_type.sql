@@ -15,6 +15,12 @@ as begin
             throw 50001, 'Podany typ nie istnieje', 1;
         end
 
+        -- Sprawdzenie czy nie zmieniasz na ten sam typ
+        if exists(select 1 from Modules where ModuleID = @ModuleID and TypeID = @TypeID)
+        begin
+            throw 50002, 'Zmieniasz typ modułu na ten sam typ', 1;
+        end
+
         declare @OldType int = (select TypeID from Modules where ModuleID = @ModuleID)
         declare @OldTypeName varchar(20);
         set @OldTypeName = (select TypeName from Types where TypeID = @OldType)

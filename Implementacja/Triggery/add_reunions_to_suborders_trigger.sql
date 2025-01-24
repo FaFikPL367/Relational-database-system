@@ -36,6 +36,7 @@ as begin
             insert @allReunionsForStudies (PaymentDeadline, FullPrice, ReunionID)
             select dateadd(day, -3, r.StartDate), r.Price, r.ReunionID
                 from Studies_Reunion r
+                where StudiesID = @ProductID
 
             insert Payment_for_reunions (SubOrderID, ReunionID, PaymentDeadline, PaymentDate, IsPaid)
             select @SubOrderID, ReunionID, PaymentDeadline, null, null

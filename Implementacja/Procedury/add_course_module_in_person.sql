@@ -53,8 +53,8 @@ as begin
         end
 
         -- Dodanie danych
-        insert In_person_Modules(ModuleID, Classroom, TranslatorID, LanguageID)
-        values (@ModuleID, @Classroom, @TranslatorID, @LanguageID)
+        insert In_person_Modules(ModuleID, Classroom, TranslatorID, LanguageID, Limit)
+        values (@ModuleID, @Classroom, @TranslatorID, @LanguageID, @Limit)
     end try
     begin catch
         -- Przerzucenie ERRORa dalej

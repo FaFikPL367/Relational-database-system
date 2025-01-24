@@ -13,7 +13,8 @@ create view course_module_types as
         group by CourseID
     )
 
-    select Courses.CourseID, in_person, online_sync, online_async
+    select Courses.CourseID, ISNULL(in_person, 0) as Total_in_person, isnull(online_sync, 0) as Total_online_sync,
+           isnull(online_async, 0) as Total_online_async
     from Courses left join in_person_count on Courses.CourseID = in_person_count.CourseID
     left join online_async_count on Courses.CourseID = online_async_count.CourseID
     left join online_sync_count on Courses.CourseID = online_sync_count.CourseID

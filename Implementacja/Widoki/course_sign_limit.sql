@@ -5,6 +5,6 @@ create view course_sign_limit as
         group by CourseID
     )
 
-    select Courses.CourseID, total_product_orders, total_limit
+    select Courses.CourseID, isnull(total_product_orders, 0) as Total_quantity_product_orders, isnull(total_limit, 0) as Total_limit
     from Courses left join products_orders on products_orders.ProductID = Courses.CourseID
     left join course_limits on course_limits.CourseID = Courses.CourseID

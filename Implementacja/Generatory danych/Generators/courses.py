@@ -25,8 +25,7 @@ def courses(courses_quantity, plus_minus_days_for_courses, start_hour_courses, e
     types = [
         'In-person',
         'Online Sync',
-        'Online Async',
-        'Hybrid'
+        'Online Async'
     ]
 
 

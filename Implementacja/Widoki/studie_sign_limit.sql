@@ -7,6 +7,6 @@ create view studie_sign_limit as
         group by Studies.StudiesID
     )
 
-    select Studies.StudiesID, total_product_orders, total_limit
+    select Studies.StudiesID, isnull(total_product_orders, 0) as Total_product_orders, isnull(total_limit, 0) as Total_limit
     from Studies left join products_orders on products_orders.ProductID = Studies.StudiesID
     left join studie_limits on studie_limits.StudiesID = Studies.StudiesID

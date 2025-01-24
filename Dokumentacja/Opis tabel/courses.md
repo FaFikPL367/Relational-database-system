@@ -82,12 +82,11 @@ Zawiera informację o możliwych typach modułów czy spotkań:
 	- 'In-person' - stacjonarnie
 	- 'Online Sync' - online synchronicznie
 	- 'Online Async' - online asynchronicznie
-	- 'Hybrid' - hybrydowo
 
 ```SQL
 CREATE TABLE Types (
    TypeID int  NOT NULL IDENTITY(1, 1),
-   TypeName varchar(20)  NOT NULL CHECK (TypeName IN ('In-person', 'Online Sync', 'Online Async', 'Hybrid')),
+   TypeName varchar(20)  NOT NULL CHECK (TypeName IN ('In-person', 'Online Sync', 'Online Async')),
    CONSTRAINT TypeID PRIMARY KEY  (TypeID)
 );
 ```
@@ -133,7 +132,7 @@ CREATE TABLE Online_Sync_Modules (
 Zawiera informacje o tym, na jakie kursy jest zapisany dany użytkownik:
 - **UserID** [int] - identyfikator użytkownika
 - **CourseID** [int] - identyfikator kursu
-
+- 
 ```SQL
 CREATE TABLE Users_Courses (
    UserID int  NOT NULL,
@@ -148,9 +147,8 @@ Zawiera informację o zaliczeniu poszczególnych modułów
 przez danego użytkownika:
 - **UserID** [int] - identyfikator użytkownika
 - **ModuleID** [int] - identyfikator modułu
-- **Passed** [bit] - informacja, czy moduł został zaliczony
-przez danego użytkownika (1 - zaliczony, 0 - niezaliczony)
-
+- **Passed** [bit] - informacja, czy moduł został zaliczony przez danego użytkownika (1 - zaliczony, 0 - niezaliczony)
+- 
 ```SQL
 CREATE TABLE Users_Modules_Passes (
    UserID int  NOT NULL,

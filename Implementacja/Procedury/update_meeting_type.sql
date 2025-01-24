@@ -15,6 +15,12 @@ as begin
             throw 50001, 'Podany typ nie istnieje', 1;
         end
 
+        -- Sprawdzenie czy nie zmieniasz typu spotkania na tem sam typ
+        if exists(select 1 from Meetings where @MeetingID = MeetingID and @TypeID = TypeID)
+        begin
+            throw 50002, 'Zmieniasz typ spotkania na ten sam typ co był ustawiony', 1;
+        end
+
         declare @OldType int = (select TypeID from Meetings where MeetingID = @MeetingID)
         declare @OldTypeName varchar(20);
         set @OldTypeName = (select TypeName from Types where TypeID = @OldType)

@@ -55,7 +55,7 @@ CREATE TABLE Orders_Details (
    PaymentDeadline date  NOT NULL,
    ExtendedPaymentDeadline date  NULL,
    PaymentDate date  NULL,
-   FullPrice money  NOT NULL CHECK (FullPrice >= 0)
+   FullPrice money  NOT NULL CHECK (FullPrice >= 0),
    ProductID int  NOT NULL,
    Payment money  NULL CHECK (Payment >= 0),
    CONSTRAINT Orders_Details_pk PRIMARY KEY  (SubOrderID)
@@ -74,5 +74,25 @@ CREATE TABLE Products (
    CategoryID int  NOT NULL,
    Status bit  NOT NULL DEFAULT 0,
    CONSTRAINT Products_pk PRIMARY KEY  (ProductID)
+);
+```
+
+## <hr>
+## Tabela **Payment_for_reunions**
+Zawiera ona informacje o płatnościach użytkowników za zjazdy jeżeli zapisali się na jakieś studia:
+- **SubOrderID** [int] - identyfikator podzamówienia
+- **ReunionID** [int] - identyfikator zjazdu, za który jest wnoszona płatność
+- **PaymentDeadline** [date] - ostateczna data zapłaty za zjazd
+- **PaymentDate** [date] - faktyczna data zapłaty za zjazd
+- **IsPaid** [bit] - wartość oznaczająca czy dany użytkownik zapłacił za dany zjazd
+
+```SQL
+CREATE TABLE Payment_for_reunions (
+   SubOrderID int  NOT NULL,
+   ReunionID int  NOT NULL,
+   PaymentDeadline date  NOT NULL,
+   PaymentDate date  NULL,
+   IsPaid bit  NULL,
+   CONSTRAINT Payment_for_reunions_pk PRIMARY KEY  (ReunionID,SubOrderID)
 );
 ```

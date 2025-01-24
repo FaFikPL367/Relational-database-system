@@ -24,8 +24,7 @@ def webinars(webinars_quantity, plus_minus_days_for_webinars, start_hour_webinar
         "Webinar",
         "Course",
         "Studies",
-        "Meeting",
-        "Reunion"
+        "Meeting"
     ]
 
     # Wstawienie danych do bazy

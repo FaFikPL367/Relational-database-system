@@ -27,20 +27,24 @@
     - Dostęp do raportów generowanych przez system (raporty finansowe, raporty z "listą dłużników", raport związane z przyszłymi wydarzeniami i frekwencją na nich)
     - Możliwość wyrzucania uczestników z kursów/webinarów/studiów
 3. **Koordynator webinarów**
-    - Dodawanie i usuwanie webinarów oraz modyfikowanie ich właściwości
+    - Dodawanie webinarów
+    - Modyfikacja informacji o webinarach
     - Przypisywanie prowadzących czy tłumaczy do webinarów
+    - Dodawanie linku do nagrania z webinaru
+    - Możliwość usuwanie użytkownika z webinaru
 4. **Koordynator kursów**
-    - Dodawanie i usuwanie kursów do oferty
+    - Dodawanie kursów
     - Możliwość modyfikowania właściwości kursów i wybieranie wykładowców czy tłumaczy oraz określanie typu modułów
     - Możliwość decydowania o zaliczeniu kursu (może zmienić decyzję systemu w szeczólnych przypadkach nawet jak uczestnik zaliczył 80% modułów)
+    - Możliwość usuwanie użytkownika z kursu
 5. **Koordynator studiów**
-    - Dodawanie i usuwanie studiów do oferty
+    - Dodawanie studiów
     - Możliwość dodawania zjadów do studiów
     - Możliwość tworzenia sylabusa studiów poprzez dodawanie przedmiotów:
       - Możliwość przypisywania wykładowców i tłumaczy do danych przedmiotów
       - Możliwość określenia typu danego spotkania przedmotu (stacjnonarnie, online, hybrydowo)
     - Możliwość dodawania i usuwania uczestników danych studiów
-    - Możliwość modyfikowania harmonogramu danych studiów
+    - Możliwość modyfikowania właściwości spotkań studyjnych
     - Możliwość wpisania oceny końcowej z egzaminu 
 6. **Pracownik sekretariatu**
     - Możliwość tworzenia harmonogramu zajęć na studiach/kursach i zarządzanie nim
@@ -51,10 +55,10 @@
     - Dostęp do swojego harmonogramu zajęć i ich szczegółów
     - Możliwość modyfikacji frekwencji uczestników na swoich zajęciach
     - Dostęp do raportu dotyczącego nieobecności uczestników na swoich zajęciach
+    - Dostęp do listy obecności użytkowników
 8. **Tłumacze**
     - Dostęp do swojego harmonogramu zajęć i ich szczegółów
 9. **Uczestnik (osoba z założonym kontem)**
-    - Możliwość zmiany swoich danych osobowych
     - Możliwość dodawania produktów z oferty do koszyka
     - Możliwość wybrania sposobu płatności w przypadku kursu/studiów (zaliczka czy od razu całość)
     - Możliwość przeglądania aktualnych ofert wraz z ich szczegółami

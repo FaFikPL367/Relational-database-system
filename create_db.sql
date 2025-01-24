@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2025-01-23 15:18:25.793
+-- Last modification date: 2025-01-24 10:23:45.763
 
 -- tables
 -- Table: Categories

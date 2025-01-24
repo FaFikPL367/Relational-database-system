@@ -206,18 +206,18 @@ CREATE TABLE Users_Studies (
 ## Tabela **Studies_Reunion**
 Zawiera ona informacje o zjazdach występujących na danych studiach:
  * **ReunionID** [int] - klucz główny, identyfikator zjazdu
- * **ProductID** [int] - klucz obcy, informacja o ID jaki ma dany zjazd w produktach (potrzebny do określenia czy dany użytkownik zapłacił
- za dany zjazd czy nie)
  * **StudiesID** [int] - klucz poboczny, identyfikator studiów
  * **StartDate** [date] - data startu danego zjazdu
  * **EndDate** [date] - data końca danego zjadu
+ * **Price** [money] - cena za pojedynczy zjazd
+   * warunki: Price >= 0
 ```SQL
 CREATE TABLE Studies_Reunion (
    ReunionID int  NOT NULL IDENTITY(1, 1),
-   ProductID int  NOT NULL,
    StudiesID int  NOT NULL,
    StartDate date  NOT NULL,
    EndDate date  NOT NULL,
+   Price money  NOT NULL CHECK (Price >= 0),
    CONSTRAINT Studies_Reunion_pk PRIMARY KEY  (ReunionID)
 );
 ```

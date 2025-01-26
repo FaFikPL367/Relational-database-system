@@ -6,7 +6,7 @@ CREATE procedure add_course_module_sync
     @LanguageID int
 as begin
     begin try
-        -- Sprawdzenie czy dany moduł istnieje
+        -- Sprawdzenie, czy dany moduł istnieje
         if not exists(select 1 from Modules where ModuleID = @ModuleID)
         begin
             throw 50000, 'Moduł o podanym ID nie istnieje', 1;
@@ -19,19 +19,19 @@ as begin
             throw 50001, 'Podany moduł nie jest typu online-synchronicznie', 1;
         end
 
-        -- Sprawdzenie czy dany tłumacz istnieje
+        -- Sprawdzenie, czy dany tłumacz istnieje
         if not exists(select 1 from Translators where TranslatorID = @TranslatorID) and @TranslatorID is not null
         begin
             throw 50002, 'Tłumacz o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy dany język istnieje
+        -- Sprawdzenie, czy dany język istnieje
         if not exists(select 1 from Languages where LanguageID = @LanguageID)
         begin
             throw 50003, 'Język o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzzenie dostępności tłumacza
+        -- Sprawdzenie dostępności tłumacza
         declare @DateAndBeginningTime datetime = (select DateAndBeginningTime from Modules where ModuleID = @ModuleID)
         declare @Duration time(0) = (select Duration from Modules where ModuleID = @ModuleID)
 
@@ -45,7 +45,7 @@ as begin
         values (@ModuleID, @MeetingLink, @RecordingLink, @TranslatorID, @LanguageID)
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;

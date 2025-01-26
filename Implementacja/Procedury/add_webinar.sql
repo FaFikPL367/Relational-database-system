@@ -19,7 +19,7 @@ as begin
         if not exists(select 1 from Employees where EmployeeID = @CoordinatorID and
                                                     PositionID = 2)
         begin
-            throw 50001, 'Koordynator o danym ID nie istnieje lub nie jest kordynatorem webinarów', 1;
+            throw 50001, 'Koordynator o danym ID nie istnieje lub nie jest koordynatorem webinarów', 1;
         end
 
         if not exists(select 1 from Employees where EmployeeID = @TeacherID)
@@ -34,7 +34,7 @@ as begin
 
         if not exists(select 1 from Languages where LanguageID = @LanguageID)
         begin
-            throw 50004, 'Język o danym ID nie iestnieje', 1;
+            throw 50004, 'Język o danym ID nie istnieje', 1;
         end
 
         if not exists(select 1 from Translators where @TranslatorID = TranslatorID) and @TranslatorID IS NOT NULL
@@ -58,7 +58,7 @@ as begin
         -- Pobranie ID po dodaniu do produktów
         set @NewProductID = SCOPE_IDENTITY();
 
-        -- Dodanie do tabeli ze Wbinarami
+        -- Dodanie do tabeli ze Webinarami
         insert Webinars (WebinarID, Name, Description, DateAndBeginningTime, Duration, TeacherID, TranslatorID, Price, LanguageID, RecordingLink, MeetingLink, CoordinatorID)
         values (@NewProductID, @Name, @Description, @DateAndBeginningTIme, @Duration, @TeacherID, @TranslatorID, @Price, @LanguageID, @RecordingLink, @MeetingLink, @CoordinatorID)
 
@@ -70,7 +70,7 @@ as begin
             rollback transaction;
         end;
 
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;

@@ -16,7 +16,7 @@ as begin
 
         if not exists(select 1 from Courses where CourseID = @CourseID)
         begin
-            throw 50002, 'Kurs o podanym ID nie sitnieje', 1;
+            throw 50002, 'Kurs o podanym ID nie istnieje', 1;
         end
 
         if not exists(select 1 from Types where TypeID = @TypeID)
@@ -24,13 +24,13 @@ as begin
             throw 50003, 'Typ o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy nauczyciel nie ma w tym czasie innych zajęć
+        -- Sprawdzenie, czy nauczyciel nie ma w tym czasie innych zajęć
         if dbo.check_teachers_availability(@TeacherID, @DateAndBeginningTime, @Duration) = cast(1 as bit)
         begin
             throw 50004, 'Podany nauczyciel ma w tym czasie inne zajęcia', 1;
         end
 
-        -- Sprawdzenie czy moduł nakłada się z innym w tym samym kursie
+        -- Sprawdzenie, czy moduł nakłada się z innym w tym samym kursie
         declare @EndDate DATETIME = DATEADD(MINUTE, DATEDIFF(MINUTE, 0, @Duration), @DateAndBeginningTime);;
         IF EXISTS (
             SELECT 1
@@ -54,7 +54,7 @@ as begin
         values (@TeacherID, @CourseID, @Name, @Description, @DateAndBeginningTime, @Duration, @TypeID)
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;

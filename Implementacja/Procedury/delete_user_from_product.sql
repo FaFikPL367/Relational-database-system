@@ -3,13 +3,13 @@ create procedure delete_user_from_product
     @ProductID int
 as begin
     begin try
-        -- Sprawdzenie czy użytkownik istnieje
+        -- Sprawdzenie, czy użytkownik istnieje
         if not exists(select 1 from Users where UserID = @UserID)
         begin
             throw 50001, 'Użytkownik o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy dana para istnieje
+        -- Sprawdzenie, czy dana para istnieje
         if dbo.check_user_enrollment_for_product (@UserID, @ProductID) = cast(0 as bit)
         begin
             throw 50002, 'Taka para nie istnieje', 2;

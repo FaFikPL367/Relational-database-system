@@ -6,7 +6,7 @@ CREATE procedure add_meeting_in_person
     @Limit int
 as begin
     begin try
-        -- Sprawdzenie czy dane spotkanie istnieje
+        -- Sprawdzenie, czy dane spotkanie istnieje
         if not exists(select 1 from Meetings where MeetingID = @MeetingID)
         begin
             throw 50000, 'Spotkanie o podanym ID nie istnieje', 1;
@@ -19,19 +19,19 @@ as begin
             throw 50001, 'Podane spotkanie nie jest typu stacjonarnego', 1;
         end
 
-        -- Sprawdzenie czy dany tłumacz istnieje
+        -- Sprawdzenie, czy dany tłumacz istnieje
         if not exists(select 1 from Translators where TranslatorID = @TranslatorID) and @TranslatorID is not null
         begin
             throw 50002, 'Tłumacz o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy dany język istnieje
+        -- Sprawdzenie, czy dany język istnieje
         if not exists(select 1 from Languages where LanguageID = @LanguageID)
         begin
             throw 50003, 'Język o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy limit jest poprawnie wpisany
+        -- Sprawdzenie, czy limit jest poprawnie wpisany
         if @Limit <= 0
         begin
             throw 50004, 'Limit nie może być wartością mniejszą bądź równą 0', 1;
@@ -46,7 +46,7 @@ as begin
             throw 50006, 'Tłumacz w okresie trwania danego spotkania jest nie dostępny', 1;
         end
 
-        -- Sprawdzenie czy dana sala jest dostępna
+        -- Sprawdzenie, czy dana sala jest dostępna
         if dbo.check_classroom_availability(@Classroom, @DateAndBeginningTime, @Duration) = cast(1 as bit)
         begin
             throw 50007, 'Sala w danym terminie nie jest dostępna', 1;
@@ -57,7 +57,7 @@ as begin
         values (@MeetingID, @Classroom, @TranslatorID, @LanguageID, @Limit)
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;

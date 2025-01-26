@@ -3,16 +3,16 @@ create procedure update_recordinglink_module_sync
     @RecordingLink nvarchar(100)
 as begin
     begin try
-        -- Sprawdzenie czy dany moduł istnieje
+        -- Sprawdzenie, czy dany moduł istnieje
         if not exists(select 1 from Modules where ModuleID = @ModuleID)
         begin
             throw 50001, 'Podany moduł nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy moduł został dodany do tabeli z online-synchronicznie
+        -- Sprawdzenie, czy moduł został dodany do tabeli z online-synchronicznie
         if not exists(select 1 from Online_Sync_Modules where ModuleID = @ModuleID)
         begin
-            throw 50002, 'Moduł nie został dodaany do modułów synchronicznych', 1;
+            throw 50002, 'Moduł nie został dodany do modułów synchronicznych', 1;
         end
 
         -- Zaktualizowanie linku do nagrania
@@ -21,7 +21,7 @@ as begin
         where ModuleID = @ModuleID
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;

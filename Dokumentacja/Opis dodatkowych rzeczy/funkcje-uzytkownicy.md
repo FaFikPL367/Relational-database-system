@@ -2,7 +2,7 @@
 1. ***Paweł Sosnowski*** (skrót PS)
 2. ***Maciej Słowik*** (skrót MS)
 
-> **Powyższe skróty będą znajdować się przy nazwa i oznaczają jaka osoba co zrobiła.**
+> **Powyższe skróty będą znajdować się przy nazwach i oznaczają, jaka osoba co zrobiła.**
 
 ## Użytkownicy systemu
 1. Administrator
@@ -21,7 +21,7 @@
 ## Funkcje dla każdego użytkownika
 1. **Administrator**
     - Możliwość usuwania nagrań z webinarów
-    - Możliwość edytowania danych uzytkowników systemu
+    - Możliwość edytowania danych użytkowników systemu
     - Możliwość edytowania ofert z webinarami
     - Możliwość tworzenia i odtwarzania kopii zapasowych
 2. **Dyrektor platformy**
@@ -41,16 +41,16 @@
     - Możliwość usuwanie użytkownika z kursu
 5. **Koordynator studiów**
     - Dodawanie studiów
-    - Możliwość dodawania zjadów do studiów
+    - Możliwość dodawania zjazdów do studiów
     - Możliwość tworzenia sylabusa studiów poprzez dodawanie przedmiotów:
       - Możliwość przypisywania wykładowców i tłumaczy do danych przedmiotów
-      - Możliwość określenia typu danego spotkania przedmotu (stacjnonarnie, online, hybrydowo)
+      - Możliwość określenia typu danego spotkania przedmiotu (stacjonarnie, online, hybrydowo)
     - Możliwość dodawania i usuwania uczestników danych studiów
     - Możliwość modyfikowania właściwości spotkań studyjnych
     - Możliwość wpisania oceny końcowej z egzaminu 
 6. **Pracownik sekretariatu**
     - Możliwość tworzenia harmonogramu zajęć na studiach/kursach i zarządzanie nim
-    - Dostęp do raportów generowanych przez system (raporty finansowe, raporty z "listą dłużników", raport związane z przyszłymi wydarzeniami i frekwencją na nich)
+    - Dostęp do raportów generowanych przez system (raporty finansowe, raporty z "listą dłużników", raport związany z przyszłymi wydarzeniami i frekwencją na nich)
     - Możliwość przyjmowania zgłoszeń od użytkowników systemu
     - Dostęp do danych uczestników kursów/studiów/webinarów i możliwość ich modyfikacji
 7. **Wykładowcy**
@@ -74,8 +74,8 @@
 ---
 
 ## Funkcje systemu
-- Sprawdzanie potwierdzenia płatności (czy udana / czy nieudana)
-- Możliwość blokowania dostępu do zasobów w przypadku opoźnienia w płatnościach (nagrania, kursy)
+- Sprawdzanie potwierdzenia płatności (czy udana, czy nieudana)
+- Możliwość blokowania dostępu do zasobów w przypadku opóźnienia w płatnościach (nagrania, kursy)
 - Rejestrowanie opłat w systemie
 - Udzielenie użytkownikowi dostępu do danej usługi w przypadku potwierdzenia płatności
 - Możliwość sprawdzenia i zmienienia obecności w wyniku obejrzenia nagrania

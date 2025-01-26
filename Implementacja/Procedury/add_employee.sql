@@ -11,7 +11,7 @@ as
 begin
 
     begin try
-        -- Sprawdzenie czy dana pozycja istnieje
+        -- Sprawdzenie, czy dana pozycja istnieje
         if not exists(select 1 from Employees_Postions where PositionID = @PositionID)
         begin
             throw 51000, 'Pozycja nie istnieje ', 1;

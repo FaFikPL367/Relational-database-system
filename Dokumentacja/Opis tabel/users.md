@@ -2,7 +2,7 @@
 
 ## Tabela **Users**
 Zawiera ona informacje o użytkownikach:
- * **UserID** [int] - klucz główny, identyfikator użytkownika
+ * **UserID** [int] — klucz główny, identyfikator użytkownika
  * **FirstName** [nvarchar(50)] - imię użytkownika
  * **LastName** [nvarchar(50)] - nazwisko użytkownika
  * **Phone** [varchar(20), unique] - numer telefonu użytkownika 
@@ -11,7 +11,7 @@ Zawiera ona informacje o użytkownikach:
     * warunki: Email LIKE '%_@%.%'
  * **Address** [nvarchar(50)] - adres użytkownika
  * **City** [nvarchar(30)] - miasto użytkownika
- * **PostalCode** [varcahr(10)] - kod pocztowy użytkownika
+ * **PostalCode** [varchar(10)] - kod pocztowy użytkownika
 ``` SQL
 CREATE TABLE Users (
    UserID int  NOT NULL IDENTITY(1, 1),
@@ -31,17 +31,17 @@ CREATE TABLE Users (
 ## <hr>
 ## Tabela **Employees**
 Zawiera informacje o pracownikach:
- * **EmployeeID** [int] - klucz główny, identyfikator pracownika
+ * **EmployeeID** [int] — klucz główny, identyfikator pracownika
  * **FirstName** [nvarchar(50)] - imię pracownika
  * **LastName** [nvarchar(50)] - nazwisko pracownika
- * **Phone** [varcahr(20), unique] - numer telefonu pracownika
+ * **Phone** [varchar(20), unique] - numer telefonu pracownika
     * warunki: LEN(Phone) <= 20
  * **Email** [nvarchar(50), unique] - email pracownika
     * warunki: Email LIKE '%_@%.%'
  * **Address** [nvarchar(50)] - adres pracownika
  * **City** [nvarchar(30)] - miasto pracownika
  * **PostalCode** [varchar(10)] - kod pocztowy pracownika
- * **PositionID** [int] - identyfikator pozycji pracownika
+ * **PositionID** [int] — identyfikator pozycji pracownika
 ```SQL
 CREATE TABLE Employees (
    EmployeeID int  NOT NULL IDENTITY(1, 1),
@@ -62,19 +62,19 @@ CREATE TABLE Employees (
 ## <hr>
 ## Tabela **Employees_Positions**
 Zawiera informacje o możliwych pozycjach pracowników:
- * **PositionID** [int] - klucz główny, identyfikator pozycji
+ * **PositionID** [int] — klucz główny, identyfikator pozycji
  * **PositionName** [nvarchar(30)] - nazwa pozycji
 ```SQL
-CREATE TABLE Employees_Postions (
+CREATE TABLE Employees_Positions (
    PositionID int  NOT NULL IDENTITY(1, 1),
    PositionName nvarchar(30)  NOT NULL,
-   CONSTRAINT Employees_Postions_pk PRIMARY KEY  (PositionID)
+   CONSTRAINT Employees_Positions_pk PRIMARY KEY  (PositionID)
 );
 ```
 
 ## Tabela **Translators**
-Zwiera informacje o tłumaczach:
- * **TranslatorID** [int] - klucz główny, identyfikator tłumacza
+Zawiera informacje o tłumaczach:
+ * **TranslatorID** [int] — klucz główny, identyfikator tłumacza
  * **FirstName** [nvarchar(50)] - imię tłumacza
  * **LastName** [nvarchar(50)] - nazwisko tłumacza
  * **Phone** [varchar(20), unique] - numer telefonu tłumacza
@@ -102,9 +102,9 @@ CREATE TABLE Translators (
 
 ## <hr>
 ## Tabela **Translator_Languages**
-Zawiera informajce o językach jakimi posługują się tłumacze:
- * **TranslatorID** [int] - część klucza głównego, identyfikator tłumacza
- * **LanguageID** [int] - klucz obcy, identyfikator języka
+Zawiera informacje o językach, jakimi posługują się tłumacze:
+ * **TranslatorID** [int] — część klucza głównego, identyfikator tłumacza
+ * **LanguageID** [int] — klucz obcy, identyfikator języka
 ```SQL
 CREATE TABLE Translators_Languages (
    TranslatorID int  NOT NULL,
@@ -116,8 +116,8 @@ CREATE TABLE Translators_Languages (
 ## <hr>
 ## Tabela **Languages**
 Zawiera możliwe języki tłumaczenia:
- * **LanguageID** [int] - klucz główny, identyfikator języka
- * **LanguaneName** [nvarchar(30)] - nazwa języka
+ * **LanguageID** [int] — klucz główny, identyfikator języka
+ * **LanguageName** [nvarchar(30)] - nazwa języka
 ```SQL
 CREATE TABLE Languages (
    LanguageID int  NOT NULL IDENTITY(1, 1),

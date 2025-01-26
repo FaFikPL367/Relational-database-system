@@ -56,7 +56,7 @@ as begin
             rollback transaction;
         end;
 
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;

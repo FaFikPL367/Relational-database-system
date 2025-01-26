@@ -3,7 +3,7 @@ create procedure update_recordinglink_webinar
     @RecordingLink nvarchar(100)
 as begin
     begin try
-        -- Sprawdzenie czy dany webinar istnieje
+        -- Sprawdzenie, czy dany webinar istnieje
         if not exists(select 1 from Webinars where WebinarID = @WebinarID)
         begin
             throw 50001, 'Podany webinar nie istnieje', 1;
@@ -15,7 +15,7 @@ as begin
         where WebinarID = @WebinarID
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;

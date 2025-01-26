@@ -20,17 +20,17 @@ Zawiera informacje o Webinarach:
 - **WebinarID** [int] - identyfikator webinaru
 - **Name** [nvarchar(30)] - nazwa webinaru
 - **Description** [nvarchar(max)] - opis webinaru
-- **Date** [date] - termin odbywania się  webinaru w formacie 'rok-miesiąc-dzień'
+- **Date** [date] — termin odbywania się webinaru w formacie 'rok-miesiąc-dzień'
 - **BeginningTime** [time(8)] - czas rozpoczęcia webinaru w formacie 'godzina:minuty:sekundy'
 - **Duration** [time(8)] - czas trwania webinaru w formacie 'godziny:minuty:sekundy'
   - warunki: Duration > '00:00:00'
   - domyślna wartość: '01:30:00'
-- **TeacherID** [int] - identyfikator prowadzącego dany webinar
+- **TeacherID** [int] — identyfikator prowadzącego dany webinar
 - **TranslatorID** [int] - identyfikator tłumacza
 - **Price** [money] - cena webinaru
   - warunki: Price >= 0
   - domyślna wartość: 0
-- **LanguageID** [int] - identyfikator języka, w którym prowadzony jest webinar
+- **LanguageID** [int] — identyfikator języka, w którym prowadzony jest webinar
 - **RecordingLink** [nvarchar(100)] - link do nagrania z webinaru
 - **MeetingLink** [nvarchar(100), unique] - link do webinaru
 

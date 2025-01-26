@@ -18,14 +18,14 @@ as begin
 
         if @Price <= 0
         begin
-            throw 50003, 'Cena za zjazd nie moze być ujeman lub równa 0', 1;
+            throw 50003, 'Cena za zjazd nie może być ujemna lub równa 0', 1;
         end
 
         insert Studies_Reunion(StudiesID, StartDate, EndDate, Price)
         values (@StudiesID, @StartDate, @EndDate, @Price)
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end

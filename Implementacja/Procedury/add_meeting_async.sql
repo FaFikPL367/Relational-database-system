@@ -3,7 +3,7 @@ CREATE procedure add_meeting_async
     @RecordingLink nvarchar(100)
 as begin
     begin try
-        -- Sprawdzenie czy dane spotkanie istnieje
+        -- Sprawdzenie, czy dane spotkanie istnieje
         if not exists(select 1 from Meetings where MeetingID = @MeetingID)
         begin
             throw 50000, 'Spotkanie o podanym ID nie istnieje', 1;
@@ -21,7 +21,7 @@ as begin
         values (@MeetingID, @RecordingLink)
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;

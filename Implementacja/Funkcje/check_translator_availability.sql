@@ -4,13 +4,13 @@ create function check_translator_availability(
     @Duration time(0)
 ) returns bit
 as begin
-    -- 1 - jakieś spotkania nakładają się, 0 - nic się nei nakłada
+    -- 1 - jakieś spotkania nakładają się, 0 - nic się nie nakłada
     declare @Result bit = 0;
 
     declare @StartDate datetime = @DateAndBeginningTime;
     declare @EndDate datetime = dateadd(minute, datediff(minute, 0, @Duration), @DateAndBeginningTime);
 
-    -- Zadekalrowanie tabeli ze wszystkimi spotkaniami tłumacza
+    -- Zadeklarowanie tabeli ze wszystkimi spotkaniami tłumacza
     declare @TranslatorActivities table (
         DateAndBeginningTime datetime,
         Duration time(0)
@@ -34,13 +34,13 @@ as begin
     from In_person_Meetings inner join Meetings on In_person_Meetings.MeetingID = Meetings.MeetingID
     where TranslatorID = @TranslatorID;
 
-    -- Spotkania synchronoczne
+    -- Spotkania synchroniczne
     insert @TranslatorActivities
     select DateAndBeginningTime, Duration
     from Online_Sync_Meetings inner join Meetings on Online_Sync_Meetings.MeetingID = Meetings.MeetingID
     where TranslatorID = @TranslatorID;
 
-    -- Sprawdzenie czy date się nie nakładają
+    -- Sprawdzenie, czy date się nie nakładają
     if exists(select 1 from @TranslatorActivities where (
         @StartDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or
         @EndDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or

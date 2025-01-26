@@ -18,8 +18,8 @@ ALTER TABLE Modules ADD CONSTRAINT Employees_Modules
     FOREIGN KEY (TeacherID)
     REFERENCES Employees (EmployeeID);
 
--- Reference: Employees_Postions_Employees (table: Employees)
-ALTER TABLE Employees ADD CONSTRAINT Employees_Postions_Employees
+-- Reference: Employees_Positions_Employees (table: Employees)
+ALTER TABLE Employees ADD CONSTRAINT Employees_Positions_Employees
     FOREIGN KEY (PositionID)
     REFERENCES Employees_Postions (PositionID);
 

@@ -8,7 +8,7 @@ CREATE procedure add_course_module_async
     @RecordingLink nvarchar(100)
 as begin
     begin try
-        -- Sprawdzenie czy dany moduł istnieje
+        -- Sprawdzenie, czy dany moduł istnieje
         if not exists(select 1 from Modules where ModuleID = @ModuleID)
         begin
             throw 50000, 'Moduł o podanym ID nie istnieje', 1;
@@ -26,7 +26,7 @@ as begin
         values (@ModuleID, @RecordingLink)
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -35,7 +35,7 @@ end;
 ---
 
 ### Add_course_module_in_person - PS
-Procedura, która dodajemu informacje o module do tabeli z modułami stacjonarnymi.
+Procedura, która dodajemy informacje o module do tabeli z modułami stacjonarnymi.
 ```SQL
 CREATE procedure add_course_module_in_person
     @ModuleID int,
@@ -45,7 +45,7 @@ CREATE procedure add_course_module_in_person
     @Limit int
 as begin
     begin try
-        -- Sprawdzenie czy dany moduł istnieje
+        -- Sprawdzenie, czy dany moduł istnieje
         if not exists(select 1 from Modules where ModuleID = @ModuleID)
         begin
             throw 50000, 'Moduł o podanym ID nie istnieje', 1;
@@ -58,25 +58,25 @@ as begin
             throw 50001, 'Podany moduł nie jest typu stacjonarnego', 1;
         end
 
-        -- Sprawdzenie czy dany tłumacz istnieje
+        -- Sprawdzenie, czy dany tłumacz istnieje
         if not exists(select 1 from Translators where TranslatorID = @TranslatorID) and @TranslatorID is not null
         begin
             throw 50002, 'Tłumacz o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy dany język istnieje
+        -- Sprawdzenie, czy dany język istnieje
         if not exists(select 1 from Languages where LanguageID = @LanguageID)
         begin
             throw 50003, 'Język o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy limit jest poprawnie wpisany
+        -- Sprawdzenie, czy limit jest poprawnie wpisany
         if @Limit <= 0
         begin
             throw 50004, 'Limit nie może być wartością mniejszą bądź równą 0', 1;
         end
 
-        -- Sprawdzenie czy podana sala jest wolna w tym okresie
+        -- Sprawdzenie, czy podana sala jest wolna w tym okresie
         declare @DateAndBeginningTime datetime = (select DateAndBeginningTime from Modules where ModuleID = @ModuleID)
         declare @Duration time(0) = (select Duration from Modules where ModuleID = @ModuleID)
 
@@ -85,7 +85,7 @@ as begin
             throw 50005, 'Sala w okresie trwania modułu nie dostępna', 1;
         end
 
-        -- Sprawdzzenie dostępności tłumacza
+        -- Sprawdzenie dostępności tłumacza
         if dbo.check_translator_availability(@TranslatorID, @DateAndBeginningTime, @Duration) = cast(1 as bit)
         begin
             throw 50006, 'Tłumacz w okresie danego modułu jest nie dostępny', 1;
@@ -96,7 +96,7 @@ as begin
         values (@ModuleID, @Classroom, @TranslatorID, @LanguageID, @Limit)
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -105,7 +105,7 @@ end;
 ---
 
 ### Add_course_module_sync - PS
-Prodecura, która dodaje moduł do tabeli z podułami prowadzonymi online-synchronicznie.
+Procedura, która dodaje moduł do tabeli z modułami prowadzonymi online-synchronicznie.
 ```SQL
 CREATE procedure add_course_module_sync
     @ModuleID int,
@@ -115,7 +115,7 @@ CREATE procedure add_course_module_sync
     @LanguageID int
 as begin
     begin try
-        -- Sprawdzenie czy dany moduł istnieje
+        -- Sprawdzenie, czy dany moduł istnieje
         if not exists(select 1 from Modules where ModuleID = @ModuleID)
         begin
             throw 50000, 'Moduł o podanym ID nie istnieje', 1;
@@ -128,19 +128,19 @@ as begin
             throw 50001, 'Podany moduł nie jest typu online-synchronicznie', 1;
         end
 
-        -- Sprawdzenie czy dany tłumacz istnieje
+        -- Sprawdzenie, czy dany tłumacz istnieje
         if not exists(select 1 from Translators where TranslatorID = @TranslatorID) and @TranslatorID is not null
         begin
             throw 50002, 'Tłumacz o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy dany język istnieje
+        -- Sprawdzenie, czy dany język istnieje
         if not exists(select 1 from Languages where LanguageID = @LanguageID)
         begin
             throw 50003, 'Język o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzzenie dostępności tłumacza
+        -- Sprawdzenie dostępności tłumacza
         declare @DateAndBeginningTime datetime = (select DateAndBeginningTime from Modules where ModuleID = @ModuleID)
         declare @Duration time(0) = (select Duration from Modules where ModuleID = @ModuleID)
 
@@ -154,7 +154,7 @@ as begin
         values (@ModuleID, @MeetingLink, @RecordingLink, @TranslatorID, @LanguageID)
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -183,7 +183,7 @@ as begin
 
         if not exists(select 1 from Courses where CourseID = @CourseID)
         begin
-            throw 50002, 'Kurs o podanym ID nie sitnieje', 1;
+            throw 50002, 'Kurs o podanym ID nie istnieje', 1;
         end
 
         if not exists(select 1 from Types where TypeID = @TypeID)
@@ -191,13 +191,13 @@ as begin
             throw 50003, 'Typ o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy nauczyciel nie ma w tym czasie innych zajęć
+        -- Sprawdzenie, czy nauczyciel nie ma w tym czasie innych zajęć
         if dbo.check_teachers_availability(@TeacherID, @DateAndBeginningTime, @Duration) = cast(1 as bit)
         begin
             throw 50004, 'Podany nauczyciel ma w tym czasie inne zajęcia', 1;
         end
 
-        -- Sprawdzenie czy moduł nakłada się z innym w tym samym kursie
+        -- Sprawdzenie, czy moduł nakłada się z innym w tym samym kursie
         declare @EndDate DATETIME = DATEADD(MINUTE, DATEDIFF(MINUTE, 0, @Duration), @DateAndBeginningTime);;
         IF EXISTS (
             SELECT 1
@@ -221,7 +221,7 @@ as begin
         values (@TeacherID, @CourseID, @Name, @Description, @DateAndBeginningTime, @Duration, @TypeID)
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -248,7 +248,7 @@ as begin
         if not exists(select 1 from Employees where EmployeeID = @CoordinatorID and
                                                     PositionID = 4)
         begin
-            throw 50001, 'Koordynator o danym ID nie istnieje lub nie jest kordynatorem kursów', 1;
+            throw 50001, 'Koordynator o danym ID nie istnieje lub nie jest koordynatorem kursów', 1;
         end
 
         if @Price < 0
@@ -272,7 +272,7 @@ as begin
         -- Pobranie ID po dodaniu do produktów
         set @NewProductID = SCOPE_IDENTITY();
 
-        -- Dodanie do tabeli ze Wbinarami
+        -- Dodanie do tabeli ze Webinarami
         insert Courses (CourseID, CoordinatorID, Name, Description, StartDate, EndDate, Price)
         values (@NewProductID, @CoordinatorID, @Name, @Description, @StartDate, @EndDate, @Price)
 
@@ -285,7 +285,7 @@ as begin
             rollback transaction;
         end;
 
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -309,7 +309,7 @@ as
 begin
 
     begin try
-        -- Sprawdzenie czy dana pozycja istnieje
+        -- Sprawdzenie, czy dana pozycja istnieje
         if not exists(select 1 from Employees_Postions where PositionID = @PositionID)
         begin
             throw 51000, 'Pozycja nie istnieje ', 1;
@@ -349,7 +349,7 @@ begin
                 @City, @PostalCode);
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -377,7 +377,7 @@ begin
                 @City, @PostalCode);
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -409,7 +409,7 @@ as begin
         if not exists(select 1 from Employees where EmployeeID = @CoordinatorID and
                                                     PositionID = 2)
         begin
-            throw 50001, 'Koordynator o danym ID nie istnieje lub nie jest kordynatorem webinarów', 1;
+            throw 50001, 'Koordynator o danym ID nie istnieje lub nie jest koordynatorem webinarów', 1;
         end
 
         if not exists(select 1 from Employees where EmployeeID = @TeacherID)
@@ -424,7 +424,7 @@ as begin
 
         if not exists(select 1 from Languages where LanguageID = @LanguageID)
         begin
-            throw 50004, 'Język o danym ID nie iestnieje', 1;
+            throw 50004, 'Język o danym ID nie istnieje', 1;
         end
 
         if not exists(select 1 from Translators where @TranslatorID = TranslatorID) and @TranslatorID IS NOT NULL
@@ -448,7 +448,7 @@ as begin
         -- Pobranie ID po dodaniu do produktów
         set @NewProductID = SCOPE_IDENTITY();
 
-        -- Dodanie do tabeli ze Wbinarami
+        -- Dodanie do tabeli ze Webinarami
         insert Webinars (WebinarID, Name, Description, DateAndBeginningTime, Duration, TeacherID, TranslatorID, Price, LanguageID, RecordingLink, MeetingLink, CoordinatorID)
         values (@NewProductID, @Name, @Description, @DateAndBeginningTIme, @Duration, @TeacherID, @TranslatorID, @Price, @LanguageID, @RecordingLink, @MeetingLink, @CoordinatorID)
 
@@ -460,7 +460,7 @@ as begin
             rollback transaction;
         end;
 
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -476,19 +476,19 @@ CREATE procedure assign_translator_to_languages
     @LanguageID int
 as begin
     begin try
-        -- Sprawdzenie czy jezyk o danym ID istnieje
+        -- Sprawdzenie, czy język o danym ID istnieje
         if not exists(select 1 from Languages where LanguageID = @LanguageID)
         begin
-            throw 50001, 'Jezyk nie istnieje', 1;
+            throw 50001, 'Język nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy tlumacz o danym ID istnieje
+        -- Sprawdzenie, czy tłumacz o danym ID istnieje
         if not exists(select 1 from Translators where TranslatorID = @TranslatorID)
         begin
             throw 50002, 'Tłumacz nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy taki wpis już istnieje
+        -- Sprawdzenie, czy taki wpis już istnieje
         if dbo.check_translator_language(@TranslatorID, @LanguageID) = cast(1 as bit)
         begin
             throw 50003, 'Taka para już istnieje', 1;
@@ -499,7 +499,7 @@ as begin
         values (@TranslatorID, @LanguageID)
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -515,19 +515,19 @@ CREATE procedure delete_language_from_translator
     @LanguageID int
 as begin
     begin try
-        -- Sprawdzenie czy tłumacz istnieje
+        -- Sprawdzenie, czy tłumacz istnieje
         if not exists(select 1 from Translators where TranslatorID = @TranslatorID)
         begin
             throw 50001, 'Tłumacz o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy język istnieje
+        -- Sprawdzenie, czy język istnieje
         if not exists(select 1 from Languages where LanguageID = @LanguageID)
         begin
             throw 50002, 'Język o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy dana para istnieje
+        -- Sprawdzenie, czy dana para istnieje
         if dbo.check_translator_language(@TranslatorID, @LanguageID) = cast(0 as bit)
         begin
             throw 50003, 'Taka para nie istnieje', 2;
@@ -546,8 +546,8 @@ end;
 
 ---
 
-### Update_modue_type - PS
-Procedura umożliwiająca edytowanie typu danego modułu w razie pomyłki. Jeżeli zostały już dodane dodatkowe dane do któreś tabeli z kategorii
+### Update_module_type - PS
+Procedura umożliwiająca edytowanie typu danego modułu w razie pomyłki. Jeżeli zostały już dodane dodatkowe dane do któreś tabeli z kategorii,
 to dane stamtąd są usuwane.
 ```SQL
 CREATE procedure update_module_type
@@ -555,19 +555,19 @@ CREATE procedure update_module_type
     @TypeID int
 as begin
     begin try
-        -- Sprawdzenie czy moduł istnieje
+        -- Sprawdzenie, czy moduł istnieje
         if not exists(select 1 from Modules where ModuleID = @ModuleID)
         begin
             throw 50000, 'Moduł o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy dany typ istnieje
+        -- Sprawdzenie, czy dany typ istnieje
         if not exists(select 1 from Types where TypeID = @TypeID)
         begin
             throw 50001, 'Podany typ nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy nie zmieniasz na ten sam typ
+        -- Sprawdzenie, czy nie zmieniasz na ten sam typ
         if exists(select 1 from Modules where ModuleID = @ModuleID and TypeID = @TypeID)
         begin
             throw 50002, 'Zmieniasz typ modułu na ten sam typ', 1;
@@ -582,7 +582,7 @@ as begin
         set TypeID = @TypeID
         where ModuleID = @ModuleID
 
-        -- Usuniędzie danych ze starego typu
+        -- Usunięcie danych ze starego typu
         if @OldTypeName = 'In-person'
         begin
             if exists(select 1 from In_person_Modules where ModuleID = @ModuleID)
@@ -614,7 +614,7 @@ as begin
         end
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -623,23 +623,23 @@ end;
 ---
 
 ### Update_recordinglink_module_sync - PS
-Procedura służąca do dodania linku do nagrania w modułach prowadząnych online-synchronicznie.
+Procedura służąca do dodania linku do nagrania w modułach prowadzonych online-synchronicznie.
 ```SQl
 create procedure update_recordinglink_module_sync
     @ModuleID int,
     @RecordingLink nvarchar(100)
 as begin
     begin try
-        -- Sprawdzenie czy dany moduł istnieje
+        -- Sprawdzenie, czy dany moduł istnieje
         if not exists(select 1 from Modules where ModuleID = @ModuleID)
         begin
             throw 50001, 'Podany moduł nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy moduł został dodany do tabeli z online-synchronicznie
+        -- Sprawdzenie, czy moduł został dodany do tabeli z online-synchronicznie
         if not exists(select 1 from Online_Sync_Modules where ModuleID = @ModuleID)
         begin
-            throw 50002, 'Moduł nie został dodaany do modułów synchronicznych', 1;
+            throw 50002, 'Moduł nie został dodany do modułów synchronicznych', 1;
         end
 
         -- Zaktualizowanie linku do nagrania
@@ -648,7 +648,7 @@ as begin
         where ModuleID = @ModuleID
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -664,7 +664,7 @@ create procedure update_recordinglink_webinar
     @RecordingLink nvarchar(100)
 as begin
     begin try
-        -- Sprawdzenie czy dany webinar istnieje
+        -- Sprawdzenie, czy dany webinar istnieje
         if not exists(select 1 from Webinars where WebinarID = @WebinarID)
         begin
             throw 50001, 'Podany webinar nie istnieje', 1;
@@ -676,7 +676,7 @@ as begin
         where WebinarID = @WebinarID
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -745,7 +745,7 @@ as begin
             rollback transaction;
         end;
 
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -761,7 +761,7 @@ CREATE procedure add_meeting_async
     @RecordingLink nvarchar(100)
 as begin
     begin try
-        -- Sprawdzenie czy dane spotkanie istnieje
+        -- Sprawdzenie, czy dane spotkanie istnieje
         if not exists(select 1 from Meetings where MeetingID = @MeetingID)
         begin
             throw 50000, 'Spotkanie o podanym ID nie istnieje', 1;
@@ -779,7 +779,7 @@ as begin
         values (@MeetingID, @RecordingLink)
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -797,7 +797,7 @@ CREATE procedure add_meeting_in_person
     @Limit int
 as begin
     begin try
-        -- Sprawdzenie czy dane spotkanie istnieje
+        -- Sprawdzenie, czy dane spotkanie istnieje
         if not exists(select 1 from Meetings where MeetingID = @MeetingID)
         begin
             throw 50000, 'Spotkanie o podanym ID nie istnieje', 1;
@@ -810,19 +810,19 @@ as begin
             throw 50001, 'Podane spotkanie nie jest typu stacjonarnego', 1;
         end
 
-        -- Sprawdzenie czy dany tłumacz istnieje
+        -- Sprawdzenie, czy dany tłumacz istnieje
         if not exists(select 1 from Translators where TranslatorID = @TranslatorID) and @TranslatorID is not null
         begin
             throw 50002, 'Tłumacz o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy dany język istnieje
+        -- Sprawdzenie, czy dany język istnieje
         if not exists(select 1 from Languages where LanguageID = @LanguageID)
         begin
             throw 50003, 'Język o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy limit jest poprawnie wpisany
+        -- Sprawdzenie, czy limit jest poprawnie wpisany
         if @Limit <= 0
         begin
             throw 50004, 'Limit nie może być wartością mniejszą bądź równą 0', 1;
@@ -837,7 +837,7 @@ as begin
             throw 50006, 'Tłumacz w okresie trwania danego spotkania jest nie dostępny', 1;
         end
 
-        -- Sprawdzenie czy dana sala jest dostępna
+        -- Sprawdzenie, czy dana sala jest dostępna
         if dbo.check_classroom_availability(@Classroom, @DateAndBeginningTime, @Duration) = cast(1 as bit)
         begin
             throw 50007, 'Sala w danym terminie nie jest dostępna', 1;
@@ -848,7 +848,7 @@ as begin
         values (@MeetingID, @Classroom, @TranslatorID, @LanguageID, @Limit)
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -867,7 +867,7 @@ CREATE procedure add_meeting_sync
     @LanguageID int
 as begin
     begin try
-        -- Sprawdzenie czy dane spotkanie istnieje
+        -- Sprawdzenie, czy dane spotkanie istnieje
         if not exists(select 1 from Meetings where MeetingID = @MeetingID)
         begin
             throw 50000, 'Spotkanie o podanym ID nie istnieje', 1;
@@ -880,13 +880,13 @@ as begin
             throw 50001, 'Podane spotkanie nie jest typu online-synchronicznie', 1;
         end
 
-        -- Sprawdzenie czy dany tłumacz istnieje
+        -- Sprawdzenie, czy dany tłumacz istnieje
         if not exists(select 1 from Translators where TranslatorID = @TranslatorID) and @TranslatorID is not null
         begin
             throw 50002, 'Tłumacz o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy dany język istnieje
+        -- Sprawdzenie, czy dany język istnieje
         if not exists(select 1 from Languages where LanguageID = @LanguageID)
         begin
             throw 50003, 'Język o podanym ID nie istnieje', 1;
@@ -906,7 +906,7 @@ as begin
         values (@MeetingID, @MeetingLink, @RecordingLink, @TranslatorID, @LanguageID)
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -915,7 +915,7 @@ end;
 ---
 
 ### Add_reunion - PS
-Procedura służy do dodawania zjazu do danych studiów wraz z podaniem jego czasu odbycia się.
+Procedura służy do dodawania zjazdu do danych studiów wraz z podaniem jego czasu odbycia się.
 ```SQL
 create procedure add_reunion
     @StudiesID int,
@@ -937,14 +937,14 @@ as begin
 
         if @Price <= 0
         begin
-            throw 50003, 'Cena za zjazd nie moze być ujeman lub równa 0', 1;
+            throw 50003, 'Cena za zjazd nie może być ujemna lub równa 0', 1;
         end
 
         insert Studies_Reunion(StudiesID, StartDate, EndDate, Price)
         values (@StudiesID, @StartDate, @EndDate, @Price)
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end
@@ -971,7 +971,7 @@ as begin
         if not exists(select 1 from Employees where EmployeeID = @CoordinatorID and
                                                     PositionID = 3)
         begin
-            throw 50001, 'Koordynator o danym ID nie istnieje lub nie jest kordynatorem studiów', 1;
+            throw 50001, 'Koordynator o danym ID nie istnieje lub nie jest koordynatorem studiów', 1;
         end
 
         if @Price < 0
@@ -1007,7 +1007,7 @@ as begin
             rollback transaction;
         end;
 
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end
@@ -1024,13 +1024,13 @@ create procedure delete_user_from_product
     @ProductID int
 as begin
     begin try
-        -- Sprawdzenie czy użytkownik istnieje
+        -- Sprawdzenie, czy użytkownik istnieje
         if not exists(select 1 from Users where UserID = @UserID)
         begin
             throw 50001, 'Użytkownik o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy dana para istnieje
+        -- Sprawdzenie, czy dana para istnieje
         if dbo.check_user_enrollment_for_product (@UserID, @ProductID) = cast(0 as bit)
         begin
             throw 50002, 'Taka para nie istnieje', 2;
@@ -1105,13 +1105,13 @@ create procedure set_extended_payment_deadline (
 )
 as begin
     begin try
-        -- Sprawdzenie czy podzamówienie istnieje
+        -- Sprawdzenie, czy podzamówienie istnieje
         if not exists(select 1 from Orders_Details where SubOrderID = @SubOrderID)
         begin
             throw 50000, 'Podzamówienie o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy data przedłużonego terminu jest późniejsza od początkowej daty
+        -- Sprawdzenie, czy data przedłużonego terminu jest późniejsza od początkowej daty
         if ((select PaymentDeadline from Orders_Details where SubOrderID = @SubOrderID) > @ExtendedPaymentDeadline)
         begin
             throw 50001, 'Podana data jest nieprawidłowa', 1;
@@ -1123,7 +1123,7 @@ as begin
         where SubOrderID = @SubOrderID
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -1142,7 +1142,7 @@ CREATE procedure add_order
     @LastID int output
 as begin
     begin try
-        -- Sprawdzenie czy dany użytkownik istnieje
+        -- Sprawdzenie, czy dany użytkownik istnieje
         if not exists(select 1 from Users where UserID = @UserID)
         begin
             throw 50000, 'Użytkownik o podanym ID nie istnieje', 1;
@@ -1155,7 +1155,7 @@ as begin
         SET @LastID = SCOPE_IDENTITY();
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -1194,7 +1194,7 @@ as begin
                 @PaymentDate, @FullPrice, @ProductID, @Payment)
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -1233,7 +1233,7 @@ as begin
                 @PaymentDate, @FullPrice, @ProductID, @Payment)
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -1250,19 +1250,19 @@ CREATE procedure update_meeting_type
     @TypeID int
 as begin
     begin try
-        -- Sprawdzenie czy moduł istnieje
+        -- Sprawdzenie, czy moduł istnieje
         if not exists(select 1 from Meetings where @MeetingID = MeetingID)
         begin
             throw 50000, 'Spotkanie o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy dany typ istnieje
+        -- Sprawdzenie, czy dany typ istnieje
         if not exists(select 1 from Types where TypeID = @TypeID)
         begin
             throw 50001, 'Podany typ nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy nie zmieniasz typu spotkania na tem sam typ
+        -- Sprawdzenie, czy nie zmieniasz typu spotkania na ten sam typ
         if exists(select 1 from Meetings where @MeetingID = MeetingID and @TypeID = TypeID)
         begin
             throw 50002, 'Zmieniasz typ spotkania na ten sam typ co był ustawiony', 1;
@@ -1277,7 +1277,7 @@ as begin
         set TypeID = @TypeID
         where MeetingID = @MeetingID
 
-        -- Usuniędzie danych ze starego typu
+        -- Usunięcie danych ze starego typu
         if @OldTypeName = 'In-person'
         begin
             if exists(select 1 from In_person_Meetings where MeetingID = @MeetingID)
@@ -1309,7 +1309,7 @@ as begin
         end
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -1356,7 +1356,7 @@ create procedure add_practice
     @Email nvarchar(50)
 as begin
     begin try
-        -- Dodaawanie danych
+        -- Dodawanie danych
         insert Practices (Description, CompanyName, Country, City, Address, Phone, Email)
         values (@Description, @CompanyName, @Country, @City, @Address, @Phone, @Email)
     end try
@@ -1368,7 +1368,7 @@ end
 ```
 
 ### Assign_user_to_practice - PS
-Procedura pozwala na przypisanie studenta do danych praktyk odrazu z jakąś ocena (czy zaliczył czy nie).
+Procedura pozwala na przypisanie studenta do danych praktyk od razu z jakąś oceną (czy zaliczył, czy nie).
 ```SQL
 create procedure assign_user_to_practice
     @UserID int,
@@ -1412,7 +1412,7 @@ end
 --- 
 
 ### Update_product_status - PS
-Procedura pozwalająca na aktualizajcę statusu produktu.
+Procedura pozwalająca na aktualizację statusu produktu.
 ```SQL
 create procedure update_product_status
     @ProductID int,
@@ -1466,7 +1466,7 @@ as begin
 
         if @Grade < 2 or @Grade > 5
         begin
-            throw 50004, 'Podana ocena jest z nie dopuszczalengo przedzziału [2,5]', 1;
+            throw 50004, 'Podana ocena jest z nie dopuszczalnego przedziału [2,5]', 1;
         end
 
         -- Ustawienie oceny
@@ -1569,7 +1569,7 @@ end
 ---
 
 ### Set_user_module_attendance - PS
-Procedura pozwala na ustawienie czy dany użytkownik zdał dany moduł czy nie.
+Procedura pozwala na ustawienie czy dany użytkownik zdał dany moduł, czy nie.
 ```SQL
 create procedure set_user_module_passes
     @UserID int,

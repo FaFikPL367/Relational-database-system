@@ -26,7 +26,7 @@ as begin
                 @PaymentDate, @FullPrice, @ProductID, @Payment)
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;

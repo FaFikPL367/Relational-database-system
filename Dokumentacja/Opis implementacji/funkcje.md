@@ -1,8 +1,8 @@
 # Funkcje
 
 ### Check_translator_language - PS
-Funkcja dostaje parę indeksów, język i tłumacz, a następnie sprawdza czy dany tłumacz zna podany język. Jeżeli jednak będziemy sprawdzać
-ten warunek gdzie tłumacz ma wartość **null** czyli nie ma tłumacza, to będziemy sprawdzać czy język jest językiem polskim.
+Funkcja dostaje parę indeksów, język i tłumacz, a następnie sprawdza, czy dany tłumacz zna podany język. Jeżeli jednak będziemy sprawdzać
+ten warunek, gdzie tłumacz ma wartość **null**, czyli nie ma tłumacza, to będziemy sprawdzać, czy język jest językiem polskim.
 ```SQL
 create function check_translator_language(
     @TranslatorID int,
@@ -13,7 +13,7 @@ as begin
     -- 1 - para istnieje, 0 - para nie istnieje
     declare @Result bit;
 
-    -- Sprawdzenie czy dana para istnieje
+    -- Sprawdzenie, czy dana para istnieje
     if exists(select 1 from Translators_Languages where TranslatorID = @TranslatorID and
                                                         LanguageID = @LanguageID)
     begin
@@ -37,7 +37,7 @@ end
 ---
 
 ### Check_translator_availability - PS
-Funkcja dostaje ID tłumacza, datę i czas rozpoczęcia zajęć oraz czas trawania zajęć. Jej celem jest sprawdzenie czy podany tłumacz ma inne zajęcia w tym czasie. Sprawdzane są wszystkie jego możliwe aktywności (webinary, spotkania studyjne, moduły) tworząc dodatkową tabelę z datami tam gdzie
+Funkcja dostaje ID tłumacza, datę i czas rozpoczęcia zajęć oraz czas trwania zajęć. Jej celem jest sprawdzenie, czy podany tłumacz ma inne zajęcia w tym czasie. Sprawdzane są wszystkie jego możliwe aktywności (webinary, spotkania studyjne, moduły), tworząc dodatkową tabelę z datami tam, gdzie
 podany tłumacz się pojawia.
 ```SQL
 create function check_translator_availability(
@@ -46,13 +46,13 @@ create function check_translator_availability(
     @Duration time(0)
 ) returns bit
 as begin
-    -- 1 - jakieś spotkania nakładają się, 0 - nic się nei nakłada
+    -- 1 - jakieś spotkania nakładają się, 0 - nic się nie nakłada
     declare @Result bit = 0;
 
     declare @StartDate datetime = @DateAndBeginningTime;
     declare @EndDate datetime = dateadd(minute, datediff(minute, 0, @Duration), @DateAndBeginningTime);
 
-    -- Zadekalrowanie tabeli ze wszystkimi spotkaniami tłumacza
+    -- Zadeklarowanie tabeli ze wszystkimi spotkaniami tłumacza
     declare @TranslatorActivities table (
         DateAndBeginningTime datetime,
         Duration time(0)
@@ -76,13 +76,13 @@ as begin
     from In_person_Meetings inner join Meetings on In_person_Meetings.MeetingID = Meetings.MeetingID
     where TranslatorID = @TranslatorID;
 
-    -- Spotkania synchronoczne
+    -- Spotkania synchroniczne
     insert @TranslatorActivities
     select DateAndBeginningTime, Duration
     from Online_Sync_Meetings inner join Meetings on Online_Sync_Meetings.MeetingID = Meetings.MeetingID
     where TranslatorID = @TranslatorID;
 
-    -- Sprawdzenie czy date się nie nakładają
+    -- Sprawdzenie, czy date się nie nakładają
     if exists(select 1 from @TranslatorActivities where (
         @StartDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or
         @EndDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or
@@ -101,7 +101,7 @@ end
 ---
 
 ### Check_teachers_availability - PS
-Funkcja otrzymuje ID nauczyciela, datę i czas rozpoczęcia zajęć oraz czas ich trwania. Jej celem jest sprawdzenei czy dany nauczyciel nie ma w tym czasie innych aktywności (spotkania studyjne, webinary, moduły) tworząc dodatkową tabelę z datami gdzie nauczyciel jest zajęty i potem sprawdzając
+Funkcja otrzymuje ID nauczyciela, datę i czas rozpoczęcia zajęć oraz czas ich trwania. Jej celem jest sprawdzenie, czy dany nauczyciel nie ma w tym czasie innych aktywności (spotkania studyjne, webinary, moduły), tworząc dodatkową tabelę z datami, gdzie nauczyciel jest zajęty i potem sprawdzając
 konflikty z podanym do funkcji terminem.
 ```SQL
 create function check_teachers_availability(
@@ -127,7 +127,7 @@ as begin
     select DateAndBeginningTime, Duration
     from Modules where TeacherID = @TeacherID
 
-    -- Spotkania studujne
+    -- Spotkania studyjne
     insert @TeacherActivities
     select DateAndBeginningTime, Duration
     from Meetings where TeacherID = @TeacherID
@@ -137,7 +137,7 @@ as begin
     select DateAndBeginningTime, Duration
     from Webinars where TeacherID = @TeacherID
 
-    -- Sprawdzenie czy date się nie nakładają
+    -- Sprawdzenie, czy date się nie nakładają
     if exists(select 1 from @TeacherActivities where (
         @StartDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or
         @EndDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or
@@ -156,7 +156,7 @@ end
 ---
 
 ### Check_classroom_availability - PS
-Funkcja dostaje numer klasy oraz ID modułu lub spotkania. Jej celem jest sprawdzenie czy podany moduł lub spotkanie może się odbyć w tej sali na podstawie czasu rozpoczęcia danego modułu lub spotkania.
+Funkcja dostaje numer klasy oraz ID modułu lub spotkania. Jej celem jest sprawdzenie, czy podany moduł lub spotkanie może się odbyć w tej sali na podstawie czasu rozpoczęcia danego modułu lub spotkania.
 ```SQL
 create function check_classroom_availability(
     @Classroom int,
@@ -188,7 +188,7 @@ as begin
     from In_person_Meetings inner join Meetings on In_person_Meetings.MeetingID = Meetings.MeetingID
     where Classroom = @Classroom
 
-    -- Sprawdzenie czy w danym okresie nie ma żadnego spotkania studyjnego w danej sali
+    -- Sprawdzenie, czy w danym okresie nie ma żadnego spotkania studyjnego w danej sali
     if exists(select 1 from @ClassroomUsage where (
         @StartDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or
         @EndDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or
@@ -206,7 +206,7 @@ end
 
 ---
 ## Check_product_availability - MS
-Funkcja dostaje ID danego produktu i sprawdza czy jest on dostępny dla użytkowników, czyli czy STATUS jest równy 1.
+Funkcja dostaje ID danego produktu i sprawdza, czy jest on dostępny dla użytkowników, czyli czy STATUS jest równy 1.
 ```SQL
 create function check_product_availability(
     @ProductID int
@@ -239,7 +239,7 @@ as begin
     -- 1 - para istnieje, 0 - para nie istnieje
     declare @Result bit;
 
-    -- Sprawdzenie czy dana para istnieje
+    -- Sprawdzenie, czy dana para istnieje
     if exists(select 1 from Users_Studies where UserID = @UserID and
                                                         StudiesID = @ProductID
        union select 1 from Users_Courses where UserID = @UserID and

@@ -3,19 +3,19 @@ CREATE procedure delete_language_from_translator
     @LanguageID int
 as begin
     begin try
-        -- Sprawdzenie czy tłumacz istnieje
+        -- Sprawdzenie, czy tłumacz istnieje
         if not exists(select 1 from Translators where TranslatorID = @TranslatorID)
         begin
             throw 50001, 'Tłumacz o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy język istnieje
+        -- Sprawdzenie, czy język istnieje
         if not exists(select 1 from Languages where LanguageID = @LanguageID)
         begin
             throw 50002, 'Język o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy dana para istnieje
+        -- Sprawdzenie, czy dana para istnieje
         if dbo.check_translator_language(@TranslatorID, @LanguageID) = cast(0 as bit)
         begin
             throw 50003, 'Taka para nie istnieje', 2;

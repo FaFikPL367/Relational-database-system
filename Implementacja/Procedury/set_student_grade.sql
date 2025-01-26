@@ -22,7 +22,7 @@ as begin
 
         if @Grade < 2 or @Grade > 5
         begin
-            throw 50004, 'Podana ocena jest z nie dopuszczalengo przedzziału [2,5]', 1;
+            throw 50004, 'Podana ocena jest z nie dopuszczalnego przedziału [2,5]', 1;
         end
 
         -- Ustawienie oceny

@@ -28,7 +28,7 @@ as begin
     from In_person_Meetings inner join Meetings on In_person_Meetings.MeetingID = Meetings.MeetingID
     where Classroom = @Classroom
 
-    -- Sprawdzenie czy w danym okresie nie ma żadnego spotkania studyjnego w danej sali
+    -- Sprawdzenie, czy w danym okresie nie ma żadnego spotkania studyjnego w danej sali
     if exists(select 1 from @ClassroomUsage where (
         @StartDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or
         @EndDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or

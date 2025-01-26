@@ -8,7 +8,7 @@ as begin
         declare @CategoryName nvarchar(15);
         declare @ProductID int;
 
-        -- Wyciągnieci ID produktu
+        -- Wyciągnięcie ID produktu
         select @ProductID = ProductID from inserted;
 
         -- Znalezienie nazwy kategorii kupionego produktu
@@ -18,7 +18,7 @@ as begin
         -- Produkt -> webinar
         if @CategoryName = 'Webinar'
         begin
-            -- Sprawdzenie czy już jest zapisany na dany webinar
+            -- Sprawdzenie, czy już jest zapisany na dany webinar
             if exists(select UserID from inserted inner join Orders_Details on inserted.SubOrderID = Orders_Details.SubOrderID
                                     inner join Orders on Orders_Details.OrderID = Orders.OrderID
                                     where UserID in (select distinct UserID from Users_Webinars inner join inserted on inserted.ProductID = Users_Webinars.WebinarID))
@@ -36,7 +36,7 @@ as begin
         -- Produkt -> kurs
         if @CategoryName = 'Course'
         begin
-            -- Sprawdzenie czy już jest zapisany na dany kurs
+            -- Sprawdzenie, czy już jest zapisany na dany kurs
             if exists(select UserID from inserted inner join Orders_Details on inserted.SubOrderID = Orders_Details.SubOrderID
                                     inner join Orders on Orders_Details.OrderID = Orders.OrderID
                                     where UserID in (select distinct UserID from Users_Courses inner join inserted on inserted.ProductID = Users_Courses.CourseID))
@@ -54,7 +54,7 @@ as begin
         -- Produkt -> studia
         if @CategoryName = 'Studies'
         begin
-            -- Sprawdzenie czy już jest zapisany na dane studia
+            -- Sprawdzenie, czy już jest zapisany na dane studia
             if exists(select UserID from inserted inner join Orders_Details on inserted.SubOrderID = Orders_Details.SubOrderID
                                     inner join Orders on Orders_Details.OrderID = Orders.OrderID
                                     where UserID in (select distinct UserID from Users_Studies inner join inserted on inserted.ProductID = Users_Studies.StudiesID))
@@ -72,7 +72,7 @@ as begin
         -- Produkt -> spotkanie studyjne
         if @CategoryName = 'Meeting'
         begin
-            -- Sprawdzenie czy już jest zapisany na dane spotkanie studyjne
+            -- Sprawdzenie, czy już jest zapisany na dane spotkanie studyjne
             if exists(select UserID from inserted inner join Orders_Details on inserted.SubOrderID = Orders_Details.SubOrderID
                                     inner join Orders on Orders_Details.OrderID = Orders.OrderID
                                     where UserID in (select distinct UserID from Users_Meetings_Attendance inner join inserted on inserted.ProductID = Users_Meetings_Attendance.MeetingID))
@@ -88,7 +88,7 @@ as begin
         end
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;

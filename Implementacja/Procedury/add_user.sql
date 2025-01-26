@@ -15,7 +15,7 @@ begin
                 @City, @PostalCode);
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;

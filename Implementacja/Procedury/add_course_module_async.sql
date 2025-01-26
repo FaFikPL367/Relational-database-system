@@ -3,7 +3,7 @@ CREATE procedure add_course_module_async
     @RecordingLink nvarchar(100)
 as begin
     begin try
-        -- Sprawdzenie czy dany moduł istnieje
+        -- Sprawdzenie, czy dany moduł istnieje
         if not exists(select 1 from Modules where ModuleID = @ModuleID)
         begin
             throw 50000, 'Moduł o podanym ID nie istnieje', 1;
@@ -21,7 +21,7 @@ as begin
         values (@ModuleID, @RecordingLink)
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;

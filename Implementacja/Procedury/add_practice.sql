@@ -8,7 +8,7 @@ create procedure add_practice
     @Email nvarchar(50)
 as begin
     begin try
-        -- Dodaawanie danych
+        -- Dodawanie danych
         insert Practices (Description, CompanyName, Country, City, Address, Phone, Email)
         values (@Description, @CompanyName, @Country, @City, @Address, @Phone, @Email)
     end try

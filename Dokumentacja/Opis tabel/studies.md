@@ -1,14 +1,14 @@
 # Kategoria Studies
 
 ## Tabela **Studies**
-Zawiera informajce o dostępnych studiach:
- * **StudiesID** [int] - klucz główny, identyfikator studiów
- * **CoordinatorID** [int] - identyfikator kordynatora studiów
+Zawiera informacje o dostępnych studiach:
+ * **StudiesID** [int] — klucz główny, identyfikator studiów
+ * **CoordinatorID** [int] - identyfikator koordynatora studiów
  * **Name** [nvarchar(30)] - nazwa studiów
  * **Description** [nvarchar(max)] - opis studiów
  * **StartDate** [date] - data rozpoczęcia studiów
- * **EndDate** [date] - data zakończenia studiów
- * **Price** [money] - cena wpisowego na studiach
+ * **EndDate** [date] — data zakończenia studiów
+ * **Price** [money] — cena wpisowego na studiach
    * warunki: Price > 0
    * wartość domyślna: 1200
 ```SQL
@@ -26,9 +26,9 @@ CREATE TABLE Studies (
 
 ## <hr>
 ## Tabela **Subjects**
-Zawiera informajce o przedmiotach:
- * **SubjectID** [int] - klucz główny, identyfikator przedmiotu
- * **StudiesID** [int] - klucz obcy, identyfikator studiów
+Zawiera informacje o przedmiotach:
+ * **SubjectID** [int] — klucz główny, identyfikator przedmiotu
+ * **StudiesID** [int] — klucz obcy, identyfikator studiów
  * **Name** [nvarchar(50)] - nazwa przedmiotu
  * **Description** [ntext] - opis przedmiotu
 ```SQL
@@ -44,19 +44,19 @@ CREATE TABLE Subjects (
 ## <hr>
 ## Tabela **Meetings**
 Zawiera informacje o pojedynczym spotkaniu na studiach z danego przedmiotu:
- * **MeetingID** [int] - klucz główny, identyfikator spotkania
- * **TeacheID** [int] - klucz obcy, identyfikator nauczyciela
- * **SubjectID** [int] - klucz obcy, identyfikator przedmiotu, z którego jest dane spotkanie
- * **ReunionID** [int] - klucz obcy, identyfikator zjazdu
+ * **MeetingID** [int] — klucz główny, identyfikator spotkania
+ * **TeacherID** [int] — klucz obcy, identyfikator nauczyciela
+ * **SubjectID** [int] — klucz obcy, identyfikator przedmiotu, z którego jest dane spotkanie
+ * **ReunionID** [int] — klucz obcy, identyfikator zjazdu
  * **Date** [date] - data spotkania
  * **BeginningTime** [time(0)] - godzina rozpoczęcia spotkania
  * **Duration** [time(0)] - czas trwania spotkania
    * warunki: Duration > '00:00:00'
    * wartość domyślna: '01:30:00'
- * **Price** [money] - cena pojedynczego spotkania
+ * **Price** [money] — cena pojedynczego spotkania
    * warunki: Price > 0
    * wartość domyślna: 120
- * **TypeID** [int] - klucz obcy, identyfikator typu spotkania np. stacjonarne itd.
+ * **TypeID** [int] — klucz obcy, identyfikator typu spotkania np. stacjonarne itd.
 ```SQL
 CREATE TABLE Meetings (
    MeetingID int  NOT NULL,
@@ -73,12 +73,12 @@ CREATE TABLE Meetings (
 
 ## <hr>
 ## Tabela **In-person_Meetings**
-Zawiera dodatkowe informacje dla spotkach stacjonarnych:
- * **MeetingID** [int] - klucz główny, identyfikator spotkania
- * **Classroom** [int] - numer sali spotkania
+Zawiera dodatkowe informacje o spotkaniach stacjonarnych:
+ * **MeetingID** [int] — klucz główny, identyfikator spotkania
+ * **Classroom** [int] — numer sali spotkania
  * **TranslatorID** [int, nullable] - identyfikator tłumacza
- * **LanguageID** [int] - klucz obcy, identyfikator języka w jakim odbywa się spotkanie
- * **Limit** [int] - limit miejsc na spotkaniu
+ * **LanguageID** [int] — klucz obcy, identyfikator języka, w jakim odbywa się spotkanie
+ * **Limit** [int] — limit miejsc na spotkaniu
    * warunki: Limit > 0
    * wartość domyślna: 25
 ```SQL
@@ -94,12 +94,12 @@ CREATE TABLE In_person_Meetings (
 
 ## <hr>
 ## Tabela **Online_Sync_Meetings**
-Zaweira dodatkowe informacje dla spotkań online synchronicznie:
- * **MeetingID** [int] - klucz główny, identyfikator spotkania
+Zawiera dodatkowe informacje dla spotkań online synchronicznie:
+ * **MeetingID** [int] — klucz główny, identyfikator spotkania
  * **MeetingLink** [nvarchar(100), unique] - link do spotkania
  * **RecordingLink** [nvarchar(100)] - link do nagrania spotkania
  * **TranslatorID** [int, nullable] - identyfikator tłumacza
- * **LanguageID** [int] - identyfiaktor języka w jakim odbywa się spotkanie
+ * **LanguageID** [int] — identyfikator języka, w jakim odbywa się spotkanie
 ```SQL
 CREATE TABLE Online_Sync_Meetings (
    MeetingID int  NOT NULL,
@@ -115,7 +115,7 @@ CREATE TABLE Online_Sync_Meetings (
 ## <hr>
 ## Tabela **Online_Async_Meetings**
 Zawiera dodatkowe informacje dla spotkań online asynchronicznie:
- * **MeetingID** [int] - klucz główny, identyfikator spotkania
+ * **MeetingID** [int] — klucz główny, identyfikator spotkania
  * **RecordingLink** [nvarchar(100)] - link do nagrania
 ```SQL
 CREATE TABLE Online_Async_Meetings (
@@ -128,9 +128,9 @@ CREATE TABLE Online_Async_Meetings (
 ## <hr>
 ## Tabela **User_Meetings_Attendance**
 Zawiera informacje o obecności studenta na spotkaniu:
- * **UserID** [int] - część klucz głównego, identyfikator studenta
- * **MeetingID** [int] - część klucza głównego, identyfikator spotkania
- * **Present** [bit] - informacja o obecności studenta na spotkaniu
+ * **UserID** [int] — część klucz główny, identyfikator studenta
+ * **MeetingID** [int] — część klucza głównego, identyfikator spotkania
+ * **Present** [bit] — informacja o obecności studenta na spotkaniu
 ``` SQL
 CREATE TABLE Users_Meetings_Attendance (
    UserID int  NOT NULL,
@@ -142,9 +142,9 @@ CREATE TABLE Users_Meetings_Attendance (
 
 ## <hr>
 ## Tabela **Practices**
-Zawiera informacje o firmach gdzie mogą być odbywane praktyki:
- * **PracticeID** [int] - klucz główny, identyfikator praktyki
- * **Description** [ntext] - opis firmy gdzie odbywają się praktyki
+Zawiera informacje o firmach, gdzie mogą być odbywane praktyki:
+ * **PracticeID** [int] — klucz główny, identyfikator praktyki
+ * **Description** [ntext] — opis firmy gdzie odbywają się praktyki
  * **CompanyName** [nvarchar(30)] - nazwa firmy
  * **Country** [nvarchar(30)] - kraj gdzie jest zarejestrowana firma
  * **City** [nvarchar(30)] - miasto siedziby firmy
@@ -172,10 +172,10 @@ CREATE TABLE Practices (
 ## <hr>
 ## Tabela **Users_Practices_Attendance**
 Zawiera informacje o zdaniu praktyk przez danego studenta:
- * **UserID** [int] - część klucz głównego, identyfikator studenta
- * **StudiesID** [int] - część klucza głównego, identyfikator studiów
- * **PracticeID** [int] - część klucza głównego, identyfikator praktyk
- * **Present** [bit] - informacja o zdaniu praktyk
+ * **UserID** [int] — część klucz główny, identyfikator studenta
+ * **StudiesID** [int] — część klucza głównego, identyfikator studiów
+ * **PracticeID** [int] — część klucza głównego, identyfikator praktyk
+ * **Present** [bit] — informacja o zdaniu praktyk
 ```SQL
 CREATE TABLE Users_Practices_Attendance (
    UserID int  NOT NULL,
@@ -189,9 +189,9 @@ CREATE TABLE Users_Practices_Attendance (
 ## <hr>
 ## Tabela **Users_Studies**
 Zawiera informacje studentach przypisanych do danych studiów:
- * **UserID** [int] - część klucza głównego, identyfikator studenta
- * **StudiesID** [int] - część klucza głównego, identyfikator studiów
- * **Grade** [int] - wartość oceny studenta na koniec studiów
+ * **UserID** [int] — część klucza głównego, identyfikator studenta
+ * **StudiesID** [int] — część klucza głównego, identyfikator studiów
+ * **Grade** [int] — wartość oceny studenta na koniec studiów
    * warunki: Grade >= 2 AND Grade <= 5
 ```SQL
 CREATE TABLE Users_Studies (
@@ -205,11 +205,11 @@ CREATE TABLE Users_Studies (
 ## <hr>
 ## Tabela **Studies_Reunion**
 Zawiera ona informacje o zjazdach występujących na danych studiach:
- * **ReunionID** [int] - klucz główny, identyfikator zjazdu
- * **StudiesID** [int] - klucz poboczny, identyfikator studiów
+ * **ReunionID** [int] — klucz główny, identyfikator zjazdu
+ * **StudiesID** [int] — klucz poboczny, identyfikator studiów
  * **StartDate** [date] - data startu danego zjazdu
- * **EndDate** [date] - data końca danego zjadu
- * **Price** [money] - cena za pojedynczy zjazd
+ * **EndDate** [date] - data końca danego zjazdu
+ * **Price** [money] — cena za pojedynczy zjazd
    * warunki: Price >= 0
 ```SQL
 CREATE TABLE Studies_Reunion (

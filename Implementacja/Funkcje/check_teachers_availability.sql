@@ -21,7 +21,7 @@ as begin
     select DateAndBeginningTime, Duration
     from Modules where TeacherID = @TeacherID
 
-    -- Spotkania studujne
+    -- Spotkania studyjne
     insert @TeacherActivities
     select DateAndBeginningTime, Duration
     from Meetings where TeacherID = @TeacherID
@@ -31,7 +31,7 @@ as begin
     select DateAndBeginningTime, Duration
     from Webinars where TeacherID = @TeacherID
 
-    -- Sprawdzenie czy date się nie nakładają
+    -- Sprawdzenie, czy daty się nie nakładają
     if exists(select 1 from @TeacherActivities where (
         @StartDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or
         @EndDate between DateAndBeginningTime and dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) or

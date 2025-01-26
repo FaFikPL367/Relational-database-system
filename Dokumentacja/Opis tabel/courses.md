@@ -2,12 +2,12 @@
 
 ## Tabela **Courses**
 Zawiera informacje dotyczące kursów:
-- **CourseID** [int] - klucz główny, identyfikator kursu
+- **CourseID** [int] — klucz główny, identyfikator kursu
 - **CoordinatorID** [int] - identyfikator koordynatora kursu
 - **Name** [nvarchar(30)] - nazwa kursu
 - **Description** [nvarchar(max)] - opis kursu
-- **StartDate** [date] - data rozpoczęcia kursu w formacie 'rok-miesiąc-dzień'
-- **EndDate** [date] - data zakończenia kursu w formacie 'rok-miesiąc-dzień'
+- **StartDate** [date] — data rozpoczęcia kursu w formacie 'rok-miesiąc-dzień'
+- **EndDate** [date] — data zakończenia kursu w formacie 'rok-miesiąc-dzień'
 - **Price** [money] - cena kursu
   - warunki: Price > 0
   - domyślna wartość: 100
@@ -28,11 +28,11 @@ CREATE TABLE Courses (
 ## <hr>
 ## Tabela In-**person_Modules**
 Zawiera informacje o modułach odbywających się stacjonarnie:
-- **ModuleID** [int] - klucz główny, identyfikator modułu
-- **Classroom** [int] - numer sali, w której odbywają się zajęcia
-- **TransalatorID** [int] - identyfikator tłumacza
-- **Limit** [int] - limit osób mogących uczestniczyć w danych zajęciach
-  - waurnki: Limit > 0
+- **ModuleID** [int] — klucz główny, identyfikator modułu
+- **Classroom** [int] — numer sali, w której odbywają się zajęcia
+- **TranslatorID** [int] - identyfikator tłumacza
+- **Limit** [int] — limit osób mogących uczestniczyć w danych zajęciach
+  - warunki: Limit > 0
   - domyślna wartość: 25
 
 ```SQL
@@ -49,12 +49,12 @@ CREATE TABLE In_person_Modules (
 ## <hr>
 ## Tabela **Modules**
 Zawiera informacje dotyczące modułów:
-- **ModuleID** [int] - klucz główny, identyfikator modułu
-- **CourseID** [int] - identyfikator kursu, do którego należy dany moduł
+- **ModuleID** [int] — klucz główny, identyfikator modułu
+- **CourseID** [int] — identyfikator kursu, do którego należy dany moduł
 - **Name** [nvarchar(50)] - nazwa modułu
 - **Description** [nvarchar(max)] - opis modułu
-- **TeacherID** [int] - identyfikator prowadzącego dany moduł
-- **DateAndBeginningTime** [datetime] - data i czas rozpoczęcia modułu w formacie "rok:miesiąc:dzień godziny:minuty:sekundy"
+- **TeacherID** [int] — identyfikator prowadzącego dany moduł
+- **DateAndBeginningTime** [datetime] — data i czas rozpoczęcia modułu w formacie "rok:miesiąc:dzień godziny:minuty:sekundy"
 - **Duration** [time(8)] - czas trwania modułu w formacie 'godziny:minuty:sekundy'
   - warunki: Duration > 0
   - domyślna wartość: '01:30:00'
@@ -101,7 +101,7 @@ Zawiera informacje o modułach odbywających się online asynchronicznie:
 CREATE TABLE Online_Async_Modules (
    ModuleID int  NOT NULL,
    RecordingLink nvarchar(100)  NOT NULL,
-   CONSTRAINT OnliceAsyncModulesRecordingLInk UNIQUE (RecordingLink),
+   CONSTRAINT OnlineAsyncModulesRecordingLInk UNIQUE (RecordingLink),
    CONSTRAINT Online_Async_Modules_pk PRIMARY KEY  (ModuleID)
 );
 ```
@@ -147,7 +147,7 @@ Zawiera informację o zaliczeniu poszczególnych modułów
 przez danego użytkownika:
 - **UserID** [int] - identyfikator użytkownika
 - **ModuleID** [int] - identyfikator modułu
-- **Passed** [bit] - informacja, czy moduł został zaliczony przez danego użytkownika (1 - zaliczony, 0 - niezaliczony)
+- **Passed** [bit] — informacja, czy moduł został zaliczony przez danego użytkownika (1 - zaliczony, 0 - niezaliczony)
 - 
 ```SQL
 CREATE TABLE Users_Modules_Passes (

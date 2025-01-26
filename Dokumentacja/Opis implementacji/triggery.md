@@ -1,7 +1,7 @@
 ## Triggery
 
 ### Add_student_to_modules_trigger - PS
-Trigger ten odpowiada za przypisanie użytkownika do modułów danego kursu, którego zakupił. Wartości te są wpisywane do tablicy "Users_Modules_Passes" z domyślną wartością "null". Trigger reaguje w sytuacji gdy przypiszemy użytkownika do kursu, czyli pojawienie się wpisu
+Trigger ten odpowiada za przypisanie użytkownika do modułów danego kursu, którego zakupił. Wartości te są wpisywane do tablicy "Users_Modules_Passes" z domyślną wartością "null". Trigger reaguje w sytuacji, gdy przypiszemy użytkownika do kursu, czyli pojawienie się wpisu
 w "Users_Courses".
 ```SQL
 create trigger add_student_to_modules_trigger
@@ -30,7 +30,7 @@ as begin
         from @CourseModuleID;
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end
@@ -38,7 +38,7 @@ end
 ---
 
 ### Add_student_to_product_trigger - PS
-Trigger ten odpowiada za dodanie użytkownika do odpowiedniego produktu w zależności co użytkownik zakupił. Po pojawieniu się zamówienia w "Orders_Details" mamy informacje o użytkwniku i co on zakupił. Następnie w zależności co kupił wpisywany jest do tabeli z odpowiednią kategorią produktu.
+Trigger ten odpowiada za dodanie użytkownika do odpowiedniego produktu w zależności od tego, co użytkownik zakupił. Po pojawieniu się zamówienia w "Orders_Details" mamy informacje o użytkowniku i co on zakupił. Następnie w zależności od tego, co kupił, wpisywany jest do tabeli z odpowiednią kategorią produktu.
 ```SQL
 create trigger add_student_to_product_trigger
     on Orders_Details
@@ -50,7 +50,7 @@ as begin
         declare @CategoryName nvarchar(15);
         declare @ProductID int;
 
-        -- Wyciągnieci ID produktu
+        -- Wyciągnięci ID produktu
         select @ProductID = ProductID from inserted;
 
         -- Znalezienie nazwy kategorii kupionego produktu
@@ -60,7 +60,7 @@ as begin
         -- Produkt -> webinar
         if @CategoryName = 'Webinar'
         begin
-            -- Sprawdzenie czy już jest zapisany na dany webinar
+            -- Sprawdzenie, czy już jest zapisany na dany webinar
             if exists(select UserID from inserted inner join Orders_Details on inserted.SubOrderID = Orders_Details.SubOrderID
                                     inner join Orders on Orders_Details.OrderID = Orders.OrderID
                                     where UserID in (select distinct UserID from Users_Webinars inner join inserted on inserted.ProductID = Users_Webinars.WebinarID))
@@ -78,7 +78,7 @@ as begin
         -- Produkt -> kurs
         if @CategoryName = 'Course'
         begin
-            -- Sprawdzenie czy już jest zapisany na dany kurs
+            -- Sprawdzenie, czy już jest zapisany na dany kurs
             if exists(select UserID from inserted inner join Orders_Details on inserted.SubOrderID = Orders_Details.SubOrderID
                                     inner join Orders on Orders_Details.OrderID = Orders.OrderID
                                     where UserID in (select distinct UserID from Users_Courses inner join inserted on inserted.ProductID = Users_Courses.CourseID))
@@ -96,7 +96,7 @@ as begin
         -- Produkt -> studia
         if @CategoryName = 'Studies'
         begin
-            -- Sprawdzenie czy już jest zapisany na dane studia
+            -- Sprawdzenie, czy już jest zapisany na dane studia
             if exists(select UserID from inserted inner join Orders_Details on inserted.SubOrderID = Orders_Details.SubOrderID
                                     inner join Orders on Orders_Details.OrderID = Orders.OrderID
                                     where UserID in (select distinct UserID from Users_Studies inner join inserted on inserted.ProductID = Users_Studies.StudiesID))
@@ -114,7 +114,7 @@ as begin
         -- Produkt -> spotkanie studyjne
         if @CategoryName = 'Meeting'
         begin
-            -- Sprawdzenie czy już jest zapisany na dane spotkanie studyjne
+            -- Sprawdzenie, czy już jest zapisany na dane spotkanie studyjne
             if exists(select UserID from inserted inner join Orders_Details on inserted.SubOrderID = Orders_Details.SubOrderID
                                     inner join Orders on Orders_Details.OrderID = Orders.OrderID
                                     where UserID in (select distinct UserID from Users_Meetings_Attendance inner join inserted on inserted.ProductID = Users_Meetings_Attendance.MeetingID))
@@ -130,7 +130,7 @@ as begin
         end
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;
@@ -139,8 +139,8 @@ end;
 ---
 
 ### Add_meetings_to_attendance_trigger - MS
-Trigger ten dodaje użytkowników, którzy zakupili studia do spotkań studyjnych bez wpsianej narazie obecności. Po pojawieniu się wpisu w 
-"Users_Studies" trigger pobiera wszystkie spotkania studyjne danych studiów i przypisuje użytkownika do każdego spotkania dodając go do
+Trigger ten dodaje użytkowników, którzy zakupili studia do spotkań studyjnych bez wpisanej na razie obecności. Po pojawieniu się wpisu w 
+"Users_Studies" trigger pobiera wszystkie spotkania studyjne danych studiów i przypisuje użytkownika do każdego spotkania, dodając go do
 "Users_Meetings_Attendance".
 ```SQL
 create trigger add_meetings_to_attendance_trigger
@@ -172,7 +172,7 @@ as begin
         from @StudiesReunionsMeetingsIDs;
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end
@@ -182,7 +182,7 @@ end
 
 ### Add_reunions_to_suborders_trigger - MS
 Celem triggera jest przypisanie użytkownika do zjazdów studyjnych studiów, które zakupił. Zostaje on dopisany do tablicy "Payment_for_reunions"
-ze wszystkimi zjazdami z danych studiów. Tablica ta sama będzie przechowywała informacje o tym czy użytkownik zapłacił za dany zjazd.
+ze wszystkimi zjazdami z danych studiów. Tablica ta sama będzie przechowywała informacje o tym, czy użytkownik zapłacił za dany zjazd.
 ```SQL
 create trigger add_reunions_to_suborders_trigger
     on Orders_Details
@@ -230,7 +230,7 @@ as begin
         end
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;

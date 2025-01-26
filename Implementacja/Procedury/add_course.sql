@@ -14,7 +14,7 @@ as begin
         if not exists(select 1 from Employees where EmployeeID = @CoordinatorID and
                                                     PositionID = 4)
         begin
-            throw 50001, 'Koordynator o danym ID nie istnieje lub nie jest kordynatorem kursów', 1;
+            throw 50001, 'Koordynator o danym ID nie istnieje lub nie jest koordynatorem kursów', 1;
         end
 
         if @Price < 0
@@ -38,7 +38,7 @@ as begin
         -- Pobranie ID po dodaniu do produktów
         set @NewProductID = SCOPE_IDENTITY();
 
-        -- Dodanie do tabeli ze Wbinarami
+        -- Dodanie do tabeli ze Webinarami
         insert Courses (CourseID, CoordinatorID, Name, Description, StartDate, EndDate, Price)
         values (@NewProductID, @CoordinatorID, @Name, @Description, @StartDate, @EndDate, @Price)
 
@@ -51,7 +51,7 @@ as begin
             rollback transaction;
         end;
 
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;

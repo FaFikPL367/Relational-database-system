@@ -3,7 +3,7 @@
 ## Tabela **Categories**
 Zawiera informacje dotyczące kategorii
 możliwych do zamówienia usług (produktów):
-- **CategoryID** [int] - klucz główny, identyfikator kategorii
+- **CategoryID** [int] — klucz główny, identyfikator kategorii
 - **Name** [nvarchar(15)] - nazwa kategorii:
 	- 'Course' - kurs
 	- 'Meeting' - pojedyncze spotkanie studyjne z przedmiotu
@@ -21,9 +21,9 @@ CREATE TABLE Categories (
 ## <hr>
 ## Tabela **Orders**
 Zawiera informacje dotyczące zamówień złożonych przez użytkowników:
-- **OrderID** [int] - klucz główny, identyfikator zamówienia
-- **UserID** [int] - identyfikator użytkownika składającego zamówienie
-- **OrderDate** [date] - data złożenia zamówienia w formacie 'rok-miesiąc-dzień'
+- **OrderID** [int] — klucz główny, identyfikator zamówienia
+- **UserID** [int] — identyfikator użytkownika składającego zamówienie
+- **OrderDate** [date] — data złożenia zamówienia w formacie 'rok-miesiąc-dzień'
 - **PaymentLink** [nvarchar(100)] - link do płatności
 ```SQL
 CREATE TABLE Orders (
@@ -39,15 +39,15 @@ CREATE TABLE Orders (
 ## Tabela **Orders_Details**
 Zawiera informacje szczegółowe dotyczące danego zamówienia
 oraz jego zamówień składowych:
-- **SubOrderID** [int] - klucz główny, identyfikator zamówienia składowego
+- **SubOrderID** [int] — klucz główny, identyfikator zamówienia składowego
 - **OrderID** [int] - identyfikator zamówienia
-- **PaymentDeadline** [date] - termin, do którego trzeba dokonać płatności w formacie 'rok-miesiąc-dzień'
-- **ExtendedPaymentDeadline** [date] - odroczony termin, do którego trzeba dokonać płatności w formacie 'rok-miesiąc-dzień' (jeśli jest podany,
+- **PaymentDeadline** [date] — termin, do którego trzeba dokonać płatności w formacie 'rok-miesiąc-dzień'
+- **ExtendedPaymentDeadline** [date] — odroczony termin, do którego trzeba dokonać płatności w formacie 'rok-miesiąc-dzień' (jeśli jest podany,
 to musi być późniejszy od poprzedniego terminu płatności)
-- **PaymentDate** [date] - data dokonania płatności za dane zamówienie składowe w formacie 'rok-miesiąc-dzień'
+- **PaymentDate** [date] — data dokonania płatności za dane zamówienie składowe w formacie 'rok-miesiąc-dzień'
 - **FullPrice** [money] - pełna cena za dany produkt
-- **ProductID** [int] - identyfikator zamawianego produktu
-- **Payment** [money] - wartość jaka została zapłacona za dany produkt np. za wpisowa na kurs czy studia
+- **ProductID** [int] — identyfikator zamawianego produktu
+- **Payment** [money] — wartość, jaka została zapłacona za dany produkt np. za wpisowa na kurs czy studia
 ```SQL
 CREATE TABLE Orders_Details (
    SubOrderID int  NOT NULL IDENTITY(1, 1),
@@ -65,9 +65,9 @@ CREATE TABLE Orders_Details (
 ## <hr>
 ## Tabela **Products**
 Zawiera informacje o dostępnych produktach (usługach):
-- **ProductID** [int] - klucz główny, identyfikator produktu
+- **ProductID** [int] — klucz główny, identyfikator produktu
 - **CategoryID** [int] - identyfikator kategorii produktu
-- **Status** [bit] - informacje czy dany produkt jest dostępny dla użytkowników
+- **Status** [bit] — informacje czy dany produkt jest dostępny dla użytkowników
 ```SQL
 CREATE TABLE Products (
    ProductID int  NOT NULL IDENTITY(1, 1),
@@ -79,12 +79,12 @@ CREATE TABLE Products (
 
 ## <hr>
 ## Tabela **Payment_for_reunions**
-Zawiera ona informacje o płatnościach użytkowników za zjazdy jeżeli zapisali się na jakieś studia:
-- **SubOrderID** [int] - identyfikator podzamówienia
-- **ReunionID** [int] - identyfikator zjazdu, za który jest wnoszona płatność
+Zawiera ona informacje o płatnościach użytkowników za zjazdy, jeżeli zapisali się na jakieś studia:
+- **SubOrderID** [int] — identyfikator podzamówienia
+- **ReunionID** [int] — identyfikator zjazdu, za który jest wnoszona płatność
 - **PaymentDeadline** [date] - ostateczna data zapłaty za zjazd
-- **PaymentDate** [date] - faktyczna data zapłaty za zjazd
-- **IsPaid** [bit] - wartość oznaczająca czy dany użytkownik zapłacił za dany zjazd
+- **PaymentDate** [date] — faktyczna data zapłaty za zjazd
+- **IsPaid** [bit] — wartość oznaczająca czy dany użytkownik zapłacił za dany zjazd
 
 ```SQL
 CREATE TABLE Payment_for_reunions (

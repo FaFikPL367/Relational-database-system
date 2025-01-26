@@ -14,7 +14,7 @@ as begin
         if not exists(select 1 from Employees where EmployeeID = @CoordinatorID and
                                                     PositionID = 3)
         begin
-            throw 50001, 'Koordynator o danym ID nie istnieje lub nie jest kordynatorem studiów', 1;
+            throw 50001, 'Koordynator o danym ID nie istnieje lub nie jest koordynatorem studiów', 1;
         end
 
         if @Price < 0
@@ -50,7 +50,7 @@ as begin
             rollback transaction;
         end;
 
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end

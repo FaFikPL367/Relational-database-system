@@ -1,7 +1,7 @@
 # Widoki
 
 ### Course_information - PS
-Widok przedstawia informacje o stworzonych kursach dostępnych i nie dostępnych. Przedstawia również informacje o ilości modułów i maksymalnej ilości miejsc na kursie (wyznaczana na podstawie limitu w modułach stacjonarnych).
+Widok przedstawia informacje o stworzonych kursach dostępnych i niedostępnych. Przedstawia również informacje o ilości modułów i maksymalnej ilości miejsc na kursie (wyznaczana na podstawie limitu w modułach stacjonarnych).
 ```SQL
 create view course_information as
     with count_modules as (select CourseID, count(ModuleID) as count_module
@@ -26,7 +26,7 @@ create view course_information as
 ```
 ---
 ### Course_module_types - PS
-Widok ten pokazuje ile jest modułów każdego typu w każdym kursie.
+Widok ten pokazuje, ile jest modułów każdego typu w każdym kursie.
 ```SQL
 create view course_module_types as
     with in_person_count as (
@@ -68,7 +68,7 @@ create view course_passes as
 ---
 
 ### Products_orders - PS
-Widok wyświetla informacje o tym ile razy dany produkt został sprzedany.
+Widok wyświetla informacje o tym, ile razy dany produkt został sprzedany.
 ```SQL
 create view products_orders as
     select ProductID, count(SubOrderID) as total_product_orders
@@ -79,7 +79,7 @@ create view products_orders as
 ---
 
 ### Course_sign_limit - PS
-Widok wyświetla dla każdego kursu ile osób się na niego zapisało i jaki jest limit.
+Widok wyświetla dla każdego kursu, ile osób się na niego zapisało i jaki jest limit.
 ```SQL
 create view course_sign_limit as
     with course_limits as (
@@ -150,7 +150,7 @@ CREATE view employees_information as
 ---
 
 ### Financial_report - PS
-Widok przedstawia raport finansoowy, czyli jaki jest dochód ze sprzedarzy każdego produktu i ile razy został sprzedany.
+Widok przedstawia raport finansowy, czyli jaki jest dochód ze sprzedaży każdego produktu i ile razy został sprzedany.
 ```SQL
 create view financial_report as
     with count_products_sales as (
@@ -194,7 +194,7 @@ create view future_courses as
 ---
 
 ### Meetings_information - PS
-Widok przedstawiający wszystkie onformacje na temat sszystkich spotkań.
+Widok przedstawiający wszystkie informacje na temat wszystkich spotkań.
 ```SQL
 create view meetings_information as
     select MeetingID,
@@ -293,7 +293,7 @@ create view future_webinars as
 ---
 
 ### In_person_meeting_information - PS
-Widok przedstawia informacje o spotkaniach studyjnych - stacjonarnych.
+Widok przedstawia informacje o spotkaniach studyjnych — stacjonarnych.
 ```SQL
 create view in_person_meeting_information as
     select MeetingID,
@@ -323,7 +323,7 @@ create view in_person_module_information as
 ---
 
 ### Languages_count_translators - PS
-Widok przedstawia ilu tłumaczy mówi w danych językach.
+Widok przedstawia, ilu tłumaczy mówi w danych językach.
 ```SQL
 create view languages_count_translators as
     select LanguageName,
@@ -386,7 +386,7 @@ create view online_sync_module_information as
 ---
 
 ### Online_async_module_information - PS
-Widok przedstawia informacje o modułach online-asynchronicznyhc w kursach.
+Widok przedstawia informacje o modułach online-asynchronicznych w kursach.
 ```SQl
 create view online_async_module_information as
     select ModuleID,
@@ -654,7 +654,7 @@ create view extended_payments as
 ---
 
 ### Reunion_information - PS
-Widok przedstawia podstawowe informacje o zjazdzie i podaje ilość spotkań w tym zjezdzie.
+Widok przedstawia podstawowe informacje o zjeździe i podaje ilość spotkań w tym zjeździe.
 ```SQl
 create view reunion_information as
     with count_meetings_in_reunion as (
@@ -685,7 +685,7 @@ create view studies_practice_attendances as
 ---
 
 ### Users_orders_count - PS
-Widok przedstawia informacje o tym ile dany użytkownik podał produktów każdej kategorii (webinary, kursy, studia i spotkania).
+Widok przedstawia informacje o tym, ile dany użytkownik podał produktów każdej kategorii (webinary, kursy, studia i spotkania).
 ```SQl
 with webinars_count as (
         select UserID, count(Products.ProductID) as Total_webinars
@@ -725,4 +725,194 @@ with webinars_count as (
     left join webinars_count on Users.UserID = webinars_count.UserID
     left join studies_count on Users.UserID = studies_count.UserID
     left join meetings_count on Users.UserID = meetings_count.UserID
+```
+
+---
+
+### Teachers_and_translators_schedule - MS
+Widok przedstawia harmonogram przyszłych zajęć dla nauczycieli i tłumaczy.
+```SQl
+create view teachers_and_translators_schedule as
+    select
+        e1.EmployeeID,
+        e1.FirstName,
+        e1.LastName,
+        'Teacher' as EmployeeType,
+        case
+            when meet1.MeetingID in (select MeetingID from In_person_Meetings) then 'InPersonMeeting'
+            when meet1.MeetingID in (select MeetingID from Online_Sync_Meetings) then 'OnlineSyncMeeting'
+            else 'OnlineAsyncMeeting'
+        end as TypeOfActivity,
+        meet1.DateAndBeginningTime,
+        dateadd(minute, datediff(minute, 0, meet1.Duration), meet1.DateAndBeginningTime) as DateAndEndingTime
+    from Employees e1
+    join Meetings meet1 on e1.EmployeeID = meet1.TeacherID
+    where meet1.DateAndBeginningTime > getdate()
+
+    union all
+
+    select
+        e2.EmployeeID,
+        e2.FirstName,
+        e2.LastName,
+        'Teacher' as EmployeeType,
+        'Webinar' as TypeOfActivity,
+        w1.DateAndBeginningTime,
+        dateadd(minute, datediff(minute, 0, w1.Duration), w1.DateAndBeginningTime) as DateAndEndingTime
+    from Employees e2
+    join Webinars w1 on e2.EmployeeID = w1.TeacherID
+    where w1.DateAndBeginningTime > getdate()
+
+    union all
+
+    select
+        e3.EmployeeID,
+        e3.FirstName,
+        e3.LastName,
+        'Teacher' as EmployeeType,
+        case
+            when mod1.ModuleID in (select ModuleID from In_person_Modules) then 'InPersonModule'
+            when mod1.ModuleID in (select ModuleID from Online_Sync_Modules) then 'OnlineSyncModule'
+            else 'OnlineAsyncModule'
+        end as TypeOfActivity,
+        mod1.DateAndBeginningTime,
+        dateadd(minute, datediff(minute, 0, mod1.Duration), mod1.DateAndBeginningTime) as DateAndEndingTime
+    from Employees e3
+    join Modules mod1 on e3.EmployeeID = mod1.TeacherID
+    where mod1.DateAndBeginningTime > getdate()
+
+    union all
+
+    select
+        t1.TranslatorID,
+        t1.FirstName,
+        t1.LastName,
+        'Translator' as EmployeeType,
+        'InPersonMeeting' as TypeOfActivity,
+        im1.DateAndBeginningTime,
+        dateadd(minute, datediff(minute, 0, im1.Duration), im1.DateAndBeginningTime) as DateAndEndingTime
+    from Translators t1
+    join In_person_Meetings im1 on t1.TranslatorID = im1.TranslatorID
+    join Meetings meet2 on im1.MeetingID = meet2.MeetingID
+    where meet2.DateAndBeginningTime > getdate()
+
+    union all
+
+    select
+        t2.TranslatorID,
+        t2.FirstName,
+        t2.LastName,
+        'Translator' as EmployeeType,
+        'OnlineSyncMeeting' as TypeOfActivity,
+        om_meeting.DateAndBeginningTime,
+        dateadd(minute, datediff(minute, 0, om_meeting.Duration), om_meeting.DateAndBeginningTime) as DateAndEndingTime
+    from Translators t2
+    join Online_Sync_Meetings om_meeting on t2.TranslatorID = om_meeting.TranslatorID
+    join Meetings meet3 on om_meeting.MeetingID = meet3.MeetingID
+    where meet3.DateAndBeginningTime > getdate()
+
+    union all
+
+    select
+        t3.TranslatorID,
+        t3.FirstName,
+        t3.LastName,
+        'Translator' as EmployeeType,
+        'Webinar' as TypeOfActivity,
+        w2.DateAndBeginningTime,
+        dateadd(minute, datediff(minute, 0, w2.Duration), w2.DateAndBeginningTime) as DateAndEndingTime
+    from Translators t3
+    join Webinars w2 on t3.TranslatorID = w2.TranslatorID
+    where w2.DateAndBeginningTime > getdate()
+
+    union all
+
+    select
+        t4.TranslatorID,
+        t4.FirstName,
+        t4.LastName,
+        'Translator' as EmployeeType,
+        'InPersonModule' as TypeOfActivity,
+        im2.DateAndBeginningTime,
+        dateadd(minute, datediff(minute, 0, im2.Duration), im2.DateAndBeginningTime) as DateAndEndingTime
+    from Translators t4
+    join In_person_Modules im2 on t4.TranslatorID = im2.TranslatorID
+    join Modules mod2 on im2.ModuleID = mod2.ModuleID
+    where mod2.DateAndBeginningTime > getdate()
+
+    union all
+
+    select
+        t5.TranslatorID,
+        t5.FirstName,
+        t5.LastName,
+        'Translator' as EmployeeType,
+        'OnlineSyncModule' as TypeOfActivity,
+        om_module.DateAndBeginningTime,
+        dateadd(minute, datediff(minute, 0, om_module.Duration), om_module.DateAndBeginningTime) as DateAndEndingTime
+    from Translators t5
+    join Online_Sync_Modules om_module on t5.TranslatorID = om_module.TranslatorID
+    join Modules mod3 on om_module.ModuleID = mod3.ModuleID
+    where mod3.DateAndBeginningTime > getdate();
+```
+
+---
+
+### Users_activities_collisions - MS
+Widok przedstawia informacje o kolizjach zajęć studentów.
+```SQl
+create view users_activities_collisions as
+with CombinedActivities as (
+    select
+        UserID,
+        ModuleID as ActivityID,
+        DateAndBeginningTime,
+        dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) as DateAndEndingTime,
+        'Module' as ActivityType
+    from Modules m
+    join Users_Courses uc on m.CourseID = uc.CourseID
+
+    union all
+
+    select
+        UserID,
+        meet.MeetingID as ActivityID,
+        DateAndBeginningTime,
+        dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) as DateAndEndingTime,
+        'Meeting' as ActivityType
+    from Meetings meet
+    join Users_Meetings_Attendance meeta on meet.MeetingID = meeta.MeetingID
+
+    union all
+
+    select
+        UserID,
+        w.WebinarID as ActivityID,
+        DateAndBeginningTime,
+        dateadd(minute, datediff(minute, 0, Duration), DateAndBeginningTime) as DateAndEndingTime,
+        'Webinar' as ActivityType
+    from Webinars w
+    join Users_Webinars uw on w.WebinarID = uw.WebinarID
+),
+Collisions as (
+    select
+        a.UserID,
+        a.ActivityID as Activity1ID,
+        a.ActivityType as Activity1Type,
+        a.DateAndBeginningTime as StartTime1,
+        a.DateAndEndingTime as EndTime1,
+        b.ActivityID as Activity2ID,
+        b.ActivityType as Activity2Type,
+        b.DateAndBeginningTime as StartTime2,
+        b.DateAndEndingTime as EndTime2
+    from CombinedActivities a
+    join CombinedActivities b on a.UserID = b.UserID and a.ActivityID < b.ActivityID
+    where
+       (a.DateAndBeginningTime between b.DateAndBeginningTime and b.DateAndEndingTime) or 
+       (a.DateAndEndingTime between b.DateAndBeginningTime and b.DateAndEndingTime) or 
+       (b.DateAndBeginningTime between a.DateAndBeginningTime and a.DateAndEndingTime) or 
+       (b.DateAndEndingTime between a.DateAndBeginningTime and a.DateAndEndingTime)
+)
+select * from Collisions
+order by UserID;
 ```

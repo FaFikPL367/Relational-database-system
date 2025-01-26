@@ -3,19 +3,19 @@ CREATE procedure update_meeting_type
     @TypeID int
 as begin
     begin try
-        -- Sprawdzenie czy moduł istnieje
+        -- Sprawdzenie, czy moduł istnieje
         if not exists(select 1 from Meetings where @MeetingID = MeetingID)
         begin
             throw 50000, 'Spotkanie o podanym ID nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy dany typ istnieje
+        -- Sprawdzenie, czy dany typ istnieje
         if not exists(select 1 from Types where TypeID = @TypeID)
         begin
             throw 50001, 'Podany typ nie istnieje', 1;
         end
 
-        -- Sprawdzenie czy nie zmieniasz typu spotkania na tem sam typ
+        -- Sprawdzenie, czy nie zmieniasz typu spotkania na ten sam typ
         if exists(select 1 from Meetings where @MeetingID = MeetingID and @TypeID = TypeID)
         begin
             throw 50002, 'Zmieniasz typ spotkania na ten sam typ co był ustawiony', 1;
@@ -30,7 +30,7 @@ as begin
         set TypeID = @TypeID
         where MeetingID = @MeetingID
 
-        -- Usuniędzie danych ze starego typu
+        -- Usunięcie danych ze starego typu
         if @OldTypeName = 'In-person'
         begin
             if exists(select 1 from In_person_Meetings where MeetingID = @MeetingID)
@@ -62,7 +62,7 @@ as begin
         end
     end try
     begin catch
-        -- Przerzucenie ERRORa dalej
+        -- Przerzucenie ERROR-a dalej
         throw;
     end catch
 end;

@@ -14,7 +14,7 @@ as begin
         -- Znalezienie nazwy kategorii kupionego produktu
         select @CategoryName = Name from Products inner join Categories on Products.CategoryID = Categories.CategoryID
                                                           where Products.ProductID = @ProductID;
-        print @CategoryName;
+
         -- Produkt -> webinar
         if @CategoryName = 'Webinar'
         begin

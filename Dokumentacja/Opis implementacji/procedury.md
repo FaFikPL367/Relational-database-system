@@ -1,6 +1,6 @@
 # Procedury
----
-### Add_course_module_async
+
+### Add_course_module_async - PS
 Procedura, która dodaje dany moduł z danymi do tabeli z modułami prowadzonymi online-asynchronicznie.
 ```SQl
 CREATE procedure add_course_module_async
@@ -34,7 +34,7 @@ end;
 
 ---
 
-### Add_course_module_in_person
+### Add_course_module_in_person - PS
 Procedura, która dodajemu informacje o module do tabeli z modułami stacjonarnymi.
 ```SQL
 CREATE procedure add_course_module_in_person
@@ -92,8 +92,8 @@ as begin
         end
 
         -- Dodanie danych
-        insert In_person_Modules(ModuleID, Classroom, TranslatorID, LanguageID)
-        values (@ModuleID, @Classroom, @TranslatorID, @LanguageID)
+        insert In_person_Modules(ModuleID, Classroom, TranslatorID, LanguageID, Limit)
+        values (@ModuleID, @Classroom, @TranslatorID, @LanguageID, @Limit)
     end try
     begin catch
         -- Przerzucenie ERRORa dalej
@@ -104,7 +104,7 @@ end;
 
 ---
 
-### Add_course_module_sync
+### Add_course_module_sync - PS
 Prodecura, która dodaje moduł do tabeli z podułami prowadzonymi online-synchronicznie.
 ```SQL
 CREATE procedure add_course_module_sync
@@ -162,7 +162,7 @@ end;
 
 ---
 
-### Add_course_module
+### Add_course_module - PS
 Procedura służąca do dodawania modułów do danego kursu.
 ```SQl
 CREATE procedure add_course_modules
@@ -229,7 +229,7 @@ end;
 
 ---
 
-### Add_course
+### Add_course - PS
 Procedura służąca do dodawania kursu do oferty.
 ```SQL
 CREATE procedure add_course
@@ -293,7 +293,7 @@ end;
 
 ---
 
-### Add_employee
+### Add_employee - PS
 Procedura służąca do dodania nowego pracownika do systemu.
 ```SQl
 CREATE procedure add_employee
@@ -329,7 +329,7 @@ end;
 
 ---
 
-### Add_translator
+### Add_translator - PS
 Procedura służąca na dodanie nowego tłumacza do systemu.
 ```SQl
 CREATE procedure add_translator
@@ -357,7 +357,7 @@ end;
 
 ---
 
-### Add_user
+### Add_user - PS
 Procedura służąca do dodania nowego użytkownika do systemu.
 ```SQL
 create procedure add_user
@@ -385,7 +385,7 @@ end;
 
 ---
 
-### Add_webinar
+### Add_webinar - PS
 Procedura służąca do dodania nowych webinarów do oferty.
 ```SQL
 CREATE procedure add_webinar
@@ -468,7 +468,7 @@ end;
 
 ---
 
-### Assign_language_to_translator
+### Assign_language_to_translator - PS
 Procedura służąca do dodania języka do tłumacza (języka, którego tłumaczy).
 ```SQl
 CREATE procedure assign_translator_to_languages
@@ -507,7 +507,7 @@ end;
 
 ---
 
-### Delete_language_from_translator
+### Delete_language_from_translator - PS
 Procedura służąca do usunięcia języka tłumaczowi (języka, którego tłumaczył).
 ```SQL
 CREATE procedure delete_language_from_translator
@@ -546,8 +546,9 @@ end;
 
 ---
 
-### Update_modue_type
-Procedura umożliwiająca edytowanie typu danego modułu w razie pomyłki.
+### Update_modue_type - PS
+Procedura umożliwiająca edytowanie typu danego modułu w razie pomyłki. Jeżeli zostały już dodane dodatkowe dane do któreś tabeli z kategorii
+to dane stamtąd są usuwane.
 ```SQL
 CREATE procedure update_module_type
     @ModuleID int,
@@ -566,10 +567,51 @@ as begin
             throw 50001, 'Podany typ nie istnieje', 1;
         end
 
+        -- Sprawdzenie czy nie zmieniasz na ten sam typ
+        if exists(select 1 from Modules where ModuleID = @ModuleID and TypeID = @TypeID)
+        begin
+            throw 50002, 'Zmieniasz typ modułu na ten sam typ', 1;
+        end
+
+        declare @OldType int = (select TypeID from Modules where ModuleID = @ModuleID)
+        declare @OldTypeName varchar(20);
+        set @OldTypeName = (select TypeName from Types where TypeID = @OldType)
+
         -- Aktualizacja typu
         update Modules
         set TypeID = @TypeID
         where ModuleID = @ModuleID
+
+        -- Usuniędzie danych ze starego typu
+        if @OldTypeName = 'In-person'
+        begin
+            if exists(select 1 from In_person_Modules where ModuleID = @ModuleID)
+            begin
+                -- Informacje zostały dodane i można usunąć informacje
+                delete from In_person_Modules
+                where ModuleID = @ModuleID
+            end
+        end
+
+        if @OldTypeName = 'Online Sync'
+        begin
+            if exists(select 1 from Online_Sync_Modules where ModuleID = @ModuleID)
+            begin
+                -- Informacje zostały dodane i można usunąć informacje
+                delete from Online_Sync_Modules
+                where ModuleID = @ModuleID
+            end
+        end
+
+        if @OldTypeName = 'Online Async'
+        begin
+            if exists(select 1 from Online_Async_Modules where ModuleID = @ModuleID)
+            begin
+                -- Informacje zostały dodane i można usunąć informacje
+                delete from Online_Async_Modules
+                where ModuleID = @ModuleID
+            end
+        end
     end try
     begin catch
         -- Przerzucenie ERRORa dalej
@@ -580,7 +622,7 @@ end;
 
 ---
 
-### Update_recordinglink_module_sync
+### Update_recordinglink_module_sync - PS
 Procedura służąca do dodania linku do nagrania w modułach prowadząnych online-synchronicznie.
 ```SQl
 create procedure update_recordinglink_module_sync
@@ -614,7 +656,7 @@ end;
 
 ---
 
-### Update_recording_webinar
+### Update_recording_webinar - PS
 Procedura służąca do dodania linku do nagrania w webinarach.
 ```SQL
 create procedure update_recordinglink_webinar
@@ -642,7 +684,7 @@ end;
 
 ---
 
-### Add_meeting
+### Add_meeting - MS
 Procedura służy do dodania spotkania studyjnego.
 ```SQL
 create procedure add_meeting(
@@ -657,6 +699,8 @@ create procedure add_meeting(
 )
 as begin
     begin try
+        begin transaction;
+
         -- Sprawdzenie poprawności wpisanych danych
         if not exists(select 1 from Employees where EmployeeID = @TeacherID)
         begin
@@ -691,8 +735,16 @@ as begin
         -- Wstawienie danych to tabeli
         insert Meetings (MeetingID, TeacherID, SubjectID, ReunionID, DateAndBeginningTime, Duration, Price, TypeID)
         values ( @NewProductID,@TeacherID, @SubjectID, @ReunionID, @DateAndBeginningTime, @Duration, @Price, @TypeID);
+
+        commit transaction;
     end try
     begin catch
+        -- Wycofanie transakcji w przypadku błędu
+        if @@TRANCOUNT > 0
+        begin
+            rollback transaction;
+        end;
+
         -- Przerzucenie ERRORa dalej
         throw;
     end catch
@@ -701,7 +753,7 @@ end;
 
 ---
 
-### Add_meeting_async
+### Add_meeting_async - MS
 Procedura służy do dodawania informacji o spotkaniu online-asynchronicznym do tabeli z tymi spotkaniami.
 ```SQL
 CREATE procedure add_meeting_async
@@ -734,7 +786,7 @@ end;
 ```
 
 ---
-### Add_meeting_in_person
+### Add_meeting_in_person - MS
 Procedura służy do dodawania informacji o spotkaniu stacjonarnym do tabeli z tymi spotkaniami.
 ```SQL
 CREATE procedure add_meeting_in_person
@@ -804,7 +856,7 @@ end;
 
 ---
 
-### Add_meeting_sync
+### Add_meeting_sync - MS
 Procedura służy do dodania informacji o spotkaniu stacjonarnym do tabeli z tymi spotkaniami.
 ```SQL
 CREATE procedure add_meeting_sync
@@ -862,18 +914,16 @@ end;
 
 ---
 
-### Add_reunion
+### Add_reunion - PS
 Procedura służy do dodawania zjazu do danych studiów wraz z podaniem jego czasu odbycia się.
 ```SQL
 create procedure add_reunion
     @StudiesID int,
     @StartDate date,
     @EndDate date,
-    @Status bit
+    @Price money
 as begin
     begin try
-        begin transaction;
-
         -- Sprawdzenie poprawności wpisanych danych
         if not exists(select 1 from Studies where StudiesID = @StudiesID)
         begin
@@ -885,29 +935,15 @@ as begin
             throw 50002, 'Data startowa nie może być późniejsza niż data końca', 1;
         end
 
-        -- W innym przypadku możemy dodać
-        -- Rezerwacja ID w produktach
-        declare @NewProductID int;
-        declare @CategoryID int = (select CategoryID from Categories where Name = 'Reunion')
+        if @Price <= 0
+        begin
+            throw 50003, 'Cena za zjazd nie moze być ujeman lub równa 0', 1;
+        end
 
-        insert into Products (CategoryID, Status)
-        values (@CategoryID, @Status)
-
-        -- Pobranie ID po dodaniu do produktów
-        set @NewProductID = SCOPE_IDENTITY();
-
-        insert Studies_Reunion(ProductID, StudiesID, StartDate, EndDate)
-        values (@NewProductID, @StudiesID, @StartDate, @EndDate)
-
-        commit transaction;
+        insert Studies_Reunion(StudiesID, StartDate, EndDate, Price)
+        values (@StudiesID, @StartDate, @EndDate, @Price)
     end try
     begin catch
-        -- Wycofanie transakcji w przypadku błędu
-        if @@TRANCOUNT > 0
-        begin
-            rollback transaction;
-        end;
-
         -- Przerzucenie ERRORa dalej
         throw;
     end catch
@@ -916,7 +952,7 @@ end
 
 ---
 
-### Add_studie
+### Add_studie - PS
 Procedura pozwala na dodanie studiów do bazy wraz z jej wszystkimi informacjami.
 ```SQL
 create procedure add_studie
@@ -933,7 +969,7 @@ as begin
 
         -- Sprawdzenie poprawności wpisywanych danych
         if not exists(select 1 from Employees where EmployeeID = @CoordinatorID and
-                                                    PositionID = 2)
+                                                    PositionID = 3)
         begin
             throw 50001, 'Koordynator o danym ID nie istnieje lub nie jest kordynatorem studiów', 1;
         end
@@ -977,16 +1013,15 @@ as begin
 end
 ```
 
-
 ---
 
-### Delete_user_from_product
-Procedura usuwa użytkownika z danych studiów/kursu/webinaru
+### Delete_user_from_product - MS
+Procedura usuwa użytkownika z danych studiów/kursu/webinaru. Dodatkowo w przypadku kursów usuwamy go ze wszystkich modułów, a w przypadku
+studiów ze wszystkich spotkań studyjnych.
 ```SQL
-create function delete_user_from_product(
+create procedure delete_user_from_product
     @UserID int,
     @ProductID int
-)
 as begin
     begin try
         -- Sprawdzenie czy użytkownik istnieje
@@ -996,24 +1031,56 @@ as begin
         end
 
         -- Sprawdzenie czy dana para istnieje
-        if dbo.check_user_enlistment_for_product(@UserID, @ProductID) = cast(0 as bit)
+        if dbo.check_user_enrollment_for_product (@UserID, @ProductID) = cast(0 as bit)
         begin
             throw 50002, 'Taka para nie istnieje', 2;
         end
 
         -- W innym przypadku ją usuwamy
+
+        -- Produkt to STUDIA
         if exists(select 1 from Studies where StudiesID = @ProductID)
         begin
             delete from Users_Studies
-            where UserID = @UserID and StudiesID = @ProductID;
+            where UserID = @UserID and StudiesID = @ProductID
+
+            -- Stworzenie tabeli ze wszystkimi spotkaniami ze wszystkich zjazdów z danych studiów
+            declare @StudiesReunionsMeetingsIDs table (
+                MeetingID int
+            )
+
+            insert @StudiesReunionsMeetingsIDs
+            select m.MeetingID from Studies s
+                join Studies_Reunion r on s.StudiesID = r.StudiesID
+                join Meetings m on r.ReunionID = m.ReunionID
+                where s.StudiesID = @ProductID
+
+            delete uma
+            from Users_Meetings_Attendance uma
+            join @StudiesReunionsMeetingsIDs srm on uma.MeetingID = srm.MeetingID
+            where uma.UserID = @UserID;
         end
-        
+        -- Produkt to KURS
         else if exists(select 1 from Courses where CourseID = @ProductID)
         begin
             delete from Users_Courses
-            where UserID = @UserID and CourseID = @ProductID;
+            where UserID = @UserID and CourseID = @ProductID
+
+            -- Pobrać tabele z modułami danego kursu
+            declare @CourseModuleID table (
+                ModuleID int
+            )
+
+            -- Zebranie ID modułów danego kursu
+            insert @CourseModuleID (ModuleID)
+            select ModuleID from Modules where Modules.CourseID = @ProductID
+
+            delete ump
+            from Users_Modules_Passes ump
+            join @CourseModuleID cm on ump.ModuleID = cm.ModuleID
+            where ump.UserID = @UserID;
         end
-        
+        -- Produkt to WEBINAR
         else
         begin
             delete from Users_Webinars
@@ -1027,11 +1094,10 @@ as begin
 end;
 ```
 
-
 ---
 
-### Set_extended_payment_deadline
-Procedura pozwala na ustawienie daty przedłużonego terminu podzamówienia
+### Set_extended_payment_deadline - MS
+Procedura pozwala na ustawienie daty przedłużonego terminu podzamówienia.
 ```SQL
 create procedure set_extended_payment_deadline (
     @SubOrderID int,
@@ -1066,14 +1132,14 @@ end;
 
 ---
 
-### Add_order
-Procedura pozwala na dodanie zamówienia
+### Add_order - MS
+Procedura pozwala na dodanie zamówienia.
 ```SQL
 CREATE procedure add_order
-    @OrderID int,
     @UserID int,
     @OrderDate date,
-    @PaymentLink nvarchar(100)
+    @PaymentLink nvarchar(100),
+    @LastID int output
 as begin
     begin try
         -- Sprawdzenie czy dany użytkownik istnieje
@@ -1083,8 +1149,10 @@ as begin
         end
 
         -- Dodanie danych do tabeli
-        insert Orders(OrderID, UserID, OrderDate, PaymentLink)
-        values (@OrderID, @UserID, @OrderDate, @PaymentLink)
+        insert Orders(UserID, OrderDate, PaymentLink)
+        values (@UserID, @OrderDate, @PaymentLink)
+
+        SET @LastID = SCOPE_IDENTITY();
     end try
     begin catch
         -- Przerzucenie ERRORa dalej
@@ -1093,39 +1161,446 @@ as begin
 end;
 ```
 
-
 ---
 
-### Add_suborder
-Procedura pozwala na dodanie podzamówienia
+### Add_suborder - MS
+Procedura pozwala na dodanie podzamówienia.
 ```SQL
 CREATE procedure add_suborder
-    @SubOrderID int,
     @OrderID int,
     @PaymentDeadline date,
+    @ExtendedPaymentDeadline date,
+    @PaymentDate date,
     @FullPrice money,
-    @ProductID int
+    @ProductID int,
+    @Payment money
 as begin
     begin try
-        -- Sprawdzenie czy dane zamówienie istnieje
+        -- Sprawdzenie, czy dane zamówienie istnieje
         if not exists(select 1 from Orders where OrderID = @OrderID)
         begin
             throw 50000, 'Zamówienie o podanym ID nie istnieje', 1;
         end
-        
-        -- Sprawdzenie czy dany produkt istnieje
+
+        -- Sprawdzenie, czy dany produkt istnieje
         if not exists(select 1 from Products where ProductID = @ProductID)
         begin
             throw 50000, 'Produkt o podanym ID nie istnieje', 1;
         end
 
         -- Dodanie danych do tabeli
-        insert Orders_Details(SubOrderID, OrderID, PaymentDeadline, ExtendedPaymentDeadline, PaymentDate, FullPrice, ProductID, Payment)
-        values (@SubOrderID, @OrderID, @PaymentDeadline, null, null, @FullPrice, @ProductID, null)
+        insert Orders_Details(OrderID, PaymentDeadline, ExtendedPaymentDeadline, PaymentDate, FullPrice, ProductID, Payment)
+        values (@OrderID, @PaymentDeadline, @ExtendedPaymentDeadline,
+                @PaymentDate, @FullPrice, @ProductID, @Payment)
     end try
     begin catch
         -- Przerzucenie ERRORa dalej
         throw;
     end catch
 end;
+```
+
+---
+
+### Update_recordinglink_meeting_sync - PS
+Procedura pozwalająca na dodanie, czy zmianę liku do spotkania dla spotkania studyjnego.
+```SQL
+CREATE procedure add_suborder
+    @OrderID int,
+    @PaymentDeadline date,
+    @ExtendedPaymentDeadline date,
+    @PaymentDate date,
+    @FullPrice money,
+    @ProductID int,
+    @Payment money
+as begin
+    begin try
+        -- Sprawdzenie, czy dane zamówienie istnieje
+        if not exists(select 1 from Orders where OrderID = @OrderID)
+        begin
+            throw 50000, 'Zamówienie o podanym ID nie istnieje', 1;
+        end
+
+        -- Sprawdzenie, czy dany produkt istnieje
+        if not exists(select 1 from Products where ProductID = @ProductID)
+        begin
+            throw 50000, 'Produkt o podanym ID nie istnieje', 1;
+        end
+
+        -- Dodanie danych do tabeli
+        insert Orders_Details(OrderID, PaymentDeadline, ExtendedPaymentDeadline, PaymentDate, FullPrice, ProductID, Payment)
+        values (@OrderID, @PaymentDeadline, @ExtendedPaymentDeadline,
+                @PaymentDate, @FullPrice, @ProductID, @Payment)
+    end try
+    begin catch
+        -- Przerzucenie ERRORa dalej
+        throw;
+    end catch
+end;
+```
+
+---
+
+### Update_meeting_type - PS
+Procedura pozwalająca na zmianę typu spotkania studyjnego. W przypadku wpisania już danych do tabeli z konkretną kategorią spotkania, dane
+już wpisane są usuwane.
+```SQL
+CREATE procedure update_meeting_type
+    @MeetingID int,
+    @TypeID int
+as begin
+    begin try
+        -- Sprawdzenie czy moduł istnieje
+        if not exists(select 1 from Meetings where @MeetingID = MeetingID)
+        begin
+            throw 50000, 'Spotkanie o podanym ID nie istnieje', 1;
+        end
+
+        -- Sprawdzenie czy dany typ istnieje
+        if not exists(select 1 from Types where TypeID = @TypeID)
+        begin
+            throw 50001, 'Podany typ nie istnieje', 1;
+        end
+
+        -- Sprawdzenie czy nie zmieniasz typu spotkania na tem sam typ
+        if exists(select 1 from Meetings where @MeetingID = MeetingID and @TypeID = TypeID)
+        begin
+            throw 50002, 'Zmieniasz typ spotkania na ten sam typ co był ustawiony', 1;
+        end
+
+        declare @OldType int = (select TypeID from Meetings where MeetingID = @MeetingID)
+        declare @OldTypeName varchar(20);
+        set @OldTypeName = (select TypeName from Types where TypeID = @OldType)
+
+        -- Aktualizacja typu
+        update Meetings
+        set TypeID = @TypeID
+        where MeetingID = @MeetingID
+
+        -- Usuniędzie danych ze starego typu
+        if @OldTypeName = 'In-person'
+        begin
+            if exists(select 1 from In_person_Meetings where MeetingID = @MeetingID)
+            begin
+                -- Informacje zostały dodane i można usunąć informacje
+                delete from In_person_Meetings
+                where MeetingID = @MeetingID
+            end
+        end
+
+        if @OldTypeName = 'Online Sync'
+        begin
+            if exists(select 1 from Online_Sync_Meetings where MeetingID = @MeetingID)
+            begin
+                -- Informacje zostały dodane i można usunąć informacje
+                delete from Online_Sync_Meetings
+                where MeetingID = @MeetingID
+            end
+        end
+
+        if @OldTypeName = 'Online Async'
+        begin
+            if exists(select 1 from Online_Async_Meetings where MeetingID = @MeetingID)
+            begin
+                -- Informacje zostały dodane i można usunąć informacje
+                delete from Online_Async_Meetings
+                where MeetingID = @MeetingID
+            end
+        end
+    end try
+    begin catch
+        -- Przerzucenie ERRORa dalej
+        throw;
+    end catch
+end;
+```
+
+### Add_subject - PS
+Procedura pozwalająca na dodawanie przedmiotu do studiów.
+```SQL
+create procedure add_subject
+    @StudiesID int,
+    @Name nvarchar(50),
+    @Description nvarchar(max)
+as begin
+    begin try
+        -- Sprawdzenie poprawności wpisanych danych
+        if not exists(select 1 from Studies where StudiesID = @StudiesID)
+        begin
+            throw 50001, 'Studia o podanym ID nie istnieją', 1;
+        end
+
+        -- Dodanie danych
+        insert Subjects (StudiesID, Name, Description)
+        values (@StudiesID, @Name, @Description)
+    end try
+    begin catch
+        -- Przerzucenie błędu dalej
+        throw;
+    end catch
+end
+```
+
+---
+
+### Add_practice - PS
+Procedura umożliwiająca dodanie praktykanta do listy z praktykami.
+```SQL
+create procedure add_practice
+    @Description nvarchar(max),
+    @CompanyName nvarchar(30),
+    @Country nvarchar(30),
+    @City nvarchar(30),
+    @Address nvarchar(50),
+    @Phone nvarchar(20),
+    @Email nvarchar(50)
+as begin
+    begin try
+        -- Dodaawanie danych
+        insert Practices (Description, CompanyName, Country, City, Address, Phone, Email)
+        values (@Description, @CompanyName, @Country, @City, @Address, @Phone, @Email)
+    end try
+    begin catch
+        -- Przerzucenie błędu dalej
+        throw;
+    end catch
+end
+```
+
+### Assign_user_to_practice - PS
+Procedura pozwala na przypisanie studenta do danych praktyk odrazu z jakąś ocena (czy zaliczył czy nie).
+```SQL
+create procedure assign_user_to_practice
+    @UserID int,
+    @StudiesID int,
+    @PracticeID int,
+    @Present bit
+as begin
+    begin try
+        -- Sprawdzenie poprawności danych
+        if not exists(select 1 from Users where UserID = @UserID)
+        begin
+            throw 50001, 'Użytkownik o podanym ID nie istnieje', 1;
+        end
+
+        if not exists(select 1 from Studies where StudiesID = @StudiesID)
+        begin
+            throw 50002, 'Studia o podanym ID nie istnieją', 1;
+        end
+
+        if not exists(select 1 from Practices where PracticeID = @PracticeID)
+        begin
+            throw 50003, 'Praktyki o podanym ID nie istnieją', 1;
+        end
+
+        if dbo.check_user_enrollment_for_product(@UserID, @StudiesID) = cast(0 as bit)
+        begin
+            throw 50004, 'Użytkownik nie jest zapisany na dane studia', 1;
+        end
+
+        -- Dodanie danych
+        insert Users_Practices_Attendance (UserID, StudiesID, PracticeID, Present)
+        values (@UserID, @StudiesID, @PracticeID, @Present)
+    end try
+    begin catch
+        -- Przerzucenie błędu dalej
+        throw;
+    end catch
+end
+```
+
+--- 
+
+### Update_product_status - PS
+Procedura pozwalająca na aktualizajcę statusu produktu.
+```SQL
+create procedure update_product_status
+    @ProductID int,
+    @Status bit
+as begin
+    begin try
+        -- Sprawdzenie poprawności danych
+        if not exists(select 1 from Products where ProductID = @ProductID)
+        begin
+            throw 50001, 'Produkt o danym ID nie istnieje', 1;
+        end
+
+        -- Aktualizacja danych
+        update Products
+        set Status = @Status
+        where ProductID = @ProductID
+    end try
+    begin catch
+        -- Przerzucenie błędy dalej
+        throw;
+    end catch
+end
+```
+
+---
+
+### Set_student_grade - PS
+Procedura pozwalająca na ustawienie oceny studentowi za studia.
+```SQL
+create procedure set_student_grade
+    @StudiesID int,
+    @UserID int,
+    @Grade int
+as begin
+    begin try
+        -- Sprawdzenie poprawności danych
+        if not exists(select 1 from Studies where StudiesID = @StudiesID)
+        begin
+            throw 50001, 'Studia o podanym ID nie istnieją', 1;
+        end
+
+        if not exists(select 1 from Users where UserID = @UserID)
+        begin
+            throw 50002, 'Użytkownik o podanym ID nie istnieje', 1;
+        end
+
+        if dbo.check_user_enrollment_for_product(@UserID, @StudiesID) = cast(0 as bit)
+        begin
+            throw 50003, 'Użytkownik nie jest zapisany na podane studia', 1;
+        end
+
+        if @Grade < 2 or @Grade > 5
+        begin
+            throw 50004, 'Podana ocena jest z nie dopuszczalengo przedzziału [2,5]', 1;
+        end
+
+        -- Ustawienie oceny
+        update Users_Studies
+        set Grade = @Grade
+        where StudiesID = @StudiesID and UserID = @UserID
+    end try
+    begin catch
+        -- Przerzucenie błędu dalej
+        throw;
+    end catch
+end
+```
+
+---
+
+### Set_student_practice_attendance - PS
+Procedura pozwala na aktualizację obecności na danych praktykach studentowi.
+```SQL
+create procedure set_student_practice_attendance
+    @UserID int,
+    @StudiesID int,
+    @PracticeID int,
+    @Present bit
+as begin
+    begin try
+        -- Sprawdzenie poprawności danych
+        if not exists(select 1 from Users where UserID = @UserID)
+        begin
+            throw 50001, 'Użytkownik o podanym ID nie istnieje', 1;
+        end
+
+        if not exists(select 1 from Studies where StudiesID = @StudiesID)
+        begin
+            throw 50002, 'Studia o podanym ID nie istnieją', 1;
+        end
+
+        if not exists(select 1 from Practices where PracticeID = @PracticeID)
+        begin
+            throw 50003, 'Praktyki o podanym ID nie istnieją', 1;
+        end
+
+        if not exists(select 1 from Users_Practices_Attendance where StudiesID = @StudiesID and PracticeID = @PracticeID
+                                                               and UserID = @UserID)
+        begin
+            throw 50004, 'Użytkownik o podanych studiach i praktykach nie ma wpisu w tabeli', 1;
+        end
+
+        -- Ustawienie obecności
+        update Users_Practices_Attendance
+        set Present = @Present
+        where UserID = @UserID and PracticeID = @PracticeID and @StudiesID = StudiesID
+    end try
+    begin catch
+        -- Przerzucenie błędu dalej
+        throw;
+    end catch
+end
+```
+
+---
+
+### Set_student_meeting_attendance - PS
+Procedura pozwala na ustawianie obecności studentom na spotkaniach.
+```SQl
+create procedure set_student_meeting_attendance
+    @UserID int,
+    @MeetingID int,
+    @Present bit
+as begin
+    begin try
+        -- Sprawdzenie poprawności danych
+        if not exists(select 1 from Users where UserID = @UserID)
+        begin
+            throw 50001, 'Użytkownik o podanym ID nie istnieje', 1;
+        end
+
+        if not exists(select 1 from Meetings where MeetingID = @MeetingID)
+        begin
+            throw 50002, 'Spotkanie o podanym ID nie istnieje', 1;
+        end
+
+        if not exists(select 1 from Users_Meetings_Attendance where MeetingID = @MeetingID and @UserID = UserID)
+        begin
+            throw 50003, 'Para student-spotkanie nie istnieje', 1;
+        end
+
+        -- Ustawienie obecności
+        update Users_Meetings_Attendance
+        set Present = @Present
+        where UserID = @UserID and MeetingID = @MeetingID
+    end try
+    begin catch
+        -- Przerzucenie błędu dalej
+        throw;
+    end catch
+end
+```
+
+---
+
+### Set_user_module_attendance - PS
+Procedura pozwala na ustawienie czy dany użytkownik zdał dany moduł czy nie.
+```SQL
+create procedure set_user_module_passes
+    @UserID int,
+    @ModuleID int,
+    @Passed bit
+as begin
+    begin try
+        -- Sprawdzenie poprawności danych
+        if not exists(select 1 from Users where UserID = @UserID)
+        begin
+            throw 50001, 'Użytkownik o podanym ID nie istnieje', 1;
+        end
+
+        if not exists(select 1 from Modules where ModuleID = @ModuleID)
+        begin
+            throw 50002, 'Moduł o podanym ID nie istnieje', 1;
+        end
+
+        if not exists(select 1 from Users_Modules_Passes where ModuleID = @ModuleID and @UserID = UserID)
+        begin
+            throw 50003, 'Para użytkownik-moduł nie istnieje', 1;
+        end
+
+        -- Ustawienie obecności
+        update Users_Modules_Passes
+        set Passed = @Passed
+        where UserID = @UserID and ModuleID = @ModuleID
+    end try
+    begin catch
+        -- Przerzucenie błędu dalej
+        throw;
+    end catch
+end
 ```

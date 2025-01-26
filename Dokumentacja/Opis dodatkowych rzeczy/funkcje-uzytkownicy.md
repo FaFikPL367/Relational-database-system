@@ -1,6 +1,8 @@
 ## AUTORZY
-1. ***Paweł Sosnowski***
-2. ***Maciej Słowik***
+1. ***Paweł Sosnowski*** (skrót PS)
+2. ***Maciej Słowik*** (skrót MS)
+
+> **Powyższe skróty będą znajdować się przy nazwa i oznaczają jaka osoba co zrobiła.**
 
 ## Użytkownicy systemu
 1. Administrator

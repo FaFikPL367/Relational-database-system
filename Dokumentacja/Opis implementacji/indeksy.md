@@ -1,4 +1,4 @@
-# Indeksy
+# Indeksy - PS
 
 ### Tabela Orders
 ```SQL
@@ -163,4 +163,21 @@ CREATE INDEX Webinars_coordinatorID on Webinars (CoordinatorID);
 CREATE INDEX Webinars_translatorID on Webinars (TranslatorID);
 CREATE INDEX Webinars_languageID on Webinars (LanguageID);
 create index Webinars_date on Webinars (DateAndBeginningTime, Duration)
+```
+---
+
+### Tabela Studies_Reunion
+```SQL
+CREATE INDEX Studies_Reunion_studiesID on Studies_Reunion (StudiesID)
+CREATE INDEX Studies_Reunion_date on Studies_Reunion (StartDate, EndDate)
+CREATE INDEX Studies_Reunion_startdate on Studies_Reunion (StartDate)
+CREATE INDEX Studies_Reunion_enddate on Studies_Reunion (EndDate)
+```
+---
+
+### Tabela Payment_for_reunions
+```SQL
+CREATE INDEX Payment_for_reunions_reunionid on Payment_for_reunions (ReunionID)
+CREATE INDEX Payment_for_reunions_suborderid on Payment_for_reunions (SubOrderID)
+CREATE INDEX Payment_for_reunions_ispaid on Payment_for_reunions (IsPaid)
 ```

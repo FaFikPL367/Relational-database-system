@@ -1,6 +1,6 @@
 # Widoki
 
-### Course_information
+### Course_information - PS
 Widok przedstawia informacje o stworzonych kursach dostępnych i nie dostępnych. Przedstawia również informacje o ilości modułów i maksymalnej ilości miejsc na kursie (wyznaczana na podstawie limitu w modułach stacjonarnych).
 ```SQL
 create view course_information as
@@ -25,7 +25,7 @@ create view course_information as
     left join limit_for_course on Courses.CourseID = limit_for_course.CourseID;
 ```
 ---
-### Course_module_types
+### Course_module_types - PS
 Widok ten pokazuje ile jest modułów każdego typu w każdym kursie.
 ```SQL
 create view course_module_types as
@@ -52,7 +52,7 @@ create view course_module_types as
 
 ---
 
-### Course_passes
+### Course_passes - PS
 Widok wyświetla informacje o zdaniu modułów kursach użytkowników.
 ```SQL
 create view course_passes as
@@ -67,7 +67,7 @@ create view course_passes as
 
 ---
 
-### Products_orders
+### Products_orders - PS
 Widok wyświetla informacje o tym ile razy dany produkt został sprzedany.
 ```SQL
 create view products_orders as
@@ -78,7 +78,7 @@ create view products_orders as
 
 ---
 
-### Course_sign_limit
+### Course_sign_limit - PS
 Widok wyświetla dla każdego kursu ile osób się na niego zapisało i jaki jest limit.
 ```SQL
 create view course_sign_limit as
@@ -95,7 +95,7 @@ create view course_sign_limit as
 
 ---
 
-### Dont_make_payment_in_time
+### Dont_make_payment_in_time - PS
 Widok przedstawiający listę osób, które nie wykonały płatność w obowiązkowym zakresie czasu.
 ```SQL
 create view dont_make_payment_in_time as
@@ -116,7 +116,7 @@ create view dont_make_payment_in_time as
 
 ---
 
-### Dont_make_payment_in_time_reunion
+### Dont_make_payment_in_time_reunion - PS
 Widok przedstawia użytkowników, którzy nie wykonali płatności w czas dla zjazdów.
 ```SQL
 create view dont_make_payment_in_time_reunion as
@@ -131,7 +131,7 @@ create view dont_make_payment_in_time_reunion as
 
 ---
 
-### Employees_information
+### Employees_information - PS
 Widok przedstawia informacje danych pracowników w systemie.
 ```SQL
 CREATE view employees_information as
@@ -149,7 +149,7 @@ CREATE view employees_information as
 
 ---
 
-### Financial_report
+### Financial_report - PS
 Widok przedstawia raport finansoowy, czyli jaki jest dochód ze sprzedarzy każdego produktu i ile razy został sprzedany.
 ```SQL
 create view financial_report as
@@ -167,7 +167,7 @@ create view financial_report as
 ```
 ---
 
-### Future_course_sign
+### Future_course_sign - PS
 Widok przestawia informacje o ilości osób zapisanych na przyszłe kursy. Przyszłe kursy oznaczają wydarzenia o dalszej dacie niż aktualna.
 ```SQL
 CREATE view future_course_sign as
@@ -182,7 +182,7 @@ CREATE view future_course_sign as
 
 ---
 
-### Future_courses
+### Future_courses - PS
 Widok przedstawia informacje o przyszłych kursach.
 ```SQL
 create view future_courses as
@@ -193,7 +193,7 @@ create view future_courses as
 
 ---
 
-### Meetings_information
+### Meetings_information - PS
 Widok przedstawiający wszystkie onformacje na temat sszystkich spotkań.
 ```SQL
 create view meetings_information as
@@ -213,7 +213,7 @@ create view meetings_information as
 
 ---
 
-### Future_meetings
+### Future_meetings - PS
 Widok przedstawiający spotkania w przyszłości od dzisiejszej daty
 ```SQL
 create view future_meetings as
@@ -224,7 +224,7 @@ create view future_meetings as
 
 ---
 
-### Future_meetings_sign
+### Future_meetings_sign - PS
 Widok przedstawiający ilość zapisań na przyszłe spotkania.
 ```SQL
 create view future_meetings_sign as
@@ -240,7 +240,7 @@ create view future_meetings_sign as
 
 ---
 
-### Future_studie_sign
+### Future_studie_sign - PS
 Widok przedstawia informacje o ilości osób zapisanych na przyszłe studia.
 ```SQL
 CREATE view future_studie_sign as
@@ -255,7 +255,7 @@ CREATE view future_studie_sign as
 
 ---
 
-### Future_studies
+### Future_studies - PS
 Widok przedstawia informacje o przyszłych studiach.
 ```SQL
 create view future_studies as
@@ -266,7 +266,7 @@ create view future_studies as
 
 ---
 
-### Future_webinar_sign
+### Future_webinar_sign - PS
 Widok przedstawia informacje o ilości zapisanych osób na przyszłe webinary.
 ```SQL
 CREATE view future_webinar_sign as
@@ -281,7 +281,7 @@ CREATE view future_webinar_sign as
 
 ---
 
-### Future_webinars
+### Future_webinars - PS
 Widok przedstawia informacje o przyszłych webinarach.
 ```SQL
 create view future_webinars as
@@ -292,7 +292,7 @@ create view future_webinars as
 
 ---
 
-### In_person_meeting_information
+### In_person_meeting_information - PS
 Widok przedstawia informacje o spotkaniach studyjnych - stacjonarnych.
 ```SQL
 create view in_person_meeting_information as
@@ -307,7 +307,7 @@ create view in_person_meeting_information as
 
 ---
 
-### In_person_module_information
+### In_person_module_information - PS
 Widok przedstawia informacje o modułach stacjonarnych w kursach.
 ```SQL
 create view in_person_module_information as
@@ -322,7 +322,7 @@ create view in_person_module_information as
 
 ---
 
-### Languages_count_translators
+### Languages_count_translators - PS
 Widok przedstawia ilu tłumaczy mówi w danych językach.
 ```SQL
 create view languages_count_translators as
@@ -335,7 +335,7 @@ create view languages_count_translators as
 
 ---
 
-### Module_information
+### Module_information - PS
 Widok przedstawia informacje o modułach w kursach.
 ```SQL
 create view module_information as
@@ -353,7 +353,7 @@ create view module_information as
 
 ---
 
-### Meeting_sign_limit
+### Meeting_sign_limit - PS
 Widok przedstawia ilość osób zapisanych na dane spotkanie i jaki jest limit tego spotkania.
 ```SQL
 create view meeting_sign_limit as
@@ -370,7 +370,7 @@ create view meeting_sign_limit as
 
 ---
 
-### Online_sync_module_information
+### Online_sync_module_information - PS
 Widok przedstawia informacje o modułach online-synchronicznych w kursach.
 ```SQL
 create view online_sync_module_information as
@@ -385,7 +385,7 @@ create view online_sync_module_information as
 
 ---
 
-### Online_async_module_information
+### Online_async_module_information - PS
 Widok przedstawia informacje o modułach online-asynchronicznyhc w kursach.
 ```SQl
 create view online_async_module_information as
@@ -396,7 +396,7 @@ create view online_async_module_information as
 
 ---
 
-### Online_async_meeting_information
+### Online_async_meeting_information - PS
 Widok przedstawia informacje o spotkaniach studyjnych online-asynchronicznych.
 ```SQL
 create view online_async_meeting_information as
@@ -406,7 +406,7 @@ create view online_async_meeting_information as
 
 ---
 
-### Online_sync_meeting_information
+### Online_sync_meeting_information - PS
 Widok przedstawia informacje o spotkaniach studyjnych online-synchronicznych.
 ```SQL
 create view online_sync_meeting_information as
@@ -420,7 +420,7 @@ create view online_sync_meeting_information as
 ```
 
 ---
-### Orders_payment_information
+### Orders_payment_information - PS
 Widok przedstawia informacje dokładne o szczegółach każdego zamówienia.
 ```SQL
 create view orders_payment_informations as
@@ -444,7 +444,7 @@ create view orders_payment_informations as
 
 ---
 
-### Studie_information
+### Studie_information - PS
 Widok przedstawia informacje o studiach wraz z ilością przedmiotów, ilością spotkań oraz maksymalną ilością miejsc na studiach (wyznaczaną po podstawie spotkań stacjonarnych).
 ```SQL
 create view studie_information as
@@ -479,7 +479,7 @@ create view studie_information as
 
 ---
 
-### Studie_sign_limit
+### Studie_sign_limit - PS
 Widok przedstawia zestawienie ilości sprzedanych miejsc na studia do limitu każdych studiów.
 ```SQL
 create view studie_sign_limit as
@@ -498,7 +498,7 @@ create view studie_sign_limit as
 
 ---
 
-### Studies_meeting_list
+### Studies_meeting_list - PS
 Widok przedstawia listę obecności dla każdego spotkania studyjnego wraz z obecnością oraz datą.
 ```SQL
 create view studies_meetings_list as
@@ -514,7 +514,7 @@ create view studies_meetings_list as
 
 ---
 
-### Translators_information
+### Translators_information - PS
 Widok przedstawia informacje o tłumaczach pracujących na platformie.
 ```SQL
 CREATE view translators_information as
@@ -531,7 +531,7 @@ CREATE view translators_information as
 
 ---
 
-### Translators_language
+### Translators_language - PS
 Widok przedstawia zestawienia tłumaczy wraz z językami, które tłumaczą
 ```SQL
 create view translators_language as
@@ -544,7 +544,7 @@ create view translators_language as
 
 ---
 
-### Users_information
+### Users_information - PS
 Widok przedstawia informacje o użytkownikach systemu.
 ```SQL
 CREATE view users_information as
@@ -561,7 +561,7 @@ CREATE view users_information as
 
 ---
 
-### Webinar_information
+### Webinar_information - PS
 Widok przedstawia informacje o webinarach dostępnych czy nie dostępnych.
 ```SQL
 create view webinar_information as
@@ -586,7 +586,7 @@ create view webinar_information as
 
 ---
 
-### Financial_report_webinars
+### Financial_report_webinars - PS
 Widok przedstawiający raport finansowy, ale tylko dla webinarów.
 ```SQL
 create view financial_report_webinar as
@@ -598,7 +598,7 @@ create view financial_report_webinar as
 
 ---
 
-### Financial_report_courses
+### Financial_report_courses - PS
 Widok przedstawiający raport finansowy, ale tylko dla kursów.
 ```SQL
 create view financial_report_courses as
@@ -610,7 +610,7 @@ create view financial_report_courses as
 
 ---
 
-### Financial_report_studies
+### Financial_report_studies - PS
 Widok przedstawiający raport finansowy, ale tylko ze studiów. Podaje oddzielnie zarobek za wpisowe i za zjazdy.
 ```SQL
 create view financial_report_studies as
@@ -630,7 +630,7 @@ create view financial_report_studies as
 
 ---
 
-### Financial_report_meetings
+### Financial_report_meetings - PS
 Widok przedstawiający raport finansowy, ale tylko ze spotkań studyjnych.
 ```SQL
 create view financial_report_meetings as
@@ -642,7 +642,7 @@ create view financial_report_meetings as
 
 ---
 
-### Extended_payments
+### Extended_payments - PS
 Widok przedstawiający zamówienia, w których data zapłaty została przedłużona przez dyrektora.
 ```SQL
 create view extended_payments as
@@ -653,7 +653,7 @@ create view extended_payments as
 
 ---
 
-### Reunion_information
+### Reunion_information - PS
 Widok przedstawia podstawowe informacje o zjazdzie i podaje ilość spotkań w tym zjezdzie.
 ```SQl
 create view reunion_information as
@@ -670,7 +670,7 @@ create view reunion_information as
 
 ---
 
-### Studies_practice_attendances
+### Studies_practice_attendances - PS
 Widok przedstawia informacje o zdaniu praktyk przez studentów.
 ```SQl
 create view studies_practice_attendances as
@@ -684,7 +684,7 @@ create view studies_practice_attendances as
 
 ---
 
-### Users_orders_count
+### Users_orders_count - PS
 Widok przedstawia informacje o tym ile dany użytkownik podał produktów każdej kategorii (webinary, kursy, studia i spotkania).
 ```SQl
 with webinars_count as (

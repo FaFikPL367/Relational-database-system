@@ -1,7 +1,8 @@
 # Funkcje
----
-### Check_translator_language
-Funkcja dostaje parę indeksów, język i tłumacz, a następnie sprawdza czy dany tłumacz zna podany język.
+
+### Check_translator_language - PS
+Funkcja dostaje parę indeksów, język i tłumacz, a następnie sprawdza czy dany tłumacz zna podany język. Jeżeli jednak będziemy sprawdzać
+ten warunek gdzie tłumacz ma wartość **null** czyli nie ma tłumacza, to będziemy sprawdzać czy język jest językiem polskim.
 ```SQL
 create function check_translator_language(
     @TranslatorID int,
@@ -35,8 +36,9 @@ end
 
 ---
 
-### Check_translator_availability
-Funkcja dostaje ID tłumacza, datę i czas rozpoczęcia zajęć oraz czas trawania zajęć. Jej celem jest sprawdzenie czy podany tłumacz ma inne zajęcia w tym czasie. Sprawdzane są wszystkie jego możliwe aktywności (webinary, spotkania studyjne, moduły).
+### Check_translator_availability - PS
+Funkcja dostaje ID tłumacza, datę i czas rozpoczęcia zajęć oraz czas trawania zajęć. Jej celem jest sprawdzenie czy podany tłumacz ma inne zajęcia w tym czasie. Sprawdzane są wszystkie jego możliwe aktywności (webinary, spotkania studyjne, moduły) tworząc dodatkową tabelę z datami tam gdzie
+podany tłumacz się pojawia.
 ```SQL
 create function check_translator_availability(
     @TranslatorID int,
@@ -98,8 +100,9 @@ end
 
 ---
 
-### Check_teachers_availability
-Funkcja otrzymuje ID nauczyciela, datę i czas rozpoczęcia zajęć oraz czas ich trwania. Jej celem jest sprawdzenei czy dany nauczyciel nie ma w tym czasie innych aktywności (spotkania studyjne, webinary, moduły).
+### Check_teachers_availability - PS
+Funkcja otrzymuje ID nauczyciela, datę i czas rozpoczęcia zajęć oraz czas ich trwania. Jej celem jest sprawdzenei czy dany nauczyciel nie ma w tym czasie innych aktywności (spotkania studyjne, webinary, moduły) tworząc dodatkową tabelę z datami gdzie nauczyciel jest zajęty i potem sprawdzając
+konflikty z podanym do funkcji terminem.
 ```SQL
 create function check_teachers_availability(
     @TeacherID int,
@@ -152,7 +155,7 @@ end
 
 ---
 
-### Check_classroom_availability
+### Check_classroom_availability - PS
 Funkcja dostaje numer klasy oraz ID modułu lub spotkania. Jej celem jest sprawdzenie czy podany moduł lub spotkanie może się odbyć w tej sali na podstawie czasu rozpoczęcia danego modułu lub spotkania.
 ```SQL
 create function check_classroom_availability(
@@ -202,7 +205,7 @@ end
 ```
 
 ---
-## Check_product_availability
+## Check_product_availability - MS
 Funkcja dostaje ID danego produktu i sprawdza czy jest on dostępny dla użytkowników, czyli czy STATUS jest równy 1.
 ```SQL
 create function check_product_availability(
@@ -224,7 +227,7 @@ end
 
 
 ---
-## Check_user_enrollment_for_product
+## Check_user_enrollment_for_product - MS
 Funkcja dostaje ID użytkownika i ID produktu (studiów/kursu/webinaru) i sprawdza, czy użytkownik zapisał się do danych studiów/kursu/webinaru
 ```SQL
 create function check_user_enrollment_for_product(

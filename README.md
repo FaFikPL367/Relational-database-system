@@ -76,7 +76,7 @@ faker
 To run Python scripts first you need to preapare ".env" file that contains database connection settings:
 ```bash
 cp .env.example .env
-rm .env.exmaple
+rm .env.example
 ```
 
 ## ERD diagram
